@@ -1,17 +1,29 @@
 {
-  "name": "development_tool",
-  "version": "0.1.0",
+  "name": "leadtribute-dashboard",
+  "version": "1.0.0",
+  "description": "Leadtribute – Final Performance Dashboard (ad analytics, ROAS, campaigns)",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --hostname 127.0.0.1",
+    "dev:clean": "lsof -ti :3000 | xargs kill -9 2>/dev/null; next dev --hostname 127.0.0.1",
+    "open-app": "open http://127.0.0.1:3000",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
+    "@radix-ui/react-dropdown-menu": "^2.1.16",
+    "@supabase/ssr": "^0.8.0",
+    "@supabase/supabase-js": "^2.93.3",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.29.2",
+    "lucide-react": "^0.563.0",
     "next": "16.1.6",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "recharts": "^3.7.0",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

@@ -1,20 +1,36 @@
+# Leadtribute – Final Dashboard App
+
+Unified **ad performance dashboard** (Next.js 16, React 19, Tailwind, Material 3 Expressive). KPIs, ROAS, campaign drill-downs, integrations, settings, landing, login/register. Dark theme, Recharts, Framer Motion, Sonner toasts.
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
 
-First, run the development server:
+### 1. Start the dev server
+
+In a terminal (e.g. Cursor’s terminal or macOS Terminal.app):
 
 ```bash
+cd /path/to/Development_Tool
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Wait until you see **Ready** and `Local: http://127.0.0.1:3000`.
+
+### 2. Open the app in a browser
+
+**Option A – Cursor built-in browser (recommended)**  
+1. `Cmd+Shift+P` (Mac) or `Ctrl+Shift+P` (Windows/Linux)  
+2. Type **Simple Browser: Show** and run it  
+3. Enter: `http://127.0.0.1:3000` and press Enter  
+
+**Option B – Your normal browser**  
+1. Open Chrome, Safari, or Firefox  
+2. In the address bar type: `http://127.0.0.1:3000`  
+3. Press Enter  
+
+**Option C – Cursor Ports**  
+If the dev server is running, open the **Ports** view in Cursor, find port **3000**, and use **Open in Browser** (if shown).
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
