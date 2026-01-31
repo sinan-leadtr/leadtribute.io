@@ -13,6 +13,8 @@ import {
   ChevronDown,
   Link2,
   LayoutDashboard,
+  ShoppingBag,
+  Music2,
 } from "lucide-react";
 
 const sectionFade = {
@@ -211,6 +213,60 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ─── LogoTicker: Seamlessly integrated with top platforms ─── */}
+      <section className="relative z-10 border-y border-white/5 py-10 sm:py-12">
+        <p className="mx-auto mb-8 max-w-6xl px-6 text-center text-xs font-medium uppercase tracking-widest text-white/50 sm:text-sm">
+          Seamlessly integrated with top platforms
+        </p>
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-12 gap-y-6 px-6">
+          {/* Meta – blue infinity symbol */}
+          <span
+            className="flex items-center gap-2 text-zinc-500 transition hover:text-[#0668E1]"
+            aria-label="Meta"
+          >
+            <svg className="h-7 w-7 sm:h-8 sm:w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M5.5 8.5C7 6 9 4 12 4c3 0 5 2 6.5 4.5" />
+              <path d="M18.5 15.5C17 18 15 20 12 20c-3 0-5-2-6.5-4.5" />
+              <path d="M12 4v16" />
+            </svg>
+            <span className="text-sm font-semibold sm:text-base">Meta Ads</span>
+          </span>
+          {/* Google – multicolor G on hover */}
+          <span
+            className="flex items-center gap-2 text-zinc-500 transition hover:[color:#4285F4]"
+            aria-label="Google Ads"
+          >
+            <svg className="h-7 w-7 sm:h-8 sm:w-8" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+              <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z" />
+            </svg>
+            <span className="text-sm font-semibold sm:text-base">Google Ads</span>
+          </span>
+          {/* Shopify – green bag */}
+          <span
+            className="flex items-center gap-2 text-zinc-500 transition hover:text-[#96BF48]"
+            aria-label="Shopify"
+          >
+            <ShoppingBag className="h-7 w-7 sm:h-8 sm:w-8" strokeWidth={2} />
+            <span className="text-sm font-semibold sm:text-base">Shopify</span>
+          </span>
+          {/* Klaviyo – bold text */}
+          <span
+            className="flex items-center gap-2 text-zinc-500 transition hover:text-orange-400"
+            aria-label="Klaviyo"
+          >
+            <span className="text-lg font-bold tracking-tight sm:text-xl">Klaviyo</span>
+          </span>
+          {/* TikTok – note icon */}
+          <span
+            className="flex items-center gap-2 text-zinc-500 transition hover:text-white"
+            aria-label="TikTok"
+          >
+            <Music2 className="h-7 w-7 sm:h-8 sm:w-8" strokeWidth={2} />
+            <span className="text-sm font-semibold sm:text-base">TikTok Ads</span>
+          </span>
+        </div>
+      </section>
+
       {/* ─── The Problem ───────────────────────────────────────── */}
       <section className="relative z-10 px-6 py-24 sm:px-8 sm:py-32">
         <div className="mx-auto max-w-6xl">
@@ -273,6 +329,74 @@ export default function Home() {
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-white/60">
                   {item.text}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── Loved by Growth Teams (Social Proof Cases) ───────────────────── */}
+      <section className="relative z-10 px-6 py-24 sm:px-8 sm:py-32">
+        <div className="mx-auto max-w-6xl">
+          <motion.h2
+            className="text-center text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl"
+            {...sectionFade}
+          >
+            Loved by Growth Teams
+          </motion.h2>
+          <p className="mx-auto mt-3 max-w-xl text-center text-white/60">
+            See why marketing leaders trust Leadtribute.
+          </p>
+          <div className="mt-16 grid gap-6 sm:grid-cols-3">
+            {[
+              {
+                name: "Sarah M.",
+                role: "CMO at GlowUp",
+                quote:
+                  "Finally, I can see my real ROAS. We scaled from 10k to 50k spend in one month.",
+                initials: "SM",
+                accent: "bg-orange-500/20 text-orange-400 ring-1 ring-orange-500/40",
+              },
+              {
+                name: "Tom B.",
+                role: "Founder of SneakerDrop",
+                quote:
+                  "The Shopify integration is seamless. No more spreadsheets.",
+                initials: "TB",
+                accent: "bg-emerald-500/20 text-emerald-400 ring-1 ring-emerald-500/40",
+              },
+              {
+                name: "AgencyFlow Team",
+                role: "Performance Agency",
+                quote:
+                  "We use Leadtribute for all our clients. Reporting time cut by 90%.",
+                initials: "AF",
+                accent: "bg-violet-500/20 text-violet-400 ring-1 ring-violet-500/40",
+              },
+            ].map((item, i) => (
+              <motion.div
+                key={item.name}
+                className="rounded-[32px] border border-zinc-800/80 bg-zinc-950/90 p-6 shadow-xl shadow-black/50 transition hover:border-orange-500/30 hover:shadow-[0_0_40px_-10px_rgba(249,115,22,0.15)] sm:p-8"
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.45, delay: i * 0.1 }}
+              >
+                <div className="flex items-center gap-4">
+                  <div
+                    className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-sm font-bold ${item.accent}`}
+                    aria-hidden
+                  >
+                    {item.initials}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-white">{item.name}</p>
+                    <p className="text-xs text-white/60">{item.role}</p>
+                  </div>
+                </div>
+                <p className="mt-4 text-sm leading-relaxed text-white/70">
+                  &ldquo;{item.quote}&rdquo;
                 </p>
               </motion.div>
             ))}
@@ -649,6 +773,12 @@ export default function Home() {
             </span>
           </div>
           <nav className="flex flex-wrap items-center justify-center gap-6 text-sm text-white/50">
+            <Link
+              href="/register"
+              className="rounded-full border border-white/20 bg-transparent px-4 py-2 font-medium text-white/90 transition hover:border-orange-500 hover:bg-orange-500/10 hover:text-orange-400"
+            >
+              Get Started
+            </Link>
             <Link href="#" className="transition hover:text-orange-400">
               Impressum
             </Link>
