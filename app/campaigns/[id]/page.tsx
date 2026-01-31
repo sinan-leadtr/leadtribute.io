@@ -104,7 +104,7 @@ export default function CampaignDetailPage() {
         {/* Back + Header */}
         <div className="mb-6">
           <Link
-            href="/"
+            href="/dashboard"
             className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-transparent px-3 py-2 text-sm font-medium text-white/80 transition hover:border-orange-500 hover:bg-orange-500/10 hover:text-orange-400"
           >
             <ArrowLeft className="h-4 w-4" />

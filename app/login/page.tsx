@@ -13,7 +13,7 @@ export default function LoginPage() {
     e.preventDefault();
     setIsLoading(true);
     await new Promise((r) => setTimeout(r, 1500));
-    router.push("/");
+    router.push("/dashboard");
   }
 
   async function handleSocialLogin(provider: "Google" | "Apple") {
@@ -21,7 +21,7 @@ export default function LoginPage() {
     toast(`${provider} Login simulated. Redirecting...`, { duration: 2500 });
     setIsLoading(true);
     await new Promise((r) => setTimeout(r, 1500));
-    router.push("/");
+    router.push("/dashboard");
   }
 
   return (

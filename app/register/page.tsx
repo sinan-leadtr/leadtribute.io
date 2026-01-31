@@ -15,14 +15,14 @@ export default function RegisterPage() {
     setIsLoading(true);
     await new Promise((r) => setTimeout(r, 1500));
     toast.success("Account created! Redirecting...", { duration: 2500 });
-    router.push("/");
+    router.push("/dashboard");
   }
 
   function handleGoogleSignUp() {
     if (isLoading) return;
     toast("Sign up with Google simulated. Redirecting...", { duration: 2500 });
     setIsLoading(true);
-    setTimeout(() => router.push("/"), 1500);
+    setTimeout(() => router.push("/dashboard"), 1500);
   }
 
   return (

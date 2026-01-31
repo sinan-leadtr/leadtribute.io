@@ -70,7 +70,7 @@ export default function SettingsPage() {
       <main className="flex min-h-screen flex-1 flex-col px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
         <header className="mb-6">
           <nav className="flex items-center gap-2 text-xs font-medium text-white/60">
-            <Link href="/" className="cursor-pointer transition hover:text-white/90">
+            <Link href="/dashboard" className="cursor-pointer transition hover:text-white/90">
               Home
             </Link>
             <span className="text-white/40">/</span>

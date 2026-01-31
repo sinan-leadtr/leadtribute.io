@@ -15,11 +15,11 @@ import {
 } from "lucide-react";
 
 const navItems = [
-  { href: "/", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/integrations", label: "Data Sources", icon: Plug },
-  { href: "/#campaigns", label: "Campaigns", icon: Megaphone },
-  { href: "/", label: "Creative Analysis", icon: ImageIcon },
-  { href: "/", label: "Reporting", icon: FileText },
+  { href: "/dashboard", label: "Campaigns", icon: Megaphone },
+  { href: "/dashboard", label: "Creative Analysis", icon: ImageIcon },
+  { href: "/dashboard", label: "Reporting", icon: FileText },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
@@ -36,28 +36,28 @@ export function Sidebar() {
     >
       {/* Scrollbarer Bereich: Logo, Nav, Today's Pulse */}
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto py-6">
-        {/* Logo */}
-        <div className="mb-8 flex items-center gap-2 px-2">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-orange-500/10 ring-1 ring-orange-400/60">
-          <span className="text-lg font-semibold text-orange-400">LT</span>
-        </div>
-        {!isCollapsed && (
-          <div className="min-w-0 flex-1">
-            <span className="block truncate text-sm font-semibold tracking-wide text-white">
-              Leadtribute
-            </span>
-            <span className="block truncate text-xs text-white/60">Performance Suite</span>
+        {/* Logo / Home → Dashboard */}
+        <Link href="/dashboard" className="mb-8 flex items-center gap-2 px-2">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-orange-500/10 ring-1 ring-orange-400/60">
+            <span className="text-lg font-semibold text-orange-400">LT</span>
           </div>
-        )}
-      </div>
+          {!isCollapsed && (
+            <div className="min-w-0 flex-1">
+              <span className="block truncate text-sm font-semibold tracking-wide text-white">
+                Leadtribute
+              </span>
+              <span className="block truncate text-xs text-white/60">Performance Suite</span>
+            </div>
+          )}
+        </Link>
 
       <nav className="flex-1 space-y-1 text-sm font-medium">
         {navItems.map((item) => {
           const pathOnly = item.href.split("#")[0];
           const isActive =
-            item.href === "/"
-              ? pathname === "/" && item.label === "Dashboard"
-              : pathname.startsWith(pathOnly) && pathOnly !== "/";
+            item.label === "Dashboard"
+              ? pathname === "/dashboard"
+              : pathname.startsWith(pathOnly);
 
           const baseClasses =
             "flex w-full items-center gap-3 rounded-2xl px-3 py-2 transition";
