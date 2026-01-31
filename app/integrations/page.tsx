@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Sidebar } from "../components/sidebar";
 import { Loader2, BookOpen } from "lucide-react";
+import { GoogleLogo, MetaLogo, TikTokLogo } from "../components/icons";
 
 const sectionFade = {
   initial: { opacity: 0, y: 24 },
@@ -150,13 +151,15 @@ export default function IntegrationsPage() {
                 >
                   <div className="mb-3 flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <div
-                        className={`flex h-10 w-10 items-center justify-center rounded-2xl ${integration.color} text-xs font-semibold text-black shadow-lg shadow-black/40 ring-1 ring-black/20`}
-                      >
-                        {integration.name
-                          .split(" ")
-                          .map((part) => part[0])
-                          .join("")}
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-zinc-900/80 shadow-lg shadow-black/40 ring-1 ring-white/10">
+                        {integration.key === "google_ads" && <GoogleLogo size={24} />}
+                        {integration.key === "meta_ads" && <MetaLogo size={24} />}
+                        {integration.key === "tiktok_ads" && <TikTokLogo size={24} />}
+                        {(integration.key === "reddit_ads" || integration.key === "linkedin_ads") && (
+                          <span className="text-xs font-semibold text-white">
+                            {integration.name.split(" ").map((p) => p[0]).join("")}
+                          </span>
+                        )}
                       </div>
                       <div>
                         <h2 className="text-sm font-semibold text-white">

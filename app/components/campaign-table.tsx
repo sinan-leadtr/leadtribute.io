@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { GoogleLogo, MetaLogo, TikTokLogo } from "./icons";
 
 export type Platform = "meta" | "google" | "tiktok";
 export type Status = "active" | "paused" | "learning";
@@ -21,22 +22,15 @@ interface CampaignTableProps {
 }
 
 function PlatformIcon({ platform }: { platform: Platform }) {
-  const config: Record<Platform, { label: string; bg: string; text: string }> = {
-    meta: { label: "Meta", bg: "bg-blue-600", text: "text-white" },
-    google: { label: "Google", bg: "bg-white", text: "text-black border border-white/30" },
-    tiktok: { label: "TikTok", bg: "bg-black", text: "text-white border border-white/20" },
-  };
-  // Fallback if platform is not in config (e.g. new platform added to DB but not here)
-  const defaultConfig = { label: platform, bg: "bg-gray-600", text: "text-white" };
-  const { label, bg, text } = config[platform] || defaultConfig;
-
-  const letter = platform === "meta" ? "M" : platform === "google" ? "G" : platform === "tiktok" ? "T" : "?";
+  const label = platform === "meta" ? "Meta" : platform === "google" ? "Google" : platform === "tiktok" ? "TikTok" : platform;
   return (
     <span
-      className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded text-[10px] font-bold ${bg} ${text}`}
+      className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded overflow-hidden bg-zinc-900/80"
       title={label}
     >
-      {letter}
+      {platform === "meta" && <MetaLogo size={20} />}
+      {platform === "google" && <GoogleLogo size={20} />}
+      {platform === "tiktok" && <TikTokLogo size={20} />}
     </span>
   );
 }

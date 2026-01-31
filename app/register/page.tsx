@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -18,11 +19,22 @@ export default function RegisterPage() {
     router.push("/dashboard");
   }
 
-  function handleGoogleSignUp() {
+  async function handleGoogleSignUp() {
     if (isLoading) return;
-    toast("Sign up with Google simulated. Redirecting...", { duration: 2500 });
     setIsLoading(true);
-    setTimeout(() => router.push("/dashboard"), 1500);
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${typeof window !== "undefined" ? window.location.origin : ""}/auth/callback`,
+      },
+    });
+    if (error) {
+      toast.error(error.message);
+      setIsLoading(false);
+      return;
+    }
+    toast.info("Redirecting to Google…");
   }
 
   return (

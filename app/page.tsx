@@ -13,9 +13,14 @@ import {
   ChevronDown,
   Link2,
   LayoutDashboard,
-  ShoppingBag,
-  Music2,
 } from "lucide-react";
+import {
+  GoogleLogo,
+  MetaLogo,
+  ShopifyLogo,
+  KlaviyoLogoText,
+  TikTokLogo,
+} from "./components/icons";
 
 const sectionFade = {
   initial: { opacity: 0, y: 40 },
@@ -219,49 +224,38 @@ export default function Home() {
           Seamlessly integrated with top platforms
         </p>
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-12 gap-y-6 px-6">
-          {/* Meta – blue infinity symbol */}
           <span
-            className="flex items-center gap-2 text-zinc-500 transition hover:text-[#0668E1]"
+            className="flex items-center gap-2 text-zinc-500 transition [&>svg]:opacity-70 hover:text-[#0668E1] hover:[&>svg]:opacity-100"
             aria-label="Meta"
           >
-            <svg className="h-7 w-7 sm:h-8 sm:w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-              <path d="M5.5 8.5C7 6 9 4 12 4c3 0 5 2 6.5 4.5" />
-              <path d="M18.5 15.5C17 18 15 20 12 20c-3 0-5-2-6.5-4.5" />
-              <path d="M12 4v16" />
-            </svg>
+            <MetaLogo size={28} className="h-7 w-7 sm:h-8 sm:w-8 shrink-0" />
             <span className="text-sm font-semibold sm:text-base">Meta Ads</span>
           </span>
-          {/* Google – multicolor G on hover */}
           <span
-            className="flex items-center gap-2 text-zinc-500 transition hover:[color:#4285F4]"
+            className="flex items-center gap-2 text-zinc-500 transition hover:opacity-100 [&>svg]:opacity-70 hover:[&>svg]:opacity-100"
             aria-label="Google Ads"
           >
-            <svg className="h-7 w-7 sm:h-8 sm:w-8" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-              <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z" />
-            </svg>
+            <GoogleLogo size={28} className="h-7 w-7 sm:h-8 sm:w-8 shrink-0" />
             <span className="text-sm font-semibold sm:text-base">Google Ads</span>
           </span>
-          {/* Shopify – green bag */}
           <span
-            className="flex items-center gap-2 text-zinc-500 transition hover:text-[#96BF48]"
+            className="flex items-center gap-2 text-zinc-500 transition [&>svg]:opacity-70 hover:text-[#96BF48] hover:[&>svg]:opacity-100"
             aria-label="Shopify"
           >
-            <ShoppingBag className="h-7 w-7 sm:h-8 sm:w-8" strokeWidth={2} />
+            <ShopifyLogo size={28} className="h-7 w-7 sm:h-8 sm:w-8 shrink-0" />
             <span className="text-sm font-semibold sm:text-base">Shopify</span>
           </span>
-          {/* Klaviyo – bold text */}
           <span
-            className="flex items-center gap-2 text-zinc-500 transition hover:text-orange-400"
+            className="flex items-center gap-2 text-zinc-500 transition hover:text-[#F26522]"
             aria-label="Klaviyo"
           >
-            <span className="text-lg font-bold tracking-tight sm:text-xl">Klaviyo</span>
+            <KlaviyoLogoText className="text-lg sm:text-xl" />
           </span>
-          {/* TikTok – note icon */}
           <span
-            className="flex items-center gap-2 text-zinc-500 transition hover:text-white"
+            className="flex items-center gap-2 text-zinc-500 transition [&>svg]:opacity-80 hover:[&>svg]:opacity-100"
             aria-label="TikTok"
           >
-            <Music2 className="h-7 w-7 sm:h-8 sm:w-8" strokeWidth={2} />
+            <TikTokLogo size={28} className="h-7 w-7 sm:h-8 sm:w-8 shrink-0" />
             <span className="text-sm font-semibold sm:text-base">TikTok Ads</span>
           </span>
         </div>

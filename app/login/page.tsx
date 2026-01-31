@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -16,12 +17,27 @@ export default function LoginPage() {
     router.push("/dashboard");
   }
 
-  async function handleSocialLogin(provider: "Google" | "Apple") {
+  async function handleGoogleLogin() {
     if (isLoading) return;
-    toast(`${provider} Login simulated. Redirecting...`, { duration: 2500 });
     setIsLoading(true);
-    await new Promise((r) => setTimeout(r, 1500));
-    router.push("/dashboard");
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${typeof window !== "undefined" ? window.location.origin : ""}/auth/callback`,
+      },
+    });
+    if (error) {
+      toast.error(error.message);
+      setIsLoading(false);
+      return;
+    }
+    toast.info("Redirecting to Google…");
+  }
+
+  async function handleAppleLogin() {
+    if (isLoading) return;
+    toast("Apple Login coming soon.", { duration: 2500 });
   }
 
   return (
@@ -108,19 +124,19 @@ export default function LoginPage() {
             <button
               type="button"
               disabled={isLoading}
-              onClick={() => handleSocialLogin("Google")}
+              onClick={handleGoogleLogin}
               className="flex flex-1 items-center justify-center gap-2 rounded-full border border-zinc-700 bg-zinc-950 px-4 py-3 text-sm font-medium text-white/90 transition hover:border-orange-500/50 hover:bg-orange-500/10 hover:text-orange-400 disabled:opacity-60"
             >
-              <GoogleIcon className="h-4 w-4" />
+              <GoogleIcon className="h-4 w-4 shrink-0" />
               Google
             </button>
             <button
               type="button"
               disabled={isLoading}
-              onClick={() => handleSocialLogin("Apple")}
+              onClick={handleAppleLogin}
               className="flex flex-1 items-center justify-center gap-2 rounded-full border border-zinc-700 bg-zinc-950 px-4 py-3 text-sm font-medium text-white/90 transition hover:border-orange-500/50 hover:bg-orange-500/10 hover:text-orange-400 disabled:opacity-60"
             >
-              <AppleIcon className="h-4 w-4" />
+              <AppleIcon className="h-4 w-4 shrink-0" />
               Apple
             </button>
           </div>
