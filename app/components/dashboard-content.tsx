@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { CampaignTable, Campaign } from "./campaign-table";
+import { RevenueChart } from "./charts/revenue-chart";
+import { PlatformSpendChart } from "./charts/platform-spend-chart";
 import { CreativesGrid } from "./creatives-grid";
 import { Sidebar } from "./sidebar";
 import { UserNav } from "./user-nav";
@@ -478,6 +480,12 @@ export function DashboardContent({ campaigns }: DashboardContentProps) {
                             </div>
                         </div>
                     </div>
+                </section>
+
+                {/* Charts – Revenue & Platform Spend (real data) */}
+                <section className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <RevenueChart campaigns={campaigns} />
+                    <PlatformSpendChart campaigns={campaigns} />
                 </section>
 
                 {/* Active Campaigns */}
