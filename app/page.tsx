@@ -773,7 +773,7 @@ export default function Home() {
             >
               Get Started
             </Link>
-            <Link href="#" className="transition hover:text-orange-400">
+            <Link href="/imprint" className="transition hover:text-orange-400">
               Impressum
             </Link>
             <Link href="#" className="transition hover:text-orange-400">

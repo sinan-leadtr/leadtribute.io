@@ -45,8 +45,37 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Deploy on Vercel (fix DEPLOYMENT_NOT_FOUND)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**DEPLOYMENT_NOT_FOUND** means the URL you opened has no deployment. Fix it by creating a deployment and using the **correct URL**.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 1. Create a deployment
+
+1. Push your code to **GitHub** (if not already).
+2. Go to [vercel.com/new](https://vercel.com/new).
+3. **Import** your repository (e.g. `Development_Tool` or `leadtribute-dashboard`).
+4. **Root Directory:** leave as is or set to the folder that contains `package.json`.
+5. **Environment Variables:** add (from `.env.example`):
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+6. Click **Deploy**. Wait until the build finishes.
+
+### 2. Use the correct URL
+
+- **Production URL:** `https://your-project-name.vercel.app` (or your custom domain).  
+  Use this for normal access; it always points to the latest production deployment.
+- **Preview URLs** (e.g. `xxx-username.vercel.app`) are tied to one deployment. If that deployment is removed or replaced, the URL can show **DEPLOYMENT_NOT_FOUND**.  
+  → Prefer the **production URL** for bookmarks and sharing.
+
+### 3. If you already deployed
+
+- Open [Vercel Dashboard](https://vercel.com/dashboard) → your project → **Deployments**.
+- Open the **latest successful** deployment and use the URL shown there (or the production domain).
+- Do **not** use an old or copied preview URL; it may no longer exist.
+
+### 4. Supabase redirect (Google OAuth)
+
+In **Supabase** → Authentication → URL Configuration, add:
+
+- **Site URL:** `https://your-project-name.vercel.app`
+- **Redirect URLs:** `https://your-project-name.vercel.app/auth/callback`

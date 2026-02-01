@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { CampaignTable, Campaign } from "./campaign-table";
 import { CreativesGrid } from "./creatives-grid";
 import { Sidebar } from "./sidebar";
 import { UserNav } from "./user-nav";
-import { Bot, Calendar, ShoppingBag } from "lucide-react";
+import { Bot, Calendar, ShoppingBag, Sparkles } from "lucide-react";
+import { generateDemoData } from "@/app/dashboard/actions";
 import {
     Bar,
     BarChart,
@@ -47,9 +49,23 @@ interface DashboardContentProps {
 }
 
 export function DashboardContent({ campaigns }: DashboardContentProps) {
+    const router = useRouter();
     const [channel, setChannel] = useState<ChannelFilter>("all");
     const [aiOpen, setAiOpen] = useState(false);
     const [aiReply, setAiReply] = useState<"ja" | "nein" | null>(null);
+    const [demoLoading, setDemoLoading] = useState(false);
+
+    async function handleGenerateDemo() {
+        setDemoLoading(true);
+        const result = await generateDemoData();
+        setDemoLoading(false);
+        if (result.ok) {
+            toast.success("5 demo campaigns created. Refreshing…");
+            router.refresh();
+        } else {
+            toast.error(result.error);
+        }
+    }
 
     return (
         <div className="flex min-h-screen bg-black text-white" style={{ backgroundColor: "#000000" }}>
@@ -466,7 +482,36 @@ export function DashboardContent({ campaigns }: DashboardContentProps) {
 
                 {/* Active Campaigns */}
                 <section id="campaigns" className="mt-6 scroll-mt-4">
-                    <CampaignTable campaigns={campaigns} />
+                    {campaigns.length === 0 ? (
+                        <div className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-10 text-center shadow-xl shadow-black/50 sm:p-14">
+                            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-500/10 ring-1 ring-orange-500/30">
+                                <Sparkles className="h-7 w-7 text-orange-400" />
+                            </div>
+                            <h2 className="mt-5 text-xl font-semibold text-white">
+                                No campaigns yet
+                            </h2>
+                            <p className="mt-2 max-w-sm mx-auto text-sm text-white/60">
+                                Connect your ad accounts or generate demo data to see your performance table here.
+                            </p>
+                            <button
+                                type="button"
+                                onClick={handleGenerateDemo}
+                                disabled={demoLoading}
+                                className="mt-6 inline-flex items-center gap-2 rounded-full bg-orange-500 px-6 py-3 text-sm font-semibold text-black shadow-lg shadow-orange-500/25 transition hover:bg-orange-400 hover:shadow-orange-500/35 disabled:opacity-70 disabled:cursor-wait"
+                            >
+                                {demoLoading ? (
+                                    <>Creating…</>
+                                ) : (
+                                    <>
+                                        <Sparkles className="h-4 w-4" />
+                                        Generate Demo Data
+                                    </>
+                                )}
+                            </button>
+                        </div>
+                    ) : (
+                        <CampaignTable campaigns={campaigns} />
+                    )}
                 </section>
 
                 {/* Top Performing Creatives */}
