@@ -10,13 +10,47 @@ import { createClient } from "@/lib/supabase/client";
 export default function RegisterPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
-  async function handleSignUp(e: React.FormEvent) {
+  async function handleSignUp(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setFormError(null);
     setIsLoading(true);
-    await new Promise((r) => setTimeout(r, 1500));
-    toast.success("Account created! Redirecting...", { duration: 2500 });
-    router.push("/dashboard");
+
+    const form = e.currentTarget;
+    const email = (form.elements.namedItem("email") as HTMLInputElement)?.value?.trim() ?? "";
+    const password = (form.elements.namedItem("password") as HTMLInputElement)?.value ?? "";
+    const fullName = (form.elements.namedItem("fullName") as HTMLInputElement)?.value?.trim() ?? "";
+
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: fullName ? { full_name: fullName } : undefined,
+        },
+      });
+
+      if (error) {
+        console.error("[Register] signUp error:", error.message, error);
+        setFormError(error.message);
+        toast.error(error.message);
+        setIsLoading(false);
+        return;
+      }
+
+      console.log("[Register] signUp success:", data.user?.id);
+      toast.success("Account created! Redirecting…");
+      router.push("/dashboard");
+      return;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Something went wrong";
+      console.error("[Register] unexpected error:", err);
+      setFormError(message);
+      toast.error(message);
+      setIsLoading(false);
+    }
   }
 
   async function handleGoogleSignUp() {
@@ -71,6 +105,7 @@ export default function RegisterPage() {
             </label>
             <input
               id="fullName"
+              name="fullName"
               type="text"
               placeholder="Full Name"
               autoComplete="name"
@@ -84,6 +119,7 @@ export default function RegisterPage() {
             </label>
             <input
               id="email"
+              name="email"
               type="email"
               placeholder="Email Address"
               autoComplete="email"
@@ -97,6 +133,7 @@ export default function RegisterPage() {
             </label>
             <input
               id="password"
+              name="password"
               type="password"
               placeholder="Password"
               autoComplete="new-password"
@@ -117,6 +154,11 @@ export default function RegisterPage() {
               className="w-full rounded-2xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-sm text-white placeholder:text-zinc-500 transition focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50 disabled:opacity-60"
             />
           </div>
+          {formError && (
+            <p className="text-sm text-red-400" role="alert">
+              {formError}
+            </p>
+          )}
           <button
             type="submit"
             disabled={isLoading}
