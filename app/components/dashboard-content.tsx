@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { CampaignTable, Campaign } from "./campaign-table";
-import { RevenueChart } from "./charts/revenue-chart";
-import { PlatformSpendChart } from "./charts/platform-spend-chart";
+import { RevenueChart } from "./dashboard/RevenueChart";
+import { PlatformSpendChart } from "./dashboard/PlatformSpendChart";
 import { CreativesGrid } from "./creatives-grid";
 import { Sidebar } from "./sidebar";
 import { UserNav } from "./user-nav";
@@ -482,10 +482,14 @@ export function DashboardContent({ campaigns }: DashboardContentProps) {
                     </div>
                 </section>
 
-                {/* Charts – Revenue & Platform Spend (real data) */}
+                {/* Analytics Charts – Cards über der Tabelle */}
                 <section className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <RevenueChart campaigns={campaigns} />
-                    <PlatformSpendChart campaigns={campaigns} />
+                    <div className="rounded-2xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:border-orange-500/20 hover:shadow-[0_0_30px_-10px_rgba(249,115,22,0.15)]">
+                        <RevenueChart />
+                    </div>
+                    <div className="rounded-2xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:border-orange-500/20 hover:shadow-[0_0_30px_-10px_rgba(249,115,22,0.15)]">
+                        <PlatformSpendChart />
+                    </div>
                 </section>
 
                 {/* Active Campaigns */}
