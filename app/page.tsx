@@ -13,7 +13,9 @@ import {
   ChevronDown,
   Link2,
   LayoutDashboard,
+  Check,
 } from "lucide-react";
+import { HeroDashboardPreview } from "./components/landing/HeroDashboardPreview";
 import {
   GoogleLogo,
   MetaLogo,
@@ -148,7 +150,12 @@ export default function Home() {
       {/* ─── Hero ───────────────────────────────────────── */}
       <section className="relative z-10 px-6 pt-16 pb-24 sm:px-8 sm:pt-24 sm:pb-32 lg:pt-32 lg:pb-40">
         <div className="mx-auto max-w-4xl text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl xl:leading-[1.1]">
+          <motion.h1
+            className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl xl:leading-[1.1]"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
             The Operating System for{" "}
             <span
               className="bg-gradient-to-r from-orange-400 via-orange-500 to-amber-500 bg-clip-text font-extrabold text-transparent"
@@ -156,12 +163,22 @@ export default function Home() {
             >
               Performance Marketers.
             </span>
-          </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg font-medium leading-relaxed text-white/80 sm:text-xl">
+          </motion.h1>
+          <motion.p
+            className="mx-auto mt-6 max-w-2xl text-lg font-medium leading-relaxed text-white/80 sm:text-xl"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
+          >
             Stop guessing. Start scaling. Integrate Meta, Google, and Shopify in
             one real-time dashboard.
-          </p>
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+          </motion.p>
+          <motion.div
+            className="mt-10 flex flex-wrap items-center justify-center gap-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.25, ease: "easeOut" }}
+          >
             <motion.div
               whileHover={{ scale: 1.05, y: -3 }}
               whileTap={{ scale: 0.98 }}
@@ -173,7 +190,7 @@ export default function Home() {
                 Start Free Trial
               </Link>
             </motion.div>
-          </div>
+          </motion.div>
         </div>
         <div className="mx-auto mt-16 max-w-5xl px-4 sm:mt-20 lg:mt-24">
           <motion.div
@@ -183,39 +200,89 @@ export default function Home() {
               boxShadow:
                 "0 0 0 1px rgba(255,255,255,0.05), 0 40px 80px -20px rgba(0,0,0,0.6), 0 0 60px -20px rgba(249,115,22,0.15)",
             }}
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
             whileHover={{
               boxShadow:
                 "0 0 0 1px rgba(255,255,255,0.08), 0 50px 100px -20px rgba(0,0,0,0.7), 0 0 80px -15px rgba(249,115,22,0.25)",
             }}
-            transition={{ duration: 0.3 }}
           >
-            <div className="aspect-[16/10] w-full bg-gradient-to-b from-zinc-900/90 to-zinc-950 p-6 sm:p-8">
-              <div className="flex h-full flex-col gap-4">
-                <div className="flex gap-4">
-                  <div className="h-10 w-32 rounded-xl bg-white/5" />
-                  <div className="h-10 flex-1 rounded-xl bg-white/5" />
-                  <div className="h-10 w-24 rounded-full bg-orange-500/20" />
-                </div>
-                <div className="grid flex-1 grid-cols-4 gap-4">
-                  {[1, 2, 3, 4].map((i) => (
-                    <div
-                      key={i}
-                      className="rounded-2xl border border-white/5 bg-white/[0.02]"
-                    />
-                  ))}
-                </div>
-                <div className="h-24 rounded-2xl border border-white/5 bg-white/[0.02]" />
-              </div>
-            </div>
+            <HeroDashboardPreview />
             <div
               className="pointer-events-none absolute inset-0 rounded-3xl"
               style={{
                 background:
                   "linear-gradient(135deg, rgba(249,115,22,0.03) 0%, transparent 50%)",
               }}
+              aria-hidden
             />
           </motion.div>
         </div>
+
+        {/* ─── Pricing (2 plans, right under Hero) ───────────────────── */}
+        <motion.div
+          className="mx-auto mt-20 max-w-4xl px-4 sm:mt-24"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+        >
+          <p className="text-center text-sm font-medium uppercase tracking-widest text-white/50">
+            Simple pricing
+          </p>
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 sm:gap-8">
+            {/* Starter */}
+            <div className="flex flex-col rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-6 shadow-xl sm:p-8">
+              <h3 className="text-lg font-semibold text-white">Starter</h3>
+              <p className="mt-3 text-3xl font-bold text-white">0 €</p>
+              <p className="mt-1 text-sm text-white/60">Free</p>
+              <p className="mt-4 text-sm text-white/70">Perfect for side projects.</p>
+              <ul className="mt-6 space-y-3 text-sm text-white/80">
+                {["Up to 3 connected accounts", "Basic ROAS & spend", "7-day data history"].map((item) => (
+                  <li key={item} className="flex items-center gap-2">
+                    <Check className="h-5 w-5 shrink-0 text-emerald-500" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-auto pt-8">
+                <Link
+                  href="/register"
+                  className="inline-flex w-full justify-center rounded-full border border-white/20 bg-transparent px-4 py-3 text-sm font-semibold text-white transition hover:border-orange-500/50 hover:bg-orange-500/10 hover:text-orange-400"
+                >
+                  Get Started
+                </Link>
+              </div>
+            </div>
+            {/* Pro – Most Popular */}
+            <div className="relative flex flex-col rounded-3xl border-2 border-orange-500/50 bg-zinc-950/90 p-6 shadow-[0_0_40px_-10px_rgba(249,115,22,0.2)] sm:-mt-1 sm:p-8 sm:scale-[1.02]">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-orange-500 px-3 py-1 text-xs font-semibold text-black">
+                Most Popular
+              </div>
+              <h3 className="text-lg font-semibold text-white">Pro</h3>
+              <p className="mt-3 text-3xl font-bold text-orange-400">49 €</p>
+              <p className="mt-1 text-sm text-white/60">per month</p>
+              <p className="mt-4 text-sm text-white/70">The CMO Suite.</p>
+              <ul className="mt-6 space-y-3 text-sm text-white/80">
+                {["Unlimited accounts", "Real-time ROAS & MER", "Full history & export", "Priority support"].map((item) => (
+                  <li key={item} className="flex items-center gap-2">
+                    <Check className="h-5 w-5 shrink-0 text-orange-400" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-auto pt-8">
+                <Link
+                  href="/register"
+                  className="inline-flex w-full justify-center rounded-full bg-orange-500 px-4 py-3 text-sm font-semibold text-black shadow-lg shadow-orange-500/25 transition hover:bg-orange-400 hover:shadow-orange-500/35"
+                >
+                  Get Started
+                </Link>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </section>
 
       {/* ─── LogoTicker: Seamlessly integrated with top platforms ─── */}
