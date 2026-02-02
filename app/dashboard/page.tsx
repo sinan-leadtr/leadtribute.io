@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { DashboardContent } from "../components/dashboard-content";
 import type { Campaign } from "../components/campaign-table";
+import type { Integration } from "./actions";
 
 type DbCampaign = {
   id: string;
@@ -35,17 +36,28 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser();
 
   let campaigns: Campaign[] = [];
+  let integrations: Integration[] = [];
 
   if (user) {
-    const { data } = await supabase
-      .from("campaigns")
-      .select("*")
-      .eq("user_id", user.id)
-      .order("spend", { ascending: false });
-    if (data && Array.isArray(data)) {
-      campaigns = (data as DbCampaign[]).map(toCampaign);
+    const [campaignsRes, integrationsRes] = await Promise.all([
+      supabase
+        .from("campaigns")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("spend", { ascending: false }),
+      supabase
+        .from("integrations")
+        .select("id, platform, status, connected_at")
+        .eq("user_id", user.id),
+    ]);
+
+    if (campaignsRes.data && Array.isArray(campaignsRes.data)) {
+      campaigns = (campaignsRes.data as DbCampaign[]).map(toCampaign);
+    }
+    if (integrationsRes.data && Array.isArray(integrationsRes.data)) {
+      integrations = integrationsRes.data as Integration[];
     }
   }
 
-  return <DashboardContent campaigns={campaigns} />;
+  return <DashboardContent campaigns={campaigns} integrations={integrations} />;
 }

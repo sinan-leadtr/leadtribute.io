@@ -36,3 +36,54 @@ export async function generateDemoData(): Promise<GenerateDemoDataResult> {
   revalidatePath("/dashboard");
   return { ok: true };
 }
+
+// --- Integrations ---
+export type Integration = {
+  id: string;
+  platform: string;
+  status: string;
+  connected_at: string;
+};
+
+export type ConnectIntegrationResult = { ok: true } | { ok: false; error: string };
+export type DisconnectIntegrationResult = { ok: true } | { ok: false; error: string };
+
+export async function connectIntegration(platform: "google" | "meta"): Promise<ConnectIntegrationResult> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return { ok: false, error: "Not logged in" };
+  }
+
+  // Simulated connection delay (1–2s) so loading spinner is visible
+  await new Promise((r) => setTimeout(r, 1500));
+
+  const { error } = await supabase.from("integrations").upsert(
+    { user_id: user.id, platform, status: "active", connected_at: new Date().toISOString() },
+    { onConflict: "user_id,platform" }
+  );
+  if (error) {
+    return { ok: false, error: error.message };
+  }
+  revalidatePath("/dashboard");
+  return { ok: true };
+}
+
+export async function disconnectIntegration(platform: "google" | "meta"): Promise<DisconnectIntegrationResult> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return { ok: false, error: "Not logged in" };
+  }
+
+  const { error } = await supabase
+    .from("integrations")
+    .delete()
+    .eq("user_id", user.id)
+    .eq("platform", platform);
+  if (error) {
+    return { ok: false, error: error.message };
+  }
+  revalidatePath("/dashboard");
+  return { ok: true };
+}

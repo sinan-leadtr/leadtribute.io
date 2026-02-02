@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { CampaignTable, Campaign } from "./campaign-table";
 import { RevenueChart } from "./dashboard/RevenueChart";
 import { PlatformSpendChart } from "./dashboard/PlatformSpendChart";
+import { Integrations } from "./dashboard/Integrations";
 import { CreativesGrid } from "./creatives-grid";
 import { Sidebar } from "./sidebar";
 import { UserNav } from "./user-nav";
@@ -48,9 +49,10 @@ type ChannelFilter = "all" | "meta" | "google" | "tiktok";
 
 interface DashboardContentProps {
     campaigns: Campaign[];
+    integrations: { id: string; platform: string; status: string; connected_at: string }[];
 }
 
-export function DashboardContent({ campaigns }: DashboardContentProps) {
+export function DashboardContent({ campaigns, integrations = [] }: DashboardContentProps) {
     const router = useRouter();
     const [channel, setChannel] = useState<ChannelFilter>("all");
     const [aiOpen, setAiOpen] = useState(false);
@@ -491,6 +493,9 @@ export function DashboardContent({ campaigns }: DashboardContentProps) {
                         <PlatformSpendChart />
                     </div>
                 </section>
+
+                {/* Integrations – Google Ads & Meta Ads */}
+                <Integrations integrations={integrations} />
 
                 {/* Active Campaigns */}
                 <section id="campaigns" className="mt-6 scroll-mt-4">
