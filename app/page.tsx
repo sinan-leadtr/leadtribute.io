@@ -20,6 +20,7 @@ import {
   GoogleLogo,
   MetaLogo,
   ShopifyLogo,
+  KlaviyoLogo,
   KlaviyoLogoText,
   TikTokLogo,
 } from "./components/icons";
@@ -482,17 +483,22 @@ export default function Home() {
           >
             <div className="relative order-2 lg:order-1">
               <div className="rounded-3xl border border-white/10 bg-zinc-900/60 p-8 backdrop-blur-sm">
-                <div className="flex flex-wrap items-center justify-center gap-6">
-                  {["Meta", "Google", "TikTok", "Shopify", "Klaviyo"].map(
-                    (label) => (
-                      <div
-                        key={label}
-                        className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-xs font-medium text-white/70"
-                      >
-                        {label.slice(0, 2)}
-                      </div>
-                    )
-                  )}
+                <div className="flex flex-wrap items-center justify-center gap-5">
+                  {[
+                    { label: "Meta", Icon: MetaLogo, glow: "shadow-[0_0_20px_-4px_rgba(6,104,225,0.5)]" },
+                    { label: "Google", Icon: GoogleLogo, glow: "shadow-[0_0_20px_-4px_rgba(66,133,244,0.4)]" },
+                    { label: "TikTok", Icon: TikTokLogo, glow: "shadow-[0_0_20px_-4px_rgba(238,29,82,0.4)]" },
+                    { label: "Shopify", Icon: ShopifyLogo, glow: "shadow-[0_0_20px_-4px_rgba(150,191,72,0.5)]" },
+                    { label: "Klaviyo", Icon: KlaviyoLogo, glow: "shadow-[0_0_20px_-4px_rgba(242,101,34,0.5)]" },
+                  ].map(({ label, Icon, glow }) => (
+                    <div
+                      key={label}
+                      className={`flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/5 ring-1 ring-white/5 transition hover:ring-white/15 ${glow}`}
+                      title={label}
+                    >
+                      <Icon size={28} className="shrink-0" />
+                    </div>
+                  ))}
                 </div>
                 <div className="mt-6 flex justify-center gap-2">
                   <Link2 className="h-5 w-5 text-orange-400" />
@@ -537,13 +543,38 @@ export default function Home() {
                   <LayoutDashboard className="h-5 w-5" />
                   <span className="text-sm">Dashboard</span>
                 </div>
-                <div className="mt-4 grid grid-cols-3 gap-2">
-                  {[1, 2, 3, 4, 5, 6].map((i) => (
-                    <div
-                      key={i}
-                      className="h-12 rounded-xl border border-white/5 bg-white/5"
-                    />
-                  ))}
+                <div className="mt-4 overflow-hidden rounded-xl border border-white/5 bg-black/30">
+                  <table className="w-full text-left text-sm">
+                    <thead>
+                      <tr className="border-b border-white/5 text-[10px] font-medium uppercase tracking-wider text-white/50">
+                        <th className="px-3 py-2.5">Campaign</th>
+                        <th className="px-3 py-2.5 text-right">Spend</th>
+                        <th className="px-3 py-2.5 text-right">ROAS</th>
+                        <th className="w-8 px-2 py-2.5" />
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {[
+                        { name: "Retargeting Q1", spend: "€4.2k", roas: "4.2x", active: true, spark: [30, 45, 40, 60, 70] },
+                        { name: "Cold Traffic", spend: "€2.1k", roas: "3.1x", active: true, spark: [50, 55, 50, 65, 75] },
+                        { name: "Advantage+", spend: "€5.8k", roas: "5.0x", active: true, spark: [20, 35, 50, 65, 85] },
+                      ].map((row) => (
+                        <tr key={row.name} className="border-b border-white/5 last:border-0">
+                          <td className="px-3 py-2.5 font-medium text-white/90">{row.name}</td>
+                          <td className="px-3 py-2.5 text-right tabular-nums text-white/80">{row.spend}</td>
+                          <td className="px-3 py-2.5 text-right tabular-nums text-emerald-400/90">{row.roas}</td>
+                          <td className="px-2 py-2.5">
+                            <span className="inline-flex items-center gap-1.5">
+                              <span className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.6)]" title="Active" />
+                              <svg viewBox="0 0 24 12" className="h-3 w-12 opacity-70" preserveAspectRatio="none">
+                                <polyline fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-500" points={row.spark.map((v, i) => `${(i / (row.spark.length - 1)) * 24},${12 - (v / 100) * 10}`).join(" ")} />
+                              </svg>
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
@@ -556,18 +587,37 @@ export default function Home() {
           >
             <div className="relative order-2 lg:order-1">
               <div className="rounded-3xl border border-white/10 bg-zinc-900/60 p-8 backdrop-blur-sm">
-                <div className="flex items-end justify-between gap-2 px-4">
-                  {[40, 55, 45, 70, 85, 90].map((h, i) => (
-                    <div
-                      key={i}
-                      className="flex-1 rounded-t bg-orange-500/40"
-                      style={{ height: `${h}%` }}
+                <div className="h-32 w-full">
+                  <svg viewBox="0 0 120 64" className="h-full w-full" preserveAspectRatio="none">
+                    <defs>
+                      <linearGradient id="profitGradient" x1="0" y1="1" x2="0" y2="0">
+                        <stop offset="0%" stopColor="#10b981" stopOpacity="0.35" />
+                        <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
+                      </linearGradient>
+                    </defs>
+                    <path
+                      d="M 0 50 Q 15 48 30 42 T 60 28 T 90 18 T 120 8 L 120 64 L 0 64 Z"
+                      fill="url(#profitGradient)"
                     />
-                  ))}
+                    <path
+                      d="M 0 50 Q 15 48 30 42 T 60 28 T 90 18 T 120 8"
+                      fill="none"
+                      stroke="#10b981"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <circle cx="120" cy="8" r="3" fill="#10b981" className="drop-shadow-[0_0_6px_rgba(16,185,129,0.8)]" />
+                  </svg>
                 </div>
-                <div className="mt-4 flex items-center gap-2 text-emerald-400">
-                  <TrendingUp className="h-5 w-5" />
-                  <span className="text-sm font-medium">Profit trend</span>
+                <div className="mt-3 flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-emerald-400">
+                    <TrendingUp className="h-5 w-5" />
+                    <span className="text-sm font-medium">Profit trend</span>
+                  </div>
+                  <span className="rounded-full bg-emerald-500/20 px-2.5 py-0.5 text-xs font-semibold text-emerald-400 ring-1 ring-emerald-500/40">
+                    +34% Profit
+                  </span>
                 </div>
               </div>
             </div>
