@@ -18,6 +18,7 @@ import {
 import { HeroDashboardPreview } from "./components/landing/HeroDashboardPreview";
 import { Pricing } from "./components/landing/Pricing";
 import { Footer } from "./components/landing/Footer";
+import { Testimonials } from "./components/landing/Testimonials";
 import {
   GoogleLogo,
   MetaLogo,
@@ -399,6 +400,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ─── Testimonials (Trusted by growth teams – Lösung nach „Stop flying blind“) ─── */}
+      <Testimonials />
 
       {/* ─── Loved by Growth Teams (Social Proof Cases) ───────────────────── */}
       <section className="relative z-10 px-6 py-24 sm:px-8 sm:py-32">

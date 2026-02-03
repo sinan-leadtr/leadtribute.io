@@ -10,7 +10,6 @@ const productLinks = [
 
 const companyLinks = [
   { label: "About", href: "#" },
-  { label: "Blog", href: "#" },
   { label: "Contact", href: "#" },
 ];
 
@@ -22,7 +21,7 @@ const legalLinks = [
 
 export function Footer() {
   return (
-    <footer className="relative z-10 border-t border-white/5 bg-black/40">
+    <footer className="relative z-10 border-t border-white/5 bg-zinc-950/95">
       <div className="mx-auto max-w-6xl px-6 py-16 sm:px-8 sm:py-20">
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-16">
           {/* Logo & Slogan */}
@@ -39,7 +38,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/60">
-              The Operating System for Performance Marketers.
+              One source of truth for your ad spend.
             </p>
           </div>
 
@@ -53,7 +52,7 @@ export function Footer() {
                 <li key={label}>
                   <Link
                     href={href}
-                    className="text-sm text-white/70 transition hover:text-orange-400"
+                    className="text-sm text-white/50 transition hover:text-white"
                   >
                     {label}
                   </Link>
@@ -72,7 +71,7 @@ export function Footer() {
                 <li key={label}>
                   <Link
                     href={href}
-                    className="text-sm text-white/70 transition hover:text-orange-400"
+                    className="text-sm text-white/50 transition hover:text-white"
                   >
                     {label}
                   </Link>
@@ -91,7 +90,7 @@ export function Footer() {
                 <li key={label}>
                   <Link
                     href={href}
-                    className="text-sm text-white/70 transition hover:text-orange-400"
+                    className="text-sm text-white/50 transition hover:text-white"
                   >
                     {label}
                   </Link>
@@ -104,7 +103,7 @@ export function Footer() {
         {/* Copyright */}
         <div className="mt-16 border-t border-white/5 pt-8 text-center sm:mt-20 sm:pt-10">
           <p className="text-sm text-white/50">
-            © 2026 Leadtribute. Made in 🇩🇪
+            © 2026 Leadtribute. Made in Düsseldorf 🇩🇪
           </p>
         </div>
       </div>

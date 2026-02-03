@@ -47,6 +47,9 @@ const tableRows = [
   ["Q1 Brand", "€4.2k", "4.2x", "Active"],
   ["Search", "€1.9k", "5.1x", "Active"],
   ["UGC Test", "€620", "1.4x", "Learning"],
+  ["Retargeting High ROAS", "€2.1k", "6.4x", "Active"],
+  ["TikTok Scale", "€3.4k", "2.8x", "Learning"],
+  ["Klaviyo Welcome Flow", "€150", "12.1x", "Active"],
 ];
 
 export function HeroDashboardPreview() {
@@ -106,12 +109,16 @@ export function HeroDashboardPreview() {
           </div>
           {tableRows.map((row, i) => (
             <div key={i} className="grid grid-cols-4 gap-2 border-t border-white/5 py-1.5 pt-2 first:border-0">
-              <span className="text-white/80">{row[0]}</span>
+              <span className="truncate text-white/80" title={row[0]}>{row[0]}</span>
               <span className="tabular-nums">{row[1]}</span>
               <span className="tabular-nums text-emerald-400/90">{row[2]}</span>
-              <span className="text-emerald-400/80">{row[3]}</span>
+              <span className={row[3] === "Learning" ? "text-amber-400/90" : "text-emerald-400/80"}>{row[3]}</span>
             </div>
           ))}
+          <div className="mt-2 flex items-center justify-between border-t border-white/5 pt-2">
+            <span className="text-white/40">Campaigns</span>
+            <span className="text-white/50">Page 1 of 4</span>
+          </div>
         </div>
       </div>
 
