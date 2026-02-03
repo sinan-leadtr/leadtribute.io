@@ -499,11 +499,20 @@ export default function Home() {
                       <Icon size={28} className="shrink-0" />
                     </div>
                   ))}
+                  <div
+                    className="flex h-14 w-14 items-center justify-center rounded-2xl border border-dashed border-white/20 bg-white/[0.02] text-white/50 transition hover:border-white/30 hover:text-white/70"
+                    title="Und mehr"
+                  >
+                    <span className="text-xs font-medium">+ more</span>
+                  </div>
                 </div>
                 <div className="mt-6 flex justify-center gap-2">
                   <Link2 className="h-5 w-5 text-orange-400" />
                   <span className="text-sm text-white/50">Connections</span>
                 </div>
+                <p className="mt-4 text-center text-sm leading-relaxed text-white/55">
+                  Schluss mit manuellen CSV-Exporten und Datenchaos. Leadtribute zentralisiert deine Datenströme automatisch und fehlerfrei.
+                </p>
               </div>
             </div>
             <div className="order-1 lg:order-2">
@@ -576,6 +585,9 @@ export default function Home() {
                     </tbody>
                   </table>
                 </div>
+                <p className="mt-4 text-center text-sm leading-relaxed text-white/55">
+                  Hör auf, im Dunkeln zu tappen. Verstehe endlich den wahren ROAS über alle Kanäle hinweg, statt isolierten Plattform-Metriken zu vertrauen.
+                </p>
               </div>
             </div>
           </motion.div>
@@ -619,6 +631,9 @@ export default function Home() {
                     +34% Profit
                   </span>
                 </div>
+                <p className="mt-4 text-center text-sm leading-relaxed text-white/55">
+                  Skaliere Budgets basierend auf echtem Profit, nicht auf Bauchgefühl. Erkenne die Gewinner-Kampagnen sofort.
+                </p>
               </div>
             </div>
             <div className="order-1 lg:order-2">

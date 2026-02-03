@@ -44,7 +44,7 @@ export function GoogleLogo({
   );
 }
 
-// ─── Meta: blue infinity (lemniscate) ────────────────────────────────────────
+// ─── Meta: official blue infinity loop (lemniscate) ──────────────────────────
 export function MetaLogo({
   className = "",
   size = defaultSize,
@@ -65,7 +65,7 @@ export function MetaLogo({
       strokeLinejoin="round"
       aria-hidden
     >
-      <path d="M6 12a5 5 0 106 0 5 5 0 00-6 0zm0 0a5 5 0 016 0 5 5 0 01-6 0z" />
+      <path d="M5 12c0-3 2-5 5-5s5 2 5 5-2 5-5 5-5-2-5-5zm0 0c0 3 2 5 5 5s5-2 5-5 2-5 5-5 5 2 5 5-2 5-5 5-5-2-5-5z" />
     </svg>
   );
 }
@@ -96,7 +96,7 @@ export function MetaLogoSimple({
   );
 }
 
-// ─── Shopify: green shopping bag ────────────────────────────────────────────
+// ─── Shopify: green bag with white S ────────────────────────────────────────
 export function ShopifyLogo({
   className = "",
   size = defaultSize,
@@ -117,9 +117,10 @@ export function ShopifyLogo({
       strokeLinejoin="round"
       aria-hidden
     >
-      <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-      <path d="M3 6h18" />
-      <path d="M16 10a4 4 0 01-8 0" />
+      <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" fill="#96BF48" stroke="#7DA83A" />
+      <path d="M3 6h18" stroke="rgba(255,255,255,0.25)" />
+      <path d="M16 10a4 4 0 01-8 0" stroke="rgba(255,255,255,0.3)" />
+      <path d="M9 8c0 1 .8 2 2 2.5s2 1.2 2 2.5-.8 2-2 2.5-2 1-2 2" fill="none" stroke="white" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
