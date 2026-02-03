@@ -16,6 +16,8 @@ import {
   Check,
 } from "lucide-react";
 import { HeroDashboardPreview } from "./components/landing/HeroDashboardPreview";
+import { Pricing } from "./components/landing/Pricing";
+import { Footer } from "./components/landing/Footer";
 import {
   GoogleLogo,
   MetaLogo,
@@ -709,80 +711,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── Pricing ───────────────────────────────────────── */}
-      <section className="relative z-10 px-6 py-24 sm:px-8 sm:py-32">
-        <div className="mx-auto max-w-6xl">
-          <motion.h2
-            className="text-center text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl"
-            {...sectionFade}
-          >
-            Simple pricing
-          </motion.h2>
-          <p className="mx-auto mt-3 max-w-xl text-center text-white/60">
-            Start free. Upgrade when you're ready.
-          </p>
-          <div className="mt-16 grid gap-6 sm:grid-cols-3">
-            {/* Starter */}
-            <motion.div
-              className="flex flex-col rounded-[32px] border border-zinc-800/80 bg-zinc-900/50 p-6 sm:p-8"
-              {...sectionFade}
-            >
-              <h3 className="text-lg font-semibold text-white">Starter</h3>
-              <p className="mt-4 text-3xl font-bold text-white">0 €</p>
-              <p className="mt-1 text-sm text-white/60">Free</p>
-              <p className="mt-4 text-sm text-white/70">
-                Perfect for side projects.
-              </p>
-              <div className="mt-auto pt-8">
-                <Link
-                  href="/register"
-                  className="inline-flex w-full justify-center rounded-full border border-white/20 bg-transparent px-4 py-3 text-sm font-semibold text-white transition hover:border-orange-500/50 hover:bg-orange-500/10 hover:text-orange-400"
-                >
-                  Get Started
-                </Link>
-              </div>
-            </motion.div>
-            {/* Pro – Popular, larger */}
-            <motion.div
-              className="relative flex flex-col rounded-[32px] border-2 border-orange-500/50 bg-zinc-950/90 p-6 shadow-[0_0_40px_-10px_rgba(249,115,22,0.25)] sm:p-8 lg:-mt-2 lg:scale-[1.02]"
-              {...sectionFade}
-            >
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-orange-500 px-3 py-1 text-xs font-semibold text-black">
-                Popular
-              </div>
-              <h3 className="text-lg font-semibold text-white">Growth</h3>
-              <p className="mt-4 text-3xl font-bold text-orange-400">49 €</p>
-              <p className="mt-1 text-sm text-white/60">per month</p>
-              <p className="mt-4 text-sm text-white/70">The CMO Suite.</p>
-              <div className="mt-auto pt-8">
-                <Link
-                  href="/register"
-                  className="inline-flex w-full justify-center rounded-full bg-orange-500 px-4 py-3 text-sm font-semibold text-black shadow-lg shadow-orange-500/25 transition hover:bg-orange-400 hover:shadow-orange-500/35"
-                >
-                  Get Started
-                </Link>
-              </div>
-            </motion.div>
-            {/* Agency */}
-            <motion.div
-              className="flex flex-col rounded-[32px] border border-zinc-800/80 bg-zinc-900/50 p-6 sm:p-8"
-              {...sectionFade}
-            >
-              <h3 className="text-lg font-semibold text-white">Agency</h3>
-              <p className="mt-4 text-3xl font-bold text-white">Custom</p>
-              <p className="mt-1 text-sm text-white/60">Contact us</p>
-              <p className="mt-4 text-sm text-white/70">For big teams.</p>
-              <div className="mt-auto pt-8">
-                <Link
-                  href="#"
-                  className="inline-flex w-full justify-center rounded-full border border-white/20 bg-transparent px-4 py-3 text-sm font-semibold text-white transition hover:border-violet-500/50 hover:bg-violet-500/10 hover:text-violet-400"
-                >
-                  Get Started
-                </Link>
-              </div>
-            </motion.div>
-          </div>
-        </div>
+      {/* ─── Pricing (Monthly / Yearly Toggle, 3 Tiers) ───────────────────── */}
+      <section id="pricing" className="relative z-10 scroll-mt-20">
+        <Pricing />
       </section>
 
       {/* ─── FAQ (Accordion) ───────────────────────────────────────── */}
@@ -887,36 +818,8 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* ─── Footer ──────────────────────────────────────── */}
-      <footer className="relative z-10 border-t border-white/5 px-6 py-12 sm:px-8">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 sm:flex-row">
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-500/10 ring-1 ring-orange-500/20">
-              <span className="text-sm font-bold text-orange-400">LT</span>
-            </div>
-            <span className="text-sm font-medium text-white/80">
-              Leadtribute
-            </span>
-          </div>
-          <nav className="flex flex-wrap items-center justify-center gap-6 text-sm text-white/50">
-            <Link
-              href="/register"
-              className="rounded-full border border-white/20 bg-transparent px-4 py-2 font-medium text-white/90 transition hover:border-orange-500 hover:bg-orange-500/10 hover:text-orange-400"
-            >
-              Get Started
-            </Link>
-            <Link href="/imprint" className="transition hover:text-orange-400">
-              Impressum
-            </Link>
-            <Link href="#" className="transition hover:text-orange-400">
-              Privacy
-            </Link>
-            <Link href="#" className="transition hover:text-orange-400">
-              Contact
-            </Link>
-          </nav>
-        </div>
-      </footer>
+      {/* ─── Footer (Logo, Product, Company, Legal, Copyright) ────────────── */}
+      <Footer />
     </div>
   );
 }
