@@ -1,6 +1,16 @@
 "use client";
 
-import { TrendingUp, BarChart3, Euro, Target } from "lucide-react";
+import { BarChart3, Euro, Target, TrendingUp } from "lucide-react";
+
+/** Pulsierender grüner Status-Punkt (Live-Aktivität) */
+function LiveStatusDot() {
+  return (
+    <span className="relative inline-flex h-3 w-3 shrink-0" aria-hidden>
+      <span className="absolute inline-flex h-3 w-3 animate-ping rounded-full bg-green-500/75 opacity-75" />
+      <span className="relative inline-flex h-3 w-3 rounded-full bg-green-500" />
+    </span>
+  );
+}
 
 const stats = [
   {
@@ -60,8 +70,8 @@ export function HeroDashboardPreview() {
               <span className="text-[10px] font-medium uppercase tracking-wider text-white/50 sm:text-xs">
                 {label}
               </span>
-              <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-400 sm:text-xs">
-                <TrendingUp className="h-3 w-3" />
+              <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-emerald-400 sm:text-xs">
+                <LiveStatusDot />
                 {trend}
               </span>
             </div>
