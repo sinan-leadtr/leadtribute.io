@@ -76,8 +76,8 @@ export function RevenueChart({ campaigns }: { campaigns: Campaign[] }) {
               borderRadius: "12px",
               fontSize: "12px",
             }}
-            labelFormatter={formatDate}
-            formatter={(value: number) => [`€ ${value.toLocaleString("de-DE")}`, "Revenue"]}
+            labelFormatter={(label: any) => formatDate(String(label ?? ""))}
+            formatter={(value: any) => [`€ ${Number(value ?? 0).toLocaleString("de-DE")}`, "Revenue"]}
             labelClassName="text-white/70"
           />
           <Area

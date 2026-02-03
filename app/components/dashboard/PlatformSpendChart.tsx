@@ -56,9 +56,9 @@ export function PlatformSpendChart() {
               borderRadius: "12px",
               fontSize: "12px",
             }}
-            formatter={(value: number, _name, props: { payload: { platform: string } }) => [
-              `€ ${value.toLocaleString("de-DE")}`,
-              props.payload.platform,
+            formatter={(value: any, _name: any, props: any) => [
+              `€ ${Number(value ?? 0).toLocaleString("de-DE")}`,
+              props?.payload?.platform ?? "",
             ]}
             cursor={{ fill: "rgba(255,255,255,0.04)" }}
           />

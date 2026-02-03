@@ -65,7 +65,7 @@ export function RevenueChart() {
               borderRadius: "12px",
               fontSize: "12px",
             }}
-            formatter={(value: number) => [`€ ${value.toLocaleString("de-DE")}`, "Revenue"]}
+            formatter={(value: any) => [`€ ${Number(value ?? 0).toLocaleString("de-DE")}`, "Revenue"]}
             labelClassName="text-white/70"
           />
           <Area
