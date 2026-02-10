@@ -12,6 +12,80 @@ import {
   type ApiKeyService,
 } from "@/app/dashboard/actions";
 
+// Lightweight UI primitives to mirror Card / Input / Button semantics
+type BasicProps = { className?: string; children: React.ReactNode };
+
+function Card({ className = "", children }: BasicProps) {
+  return (
+    <div
+      className={`rounded-2xl border border-zinc-800/80 bg-zinc-950/90 p-6 shadow-xl shadow-black/30 ${className}`}
+    >
+      {children}
+    </div>
+  );
+}
+
+function CardHeader({ className = "", children }: BasicProps) {
+  return (
+    <div className={`flex flex-col space-y-1 pb-4 ${className}`}>{children}</div>
+  );
+}
+
+function CardTitle({ className = "", children }: BasicProps) {
+  return (
+    <h2 className={`text-base font-medium text-white ${className}`}>{children}</h2>
+  );
+}
+
+function CardDescription({ className = "", children }: BasicProps) {
+  return (
+    <p className={`text-xs text-white/60 ${className}`}>{children}</p>
+  );
+}
+
+function CardContent({ className = "", children }: BasicProps) {
+  return <div className={`pt-1 ${className}`}>{children}</div>;
+}
+
+function Label({
+  className = "",
+  children,
+  ...props
+}: any) {
+  return (
+    <label
+      className={`text-xs font-medium text-white/60 ${className}`}
+      {...props}
+    >
+      {children}
+    </label>
+  );
+}
+
+function Input({ className = "", ...props }: any) {
+  return (
+    <input
+      className={`w-full rounded-xl border border-zinc-700 bg-zinc-900/80 px-4 py-2.5 text-sm text-white placeholder:text-white/40 focus:border-orange-500/50 focus:outline-none focus:ring-1 focus:ring-orange-500/30 ${className}`}
+      {...props}
+    />
+  );
+}
+
+function Button({
+  className = "",
+  children,
+  ...props
+}: any) {
+  return (
+    <button
+      className={`inline-flex items-center justify-center gap-2 rounded-full bg-orange-500 px-5 py-2.5 text-sm font-semibold text-black shadow-lg shadow-orange-500/25 transition hover:bg-orange-400 disabled:opacity-60 ${className}`}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+}
+
 function keyMap(rows: ApiKeyRow[]): Record<ApiKeyService, ApiKeyRow | null> {
   const map: Record<ApiKeyService, ApiKeyRow | null> = {
     meta: null,
@@ -36,7 +110,7 @@ function ConnectedBadge() {
 }
 
 type CardProps = {
-  title: string;
+  title?: string;
   icon: React.ReactNode;
   connected: boolean;
   saving: boolean;
@@ -49,10 +123,10 @@ function ProviderCard({ title, icon, connected, saving, onSave, children }: Card
     <div className="rounded-2xl border border-zinc-800/80 bg-zinc-950/90 p-6 shadow-xl shadow-black/30">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-2xl">
+          <div className="flex h-12 min-w-12 items-center justify-center rounded-xl border border-white/10 bg-white/5 px-3 text-2xl">
             {icon}
           </div>
-          <h2 className="text-lg font-semibold text-white">{title}</h2>
+          {title ? <h2 className="text-lg font-semibold text-white">{title}</h2> : null}
         </div>
         {connected && <ConnectedBadge />}
       </div>
@@ -129,54 +203,53 @@ export function IntegrationsForm({ initialKeys }: Props) {
           </p>
         </header>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {/* Shopify Store – erstes Element */}
-          <div className="rounded-2xl border border-zinc-800/80 bg-zinc-950/90 p-6 shadow-xl shadow-black/30">
-            <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <div className="flex items-center space-x-2">
-                <ShoppingBag className="h-6 w-6 text-green-500" />
-                <h2 className="text-base font-medium text-white">Shopify Store</h2>
-              </div>
-              {(keys.shopify?.shop_url || keys.shopify?.api_key) && <ConnectedBadge />}
-            </div>
-            <div className="grid gap-4 py-4">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {/* 1. SHOPIFY (muss hier sein!) */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <span className="text-green-500">🛍️</span> Shopify
+              </CardTitle>
+              <CardDescription>Connect your store revenue data.</CardDescription>
+            </CardHeader>
+            <CardContent className="grid gap-4">
               <div className="grid gap-2">
-                <label htmlFor="shopUrl" className="text-xs font-medium text-white/60">
-                  Shop URL
-                </label>
-                <input
+                <Label htmlFor="shopUrl">Shop URL</Label>
+                <Input
                   id="shopUrl"
-                  type="text"
                   placeholder="my-shop.myshopify.com"
                   value={shopifyUrl}
-                  onChange={(e) => setShopifyUrl(e.target.value)}
-                  className={inputClass}
+                  onChange={(e: any) => setShopifyUrl(e.target.value)}
                 />
               </div>
               <div className="grid gap-2">
-                <label htmlFor="shopToken" className="text-xs font-medium text-white/60">
-                  Admin API Token
-                </label>
-                <input
+                <Label htmlFor="shopToken">Admin API Token</Label>
+                <Input
                   id="shopToken"
                   type="password"
                   placeholder="shpat_..."
                   value={shopifyToken}
-                  onChange={(e) => setShopifyToken(e.target.value)}
-                  className={inputClass}
+                  onChange={(e: any) => setShopifyToken(e.target.value)}
                 />
               </div>
-              <button
+              <Button
+                className="w-full"
                 type="button"
-                onClick={() => handleSave("shopify", { shop_url: shopifyUrl, api_key: shopifyToken })}
+                onClick={() =>
+                  handleSave("shopify", { shop_url: shopifyUrl, api_key: shopifyToken })
+                }
                 disabled={saving === "shopify"}
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-orange-500 px-5 py-2.5 text-sm font-semibold text-black shadow-lg shadow-orange-500/25 transition hover:bg-orange-400 disabled:opacity-60"
               >
-                {saving === "shopify" ? <Loader2 className="h-4 w-4 animate-spin" /> : "Connect Shopify"}
-              </button>
-            </div>
-          </div>
+                {saving === "shopify" ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  "Connect Shopify"
+                )}
+              </Button>
+            </CardContent>
+          </Card>
 
+          {/* 2. META ADS – Sync ad spend & ROAS */}
           <ProviderCard
             title="Meta Ads"
             icon={<MetaLogo size={28} />}
@@ -206,6 +279,7 @@ export function IntegrationsForm({ initialKeys }: Props) {
             </div>
           </ProviderCard>
 
+          {/* 3. GOOGLE ADS – Search & YouTube performance */}
           <ProviderCard
             title="Google Ads"
             icon={<GoogleLogo size={28} />}
@@ -255,8 +329,8 @@ export function IntegrationsForm({ initialKeys }: Props) {
           </ProviderCard>
 
           <ProviderCard
-            title="Klaviyo"
-            icon={<KlaviyoLogoText className="text-2xl" />}
+            title=""
+            icon={<KlaviyoLogoText className="text-lg font-bold" />}
             connected={!!keys.klaviyo?.api_key}
             saving={saving === "klaviyo"}
             onSave={() => handleSave("klaviyo", { api_key: klaviyoToken })}
