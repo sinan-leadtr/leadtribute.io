@@ -16,7 +16,7 @@ import {
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/integrations", label: "Data Sources", icon: Plug },
+  { href: "/dashboard/integrations", label: "Data Sources", icon: Plug },
   { href: "/dashboard", label: "Campaigns", icon: Megaphone },
   { href: "/dashboard", label: "Creative Analysis", icon: ImageIcon },
   { href: "/dashboard", label: "Reporting", icon: FileText },

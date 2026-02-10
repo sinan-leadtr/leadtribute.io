@@ -87,3 +87,52 @@ export async function disconnectIntegration(platform: "google" | "meta"): Promis
   revalidatePath("/dashboard");
   return { ok: true };
 }
+
+// --- API Keys (Integrations credentials) ---
+export type ApiKeyService = "meta" | "google" | "shopify" | "tiktok" | "klaviyo";
+
+export type ApiKeyRow = {
+  id: string;
+  user_id: string;
+  service: ApiKeyService;
+  api_key: string | null;
+  account_id: string | null;
+  shop_url: string | null;
+  created_at: string;
+};
+
+export type SaveApiKeysPayload = {
+  api_key?: string;
+  account_id?: string;
+  shop_url?: string;
+};
+
+export type SaveApiKeysResult = { ok: true } | { ok: false; error: string };
+
+export async function saveApiKeys(
+  service: ApiKeyService,
+  payload: SaveApiKeysPayload
+): Promise<SaveApiKeysResult> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return { ok: false, error: "Not logged in" };
+  }
+
+  const row = {
+    user_id: user.id,
+    service,
+    api_key: payload.api_key?.trim() || null,
+    account_id: payload.account_id?.trim() || null,
+    shop_url: payload.shop_url?.trim() || null,
+  };
+
+  const { error } = await supabase.from("api_keys").upsert(row, {
+    onConflict: "user_id,service",
+  });
+  if (error) {
+    return { ok: false, error: error.message };
+  }
+  revalidatePath("/dashboard/integrations");
+  return { ok: true };
+}
