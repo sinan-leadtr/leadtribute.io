@@ -5,7 +5,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { Check, Loader2, ShoppingBag } from "lucide-react";
 import { Sidebar } from "@/app/components/sidebar";
-import { MetaLogo, GoogleLogo, TikTokLogo, KlaviyoLogoText } from "@/app/components/icons";
+import { MetaLogo, GoogleLogo, ShopifyLogo, TikTokLogo, KlaviyoLogo } from "@/app/components/icons";
 import {
   saveApiKeys,
   type ApiKeyRow,
@@ -208,7 +208,7 @@ export function IntegrationsForm({ initialKeys }: Props) {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <span className="text-green-500">🛍️</span> Shopify
+                <ShopifyLogo size={24} /> Shopify
               </CardTitle>
               <CardDescription>Connect your store revenue data.</CardDescription>
             </CardHeader>
@@ -329,8 +329,8 @@ export function IntegrationsForm({ initialKeys }: Props) {
           </ProviderCard>
 
           <ProviderCard
-            title=""
-            icon={<KlaviyoLogoText className="text-lg font-bold" />}
+            title="Klaviyo"
+            icon={<KlaviyoLogo size={28} />}
             connected={!!keys.klaviyo?.api_key}
             saving={saving === "klaviyo"}
             onSave={() => handleSave("klaviyo", { api_key: klaviyoToken })}

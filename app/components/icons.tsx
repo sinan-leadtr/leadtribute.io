@@ -102,7 +102,9 @@ export function TikTokLogo({
   );
 }
 
-// ─── Klaviyo: not in Simple Icons – text/letter with official peach ──────────
+// ─── Klaviyo: not in Simple Icons – badge with "K" (official peach #F26522) ───
+const KLAVIYO_PRIMARY = "#F26522";
+
 export function KlaviyoLogo({
   className = "",
   size = defaultSize,
@@ -112,13 +114,15 @@ export function KlaviyoLogo({
 }) {
   return (
     <span
-      className={`inline-flex items-center justify-center font-bold ${className}`}
+      className={`inline-flex items-center justify-center rounded-lg font-bold ${className}`}
       style={{
         width: size,
         height: size,
-        color: COLORS.klaviyo,
-        fontSize: size * 0.6,
+        backgroundColor: `${KLAVIYO_PRIMARY}20`,
+        color: KLAVIYO_PRIMARY,
+        fontSize: size * 0.55,
         fontFamily: "system-ui, sans-serif",
+        border: `1px solid ${KLAVIYO_PRIMARY}40`,
       }}
       aria-hidden
     >
@@ -131,7 +135,7 @@ export function KlaviyoLogoText({ className = "" }: { className?: string }) {
   return (
     <span
       className={`font-bold tracking-tight ${className}`}
-      style={{ color: COLORS.klaviyo, fontFamily: "system-ui, sans-serif" }}
+      style={{ color: KLAVIYO_PRIMARY, fontFamily: "system-ui, sans-serif" }}
       aria-hidden
     >
       Klaviyo
