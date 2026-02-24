@@ -32,7 +32,7 @@ const sectionFade = {
   initial: { opacity: 0, y: 40 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, margin: "-60px" },
-  transition: { duration: 0.5, ease: "easeOut" as const },
+  transition: { duration: 0.5 },
 };
 
 const heroContainer = {
@@ -42,7 +42,6 @@ const heroContainer = {
     transition: {
       staggerChildren: 0.16,
       delayChildren: 0.6,
-      ease: "easeOut",
     },
   },
 };
