@@ -58,7 +58,7 @@ export function Integrations({ integrations }: IntegrationsProps) {
           return (
             <div
               key={id}
-              className="flex flex-col gap-4 rounded-2xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:border-orange-500/20 hover:shadow-[0_0_30px_-10px_rgba(249,115,22,0.12)]"
+              className="flex flex-col gap-4 rounded-2xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)]"
             >
               <div className="flex items-center justify-between gap-2">
                 <span className="text-sm font-medium text-white">{label}</span>
@@ -86,12 +86,12 @@ export function Integrations({ integrations }: IntegrationsProps) {
                     type="button"
                     onClick={() => handleConnect(id)}
                     disabled={loading}
-                    className="inline-flex items-center gap-2 rounded-full bg-orange-500 px-4 py-2 text-xs font-semibold text-black shadow-lg shadow-orange-500/25 transition hover:bg-orange-400 hover:shadow-orange-500/35 disabled:opacity-70"
+                    className="btn-black inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold disabled:opacity-70"
                   >
                     {loading ? (
                       <Loader2 className="h-3.5 w-3.5 animate-spin" />
                     ) : null}
-                    Connect
+                    <span>Connect</span>
                   </button>
                 )}
               </div>

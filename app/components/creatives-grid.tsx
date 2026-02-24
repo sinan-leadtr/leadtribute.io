@@ -25,7 +25,7 @@ function RoasDisplay({ roas, large = false }: { roas: number; large?: boolean })
     ? "text-red-400"
     : isHigh
       ? "text-emerald-400"
-      : "text-orange-400";
+      : "text-sky-400";
   return (
     <span className={`font-semibold tabular-nums ${className} ${large ? "text-xl" : "text-sm"}`}>
       {roas.toFixed(1)}x
@@ -50,12 +50,12 @@ export function CreativesGrid() {
               key={creative.id}
               className={`group relative flex flex-col overflow-hidden rounded-xl border bg-black/80 transition-all duration-300 hover:border-white/20 ${
                 isWinner
-                  ? "border-orange-500 ring-2 ring-orange-500/40"
+                  ? "border-white ring-2 ring-white/60"
                   : "border-white/10"
               }`}
             >
               {isWinner && (
-                <span className="absolute left-2 top-2 z-10 rounded-full bg-orange-500 px-2 py-0.5 text-[10px] font-bold text-black">
+                <span className="absolute left-2 top-2 z-10 rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-black">
                   Winner
                 </span>
               )}

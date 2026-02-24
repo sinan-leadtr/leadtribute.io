@@ -35,6 +35,28 @@ const sectionFade = {
   transition: { duration: 0.5, ease: "easeOut" as const },
 };
 
+const heroContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.16,
+      delayChildren: 0.6,
+      ease: "easeOut",
+    },
+  },
+};
+
+const heroWord = {
+  hidden: { opacity: 0, x: -24, y: 8 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    y: 0,
+    transition: { duration: 1.1, ease: [0.16, 1, 0.3, 1] },
+  },
+};
+
 const faqItems = [
   {
     q: "Do you support TikTok?",
@@ -62,79 +84,27 @@ export default function Home() {
   const [faqOpen, setFaqOpen] = useState<number | null>(0);
 
   return (
-    <div
-      className="relative min-h-screen overflow-hidden bg-black text-white"
-      style={{ backgroundColor: "#000000" }}
-    >
-      {/* M3 Dynamic Color Blobs – animated background */}
-      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-        <motion.div
-          className="absolute -left-[20%] top-[10%] h-[60vmax] w-[60vmax] rounded-full bg-orange-500/25 blur-[100px] md:blur-[120px]"
-          animate={{
-            x: [0, 40, -20, 0],
-            y: [0, -30, 20, 0],
-            scale: [1, 1.1, 1.05, 1],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          aria-hidden
-        />
-        <motion.div
-          className="absolute -right-[15%] top-[30%] h-[50vmax] w-[50vmax] rounded-full bg-amber-600/20 blur-[100px] md:blur-[130px]"
-          animate={{
-            x: [0, -30, 25, 0],
-            y: [0, 25, -15, 0],
-            scale: [1.05, 1, 1.1, 1.05],
-          }}
-          transition={{
-            duration: 14,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          aria-hidden
-        />
-        <motion.div
-          className="absolute bottom-[5%] left-1/2 h-[40vmax] w-[50vmax] -translate-x-1/2 rounded-full bg-red-950/30 blur-[90px] md:blur-[110px]"
-          animate={{
-            x: ["-50%", "-48%", "-52%", "-50%"],
-            y: [0, 15, -10, 0],
-            scale: [1, 1.08, 1.02, 1],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          aria-hidden
-        />
-        <div
-          className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70"
-          aria-hidden
-        />
-      </div>
+    <div className="relative min-h-screen overflow-hidden bg-white text-black">
 
       {/* ─── Navbar ───────────────────────────────────────── */}
-      <header className="relative z-10 border-b border-white/5">
+      <header className="relative z-10 border-b border-black/5">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5 sm:px-8">
           <Link
             href="/"
-            className="flex items-center gap-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-black"
+            className="flex items-center gap-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 focus:ring-offset-white"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-500/10 ring-1 ring-orange-400/40">
-              <span className="text-lg font-bold text-orange-400">LT</span>
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-black text-white">
+              <span className="text-lg font-bold">LT</span>
             </div>
-            <span className="text-lg font-semibold tracking-tight text-white">
+            <span className="text-lg font-semibold tracking-tight">
               Leadtribute
             </span>
           </Link>
-          <nav className="flex items-center gap-3">
+          <nav className="flex items-center gap-3 text-current">
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
               <Link
                 href="/login"
-                className="inline-block rounded-full border border-white/20 bg-transparent px-5 py-2.5 text-sm font-medium text-white/90 transition hover:border-orange-500/50 hover:bg-orange-500/5 hover:text-orange-400"
+                className="inline-block rounded-full border border-black/10 bg-white/60 px-5 py-2.5 text-sm font-medium text-black/80 shadow-sm transition hover:bg-white hover:border-black/20"
               >
                 Login
               </Link>
@@ -142,9 +112,9 @@ export default function Home() {
             <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.98 }}>
               <Link
                 href="/register"
-                className="inline-block rounded-full bg-orange-500 px-5 py-2.5 text-sm font-semibold text-black shadow-lg shadow-orange-500/25 transition hover:bg-orange-400 hover:shadow-orange-500/35"
+                className="btn-black px-5 py-2.5 text-sm font-semibold"
               >
-                Get Started
+                <span>Get Started</span>
               </Link>
             </motion.div>
           </nav>
@@ -155,21 +125,30 @@ export default function Home() {
       <section className="relative z-10 px-6 pt-16 pb-24 sm:px-8 sm:pt-24 sm:pb-32 lg:pt-32 lg:pb-40">
         <div className="mx-auto max-w-4xl text-center">
           <motion.h1
-            className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl xl:leading-[1.1]"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl xl:leading-[1.1]"
+            variants={heroContainer}
+            initial="hidden"
+            animate="visible"
           >
-            The Operating System for{" "}
-            <span
-              className="bg-gradient-to-r from-orange-400 via-orange-500 to-amber-500 bg-clip-text font-extrabold text-transparent"
-              style={{ textShadow: "0 0 80px rgba(249, 115, 22, 0.25)" }}
+            {["The", "Operating", "System", "for"].map((word, idx) => (
+              <motion.span
+                key={`${word}-${idx}`}
+                variants={heroWord}
+                className="hero-shimmer inline-block bg-clip-text text-transparent pr-1 md:pr-2"
+              >
+                {word}
+              </motion.span>
+            ))}
+            <motion.span
+              variants={heroWord}
+              className="hero-shimmer inline-block bg-clip-text font-extrabold text-transparent"
+              style={{ textShadow: "0 0 80px rgba(59, 130, 246, 0.35)" }}
             >
               Performance Marketers.
-            </span>
+            </motion.span>
           </motion.h1>
           <motion.p
-            className="mx-auto mt-6 max-w-2xl text-lg font-medium leading-relaxed text-white/80 sm:text-xl"
+            className="mx-auto mt-6 max-w-2xl text-lg font-medium leading-relaxed sm:text-xl"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
@@ -189,9 +168,9 @@ export default function Home() {
             >
               <Link
                 href="/register"
-                className="inline-flex items-center justify-center rounded-full bg-orange-500 px-10 py-4 text-base font-semibold text-black shadow-lg shadow-orange-500/25 transition hover:bg-orange-400 hover:shadow-orange-500/40 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-black"
+                className="btn-black px-10 py-4 text-base font-semibold focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 focus:ring-offset-white"
               >
-                Start Free Trial
+                <span>Start Free Trial</span>
               </Link>
             </motion.div>
           </motion.div>
@@ -232,17 +211,17 @@ export default function Home() {
           viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.5, ease: "easeOut" }}
         >
-          <p className="text-center text-sm font-medium uppercase tracking-widest text-white/50">
+          <p className="text-center text-sm font-medium uppercase tracking-widest">
             Simple pricing
           </p>
           <div className="mt-8 grid gap-6 sm:grid-cols-2 sm:gap-8">
             {/* Starter */}
-            <div className="flex flex-col rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-6 shadow-xl sm:p-8">
-              <h3 className="text-lg font-semibold text-white">Starter</h3>
-              <p className="mt-3 text-3xl font-bold text-white">0 €</p>
-              <p className="mt-1 text-sm text-white/60">Free</p>
-              <p className="mt-4 text-sm text-white/70">Perfect for side projects.</p>
-              <ul className="mt-6 space-y-3 text-sm text-white/80">
+            <div className="flex flex-col rounded-3xl border border-black/5 bg-white p-6 shadow-xl sm:p-8">
+              <h3 className="text-lg font-semibold">Starter</h3>
+              <p className="mt-3 text-3xl font-bold">0 €</p>
+              <p className="mt-1 text-sm">Free</p>
+              <p className="mt-4 text-sm">Perfect for side projects.</p>
+              <ul className="mt-6 space-y-3 text-sm">
                 {["Up to 3 connected accounts", "Basic ROAS & spend", "7-day data history"].map((item) => (
                   <li key={item} className="flex items-center gap-2">
                     <Check className="h-5 w-5 shrink-0 text-emerald-500" />
@@ -253,25 +232,25 @@ export default function Home() {
               <div className="mt-auto pt-8">
                 <Link
                   href="/register"
-                  className="inline-flex w-full justify-center rounded-full border border-white/20 bg-transparent px-4 py-3 text-sm font-semibold text-white transition hover:border-orange-500/50 hover:bg-orange-500/10 hover:text-orange-400"
+                  className="inline-flex w-full justify-center rounded-full border border-black/10 bg-white/60 px-4 py-3 text-sm font-semibold text-black/80 shadow-sm transition hover:bg-white hover:border-black/20"
                 >
                   Get Started
                 </Link>
               </div>
             </div>
             {/* Pro – Most Popular */}
-            <div className="relative flex flex-col rounded-3xl border-2 border-orange-500/50 bg-zinc-950/90 p-6 shadow-[0_0_40px_-10px_rgba(249,115,22,0.2)] sm:-mt-1 sm:p-8 sm:scale-[1.02]">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-orange-500 px-3 py-1 text-xs font-semibold text-black">
+            <div className="relative flex flex-col rounded-3xl border-2 border-black p-6 shadow-[0_0_60px_-20px_rgba(0,0,0,0.65)] sm:-mt-1 sm:p-8 sm:scale-[1.02]">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-black px-3 py-1 text-xs font-semibold text-white">
                 Most Popular
               </div>
-              <h3 className="text-lg font-semibold text-white">Pro</h3>
-              <p className="mt-3 text-3xl font-bold text-orange-400">49 €</p>
-              <p className="mt-1 text-sm text-white/60">per month</p>
-              <p className="mt-4 text-sm text-white/70">The CMO Suite.</p>
-              <ul className="mt-6 space-y-3 text-sm text-white/80">
+              <h3 className="text-lg font-semibold">Pro</h3>
+              <p className="mt-3 text-3xl font-bold">49 €</p>
+              <p className="mt-1 text-sm">per month</p>
+              <p className="mt-4 text-sm">The CMO Suite.</p>
+              <ul className="mt-6 space-y-3 text-sm">
                 {["Unlimited accounts", "Real-time ROAS & MER", "Full history & export", "Priority support"].map((item) => (
                   <li key={item} className="flex items-center gap-2">
-                    <Check className="h-5 w-5 shrink-0 text-orange-400" />
+                    <Check className="h-5 w-5 shrink-0" />
                     {item}
                   </li>
                 ))}
@@ -279,9 +258,9 @@ export default function Home() {
               <div className="mt-auto pt-8">
                 <Link
                   href="/register"
-                  className="inline-flex w-full justify-center rounded-full bg-orange-500 px-4 py-3 text-sm font-semibold text-black shadow-lg shadow-orange-500/25 transition hover:bg-orange-400 hover:shadow-orange-500/35"
+                  className="btn-black inline-flex w-full justify-center px-4 py-3 text-sm font-semibold"
                 >
-                  Get Started
+                  <span>Get Started</span>
                 </Link>
               </div>
             </div>
@@ -291,7 +270,7 @@ export default function Home() {
 
       {/* ─── LogoTicker: Seamlessly integrated with top platforms ─── */}
       <section className="relative z-10 border-y border-white/5 py-10 sm:py-12">
-        <p className="mx-auto mb-8 max-w-6xl px-6 text-center text-xs font-medium uppercase tracking-widest text-white/50 sm:text-sm">
+        <p className="mx-auto mb-8 max-w-6xl px-6 text-center text-xs font-medium uppercase tracking-widest sm:text-sm">
           Seamlessly integrated with top platforms
         </p>
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-12 gap-y-6 px-6">
@@ -336,7 +315,7 @@ export default function Home() {
       <section className="relative z-10 px-6 py-24 sm:px-8 sm:py-32">
         <div className="mx-auto max-w-6xl">
           <motion.h2
-            className="text-center text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl"
+            className="text-center text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl"
             {...sectionFade}
           >
             Stop flying blind.
@@ -347,7 +326,7 @@ export default function Home() {
                 title: "Attribution Hell",
                 icon: LineChart,
                 text: "Meta says 10 sales. Shopify says 4. Who is lying?",
-                accent: "orange",
+                accent: "black",
               },
               {
                 title: "Creative Fatigue",
@@ -364,16 +343,21 @@ export default function Home() {
             ].map((item, i) => (
               <motion.div
                 key={item.title}
-                className="rounded-[32px] border border-zinc-800/80 bg-zinc-900/50 p-6 sm:p-8"
+                className="group rounded-[32px] border border-black/5 bg-zinc-900/95 p-6 text-white shadow-[0_18px_45px_rgba(0,0,0,0.85)] sm:p-8"
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
+                whileHover={{
+                  y: -6,
+                  boxShadow:
+                    "0 22px 60px rgba(0,0,0,0.9), 0 0 70px -16px rgba(148,163,184,0.55)",
+                }}
               >
                 <div
                   className={`flex h-14 w-14 items-center justify-center rounded-2xl ${
-                    item.accent === "orange"
-                      ? "bg-orange-500/10 ring-1 ring-orange-500/30"
+                    item.accent === "black"
+                      ? "bg-black text-white shadow-[0_10px_30px_rgba(0,0,0,0.6)]"
                       : item.accent === "red"
                         ? "bg-red-500/10 ring-1 ring-red-500/30"
                         : "bg-violet-500/10 ring-1 ring-violet-500/30"
@@ -381,18 +365,18 @@ export default function Home() {
                 >
                   <item.icon
                     className={`h-7 w-7 ${
-                      item.accent === "orange"
-                        ? "text-orange-400"
+                      item.accent === "black"
+                        ? "text-white"
                         : item.accent === "red"
                           ? "text-red-400"
                           : "text-violet-400"
                     }`}
                   />
                 </div>
-                <h3 className="mt-5 text-xl font-semibold text-white">
+                <h3 className="mt-5 text-xl font-semibold">
                   {item.title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-white/60">
+                <p className="mt-2 text-sm leading-relaxed">
                   {item.text}
                 </p>
               </motion.div>
@@ -408,12 +392,12 @@ export default function Home() {
       <section className="relative z-10 px-6 py-24 sm:px-8 sm:py-32">
         <div className="mx-auto max-w-6xl">
           <motion.h2
-            className="text-center text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl"
+            className="text-center text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl"
             {...sectionFade}
           >
             Loved by Growth Teams
           </motion.h2>
-          <p className="mx-auto mt-3 max-w-xl text-center text-white/60">
+          <p className="mx-auto mt-3 max-w-xl text-center text-black/60">
             See why marketing leaders trust Leadtribute.
           </p>
           <div className="mt-16 grid gap-6 sm:grid-cols-3">
@@ -424,7 +408,7 @@ export default function Home() {
                 quote:
                   "Finally, I can see my real ROAS. We scaled from 10k to 50k spend in one month.",
                 initials: "SM",
-                accent: "bg-orange-500/20 text-orange-400 ring-1 ring-orange-500/40",
+                accent: "bg-violet-500/20 text-violet-400 ring-1 ring-violet-500/40",
               },
               {
                 name: "Tom B.",
@@ -445,7 +429,7 @@ export default function Home() {
             ].map((item, i) => (
               <motion.div
                 key={item.name}
-                className="rounded-[32px] border border-zinc-800/80 bg-zinc-950/90 p-6 shadow-xl shadow-black/50 transition hover:border-orange-500/30 hover:shadow-[0_0_40px_-10px_rgba(249,115,22,0.15)] sm:p-8"
+                className="rounded-[32px] border border-zinc-800/80 bg-zinc-950/90 p-6 text-white shadow-xl shadow-black/50 transition hover:border-white/70 hover:shadow-[0_0_60px_-18px_rgba(0,0,0,0.9)] sm:p-8"
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
@@ -459,8 +443,8 @@ export default function Home() {
                     {item.initials}
                   </div>
                   <div>
-                    <p className="font-semibold text-white">{item.name}</p>
-                    <p className="text-xs text-white/60">{item.role}</p>
+                    <p className="font-semibold">{item.name}</p>
+                    <p className="text-xs">{item.role}</p>
                   </div>
                 </div>
                 <p className="mt-4 text-sm leading-relaxed text-white/70">
@@ -476,7 +460,7 @@ export default function Home() {
       <section className="relative z-10 px-6 py-24 sm:px-8 sm:py-32">
         <div className="mx-auto max-w-6xl">
           <motion.h2
-            className="text-center text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl"
+            className="text-center text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl"
             {...sectionFade}
           >
             How it works
@@ -488,7 +472,7 @@ export default function Home() {
             {...sectionFade}
           >
             <div className="relative order-2 lg:order-1">
-              <div className="rounded-3xl border border-white/10 bg-zinc-900/60 p-8 backdrop-blur-sm">
+              <div className="rounded-[32px] border border-black/5 bg-zinc-950/95 p-8 text-white shadow-[0_24px_65px_rgba(0,0,0,0.95)]">
                 <div className="flex flex-wrap items-center justify-center gap-5">
                   {[
                     { label: "Meta", Icon: MetaLogo, glow: "shadow-[0_0_20px_-4px_rgba(6,104,225,0.5)]" },
@@ -506,29 +490,29 @@ export default function Home() {
                     </div>
                   ))}
                   <div
-                    className="flex h-14 w-14 items-center justify-center rounded-2xl border border-dashed border-white/20 bg-white/[0.02] text-white/50 transition hover:border-white/30 hover:text-white/70"
+                    className="flex h-14 w-14 items-center justify-center rounded-2xl border border-dashed border-black/20 bg-transparent transition hover:border-black/40"
                     title="Und mehr"
                   >
                     <span className="text-xs font-medium">+ more</span>
                   </div>
                 </div>
-                <div className="mt-6 flex justify-center gap-2">
-                  <Link2 className="h-5 w-5 text-orange-400" />
-                  <span className="text-sm text-white/50">Connections</span>
+                <div className="mt-6 flex justify-center gap-2 text-white/80">
+                  <Link2 className="h-5 w-5" />
+                  <span className="text-sm">Connections</span>
                 </div>
-                <p className="mt-4 text-center text-sm leading-relaxed text-white/55">
+                <p className="mt-4 text-center text-sm leading-relaxed">
                   Schluss mit manuellen CSV-Exporten und Datenchaos. Leadtribute zentralisiert deine Datenströme automatisch und fehlerfrei.
                 </p>
               </div>
             </div>
             <div className="order-1 lg:order-2">
-              <span className="text-sm font-semibold uppercase tracking-wider text-orange-400">
+              <span className="text-sm font-semibold uppercase tracking-wider text-black">
                 Step 1
               </span>
-              <h3 className="mt-2 text-2xl font-bold text-white sm:text-3xl">
+              <h3 className="mt-2 text-2xl font-bold sm:text-3xl">
                 Connect everything.
               </h3>
-              <p className="mt-4 text-white/70">
+              <p className="mt-4">
                 Link Meta, Google, TikTok, Shopify, and Klaviyo in minutes. One
                 dashboard, one source of truth.
               </p>
@@ -544,24 +528,24 @@ export default function Home() {
               <span className="text-sm font-semibold uppercase tracking-wider text-emerald-400">
                 Step 2
               </span>
-              <h3 className="mt-2 text-2xl font-bold text-white sm:text-3xl">
+              <h3 className="mt-2 text-2xl font-bold sm:text-3xl">
                 Analyze in real-time.
               </h3>
-              <p className="mt-4 text-white/70">
+              <p className="mt-4">
                 ROAS, spend, and revenue update live. No more exporting CSVs or
                 waiting for tomorrow's numbers.
               </p>
             </div>
             <div className="relative">
-              <div className="rounded-3xl border border-white/10 bg-zinc-900/60 p-6 backdrop-blur-sm">
-                <div className="flex items-center gap-2 text-white/50">
+              <div className="rounded-[32px] border border-black/5 bg-zinc-950/95 p-6 text-white shadow-[0_24px_65px_rgba(0,0,0,0.95)]">
+                <div className="flex items-center gap-2">
                   <LayoutDashboard className="h-5 w-5" />
                   <span className="text-sm">Dashboard</span>
                 </div>
                 <div className="mt-4 overflow-hidden rounded-xl border border-white/5 bg-black/30">
                   <table className="w-full text-left text-sm">
                     <thead>
-                      <tr className="border-b border-white/5 text-[10px] font-medium uppercase tracking-wider text-white/50">
+                      <tr className="border-b border-black/10 text-[10px] font-medium uppercase tracking-wider">
                         <th className="px-3 py-2.5">Campaign</th>
                         <th className="px-3 py-2.5 text-right">Spend</th>
                         <th className="px-3 py-2.5 text-right">ROAS</th>
@@ -575,8 +559,8 @@ export default function Home() {
                         { name: "Advantage+", spend: "€5.8k", roas: "5.0x", active: true, spark: [20, 35, 50, 65, 85] },
                       ].map((row) => (
                         <tr key={row.name} className="border-b border-white/5 last:border-0">
-                          <td className="px-3 py-2.5 font-medium text-white/90">{row.name}</td>
-                          <td className="px-3 py-2.5 text-right tabular-nums text-white/80">{row.spend}</td>
+                          <td className="px-3 py-2.5 font-medium">{row.name}</td>
+                          <td className="px-3 py-2.5 text-right tabular-nums">{row.spend}</td>
                           <td className="px-3 py-2.5 text-right tabular-nums text-emerald-400/90">{row.roas}</td>
                           <td className="px-2 py-2.5">
                             <span className="inline-flex items-center gap-1.5">
@@ -591,7 +575,7 @@ export default function Home() {
                     </tbody>
                   </table>
                 </div>
-                <p className="mt-4 text-center text-sm leading-relaxed text-white/55">
+                <p className="mt-4 text-center text-sm leading-relaxed">
                   Hör auf, im Dunkeln zu tappen. Verstehe endlich den wahren ROAS über alle Kanäle hinweg, statt isolierten Plattform-Metriken zu vertrauen.
                 </p>
               </div>
@@ -604,7 +588,7 @@ export default function Home() {
             {...sectionFade}
           >
             <div className="relative order-2 lg:order-1">
-              <div className="rounded-3xl border border-white/10 bg-zinc-900/60 p-8 backdrop-blur-sm">
+              <div className="rounded-[32px] border border-black/5 bg-zinc-950/95 p-8 text-white shadow-[0_24px_65px_rgba(0,0,0,0.95)]">
                 <div className="h-32 w-full">
                   <svg viewBox="0 0 120 64" className="h-full w-full" preserveAspectRatio="none">
                     <defs>
@@ -643,13 +627,13 @@ export default function Home() {
               </div>
             </div>
             <div className="order-1 lg:order-2">
-              <span className="text-sm font-semibold uppercase tracking-wider text-orange-400">
+              <span className="text-sm font-semibold uppercase tracking-wider text-black">
                 Step 3
               </span>
-              <h3 className="mt-2 text-2xl font-bold text-white sm:text-3xl">
+              <h3 className="mt-2 text-2xl font-bold sm:text-3xl">
                 Scale with confidence.
               </h3>
-              <p className="mt-4 text-white/70">
+              <p className="mt-4">
                 See true margin and MER. Scale what works and cut what doesn't—
                 with data, not guesswork.
               </p>
@@ -662,7 +646,7 @@ export default function Home() {
       <section className="relative z-10 px-6 py-24 sm:px-8 sm:py-32">
         <div className="mx-auto max-w-6xl">
           <motion.h2
-            className="text-center text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl"
+            className="text-center text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl"
             {...sectionFade}
           >
             Built for scale
@@ -690,23 +674,23 @@ export default function Home() {
             ].map((item) => (
               <motion.div
                 key={item.title}
-                className="group rounded-[32px] border border-zinc-800/80 bg-zinc-950/90 p-6 sm:p-8"
+                className="group rounded-[32px] border border-zinc-800/80 bg-zinc-950/90 p-6 text-white shadow-xl shadow-black/50 sm:p-8"
                 initial={false}
                 whileHover={{
                   y: -6,
                   boxShadow:
-                    "0 0 0 1px rgba(249,115,22,0.15), 0 25px 50px -12px rgba(0,0,0,0.5), 0 0 60px -15px rgba(249,115,22,0.35)",
+                    "0 0 0 1px rgba(255,255,255,0.18), 0 25px 60px -12px rgba(0,0,0,0.8), 0 0 70px -18px rgba(129,140,248,0.55)",
                   transition: { duration: 0.25 },
                 }}
                 transition={{ duration: 0.25 }}
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-500/10 ring-1 ring-orange-500/20 transition group-hover:ring-orange-500/40">
-                  <item.icon className="h-6 w-6 text-orange-400" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-black/5 ring-1 ring-black/10 transition group-hover:ring-black/60">
+                  <item.icon className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="mt-5 text-xl font-semibold text-white">
+                <h3 className="mt-5 text-xl font-semibold">
                   {item.title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-white/60">
+                <p className="mt-2 text-sm leading-relaxed">
                   {item.text}
                 </p>
               </motion.div>
@@ -724,7 +708,7 @@ export default function Home() {
       <section className="relative z-10 px-6 py-24 sm:px-8 sm:py-32">
         <div className="mx-auto max-w-3xl">
           <motion.h2
-            className="text-center text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl"
+            className="text-center text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl"
             {...sectionFade}
           >
             Frequently asked
@@ -733,16 +717,21 @@ export default function Home() {
             {faqItems.map((item, i) => (
               <motion.div
                 key={i}
-                className="rounded-3xl border border-zinc-800/80 bg-zinc-900/50 overflow-hidden"
+                className="rounded-[999px] border border-black/5 bg-zinc-900/95 text-white shadow-[0_18px_45px_rgba(0,0,0,0.85)] overflow-hidden"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: i * 0.05 }}
+                whileHover={{
+                  y: -4,
+                  boxShadow:
+                    "0 20px 55px rgba(0,0,0,0.9), 0 0 60px -18px rgba(148,163,184,0.6)",
+                }}
               >
                 <button
                   type="button"
                   onClick={() => setFaqOpen(faqOpen === i ? null : i)}
-                  className="flex w-full items-center justify-between gap-4 px-6 py-4 text-left text-white transition hover:bg-white/5"
+                  className="flex w-full items-center justify-between gap-4 px-6 py-4 text-left text-white/90 transition hover:bg-white/5"
                 >
                   <span className="font-medium">{item.q}</span>
                   <motion.span
@@ -779,10 +768,10 @@ export default function Home() {
           className="mx-auto max-w-3xl text-center"
           {...sectionFade}
         >
-          <h2 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
+          <h2 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
             Ready to optimize?
           </h2>
-          <p className="mt-4 text-lg text-white/70">
+          <p className="mt-4 text-lg text-black/70">
             Join growth teams who run on one dashboard.
           </p>
           <motion.div
@@ -792,28 +781,28 @@ export default function Home() {
           >
             <Link
               href="/register"
-              className="inline-flex items-center justify-center rounded-full bg-orange-500 px-12 py-5 text-lg font-semibold text-black shadow-xl shadow-orange-500/30 transition hover:bg-orange-400 hover:shadow-orange-500/40 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-black"
+              className="btn-black px-12 py-5 text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 focus:ring-offset-white"
             >
-              Start 14-day Free Trial
+              <span>Start 14-day Free Trial</span>
             </Link>
           </motion.div>
         </motion.div>
       </section>
 
       {/* ─── Social Proof ───────────────────────────────── */}
-      <section className="relative z-10 border-t border-white/5 px-6 py-20 sm:px-8 sm:py-24">
+      <section className="relative z-10 border-t border-black/5 px-6 py-20 sm:px-8 sm:py-24">
         <motion.div
           className="mx-auto max-w-4xl text-center"
           {...sectionFade}
         >
-          <p className="text-sm font-medium uppercase tracking-widest text-white/40">
+          <p className="text-sm font-medium uppercase tracking-widest text-black/40">
             Trusted by growth teams at
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-x-12 gap-y-8 sm:gap-x-16">
             {["Nova", "Flux", "Apex", "Stride", "Venture"].map((name) => (
               <span
                 key={name}
-                className="text-xl font-semibold text-white/30 transition hover:text-white/50 sm:text-2xl"
+                className="text-xl font-semibold text-black/40 transition hover:text-black/70 sm:text-2xl"
               >
                 {name}
               </span>

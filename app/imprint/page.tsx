@@ -12,7 +12,7 @@ export default function ImprintPage() {
       <div className="mx-auto max-w-2xl px-6 py-16 sm:px-8 sm:py-24">
         <Link
           href="/"
-          className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-white/90 transition hover:border-orange-500 hover:bg-orange-500/10 hover:text-orange-400"
+          className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-white/90 transition hover:border-white/60 hover:bg-white/10"
         >
           <ArrowLeft className="h-4 w-4 shrink-0" />
           Back to Home
@@ -58,7 +58,7 @@ export default function ImprintPage() {
               <dd className="mt-1">
                 <a
                   href="mailto:sinan@leadtribute.io"
-                  className="font-medium text-orange-400 transition hover:text-orange-300"
+                  className="font-medium text-white transition hover:text-white/80"
                 >
                   sinan@leadtribute.io
                 </a>

@@ -56,7 +56,7 @@ export function UserNav() {
       <DropdownMenuTrigger asChild>
         <button
           type="button"
-          className="flex items-center gap-2 rounded-full border border-white/10 bg-black/80 px-2 py-1.5 text-left text-xs shadow-sm shadow-black/30 transition hover:border-orange-500 hover:bg-orange-500/10 hover:text-orange-400"
+          className="flex items-center gap-2 rounded-full border border-white/10 bg-black/80 px-2 py-1.5 text-left text-xs shadow-sm shadow-black/30 transition hover:border-white/60 hover:bg-white/5"
           aria-label="Open user menu"
         >
           {avatarUrl ? (
@@ -68,7 +68,7 @@ export function UserNav() {
               height={28}
             />
           ) : (
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-amber-400 text-xs font-semibold text-black">
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-sky-400 text-xs font-semibold text-white">
               {initials}
             </div>
           )}
@@ -94,21 +94,21 @@ export function UserNav() {
           </DropdownMenuLabel>
           <DropdownMenuSeparator className="my-1 h-px bg-zinc-800" />
           <DropdownMenuItem
-            className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-white/90 outline-none hover:bg-zinc-900 focus:bg-zinc-900 data-[highlighted]:bg-zinc-900 data-[highlighted]:text-orange-400"
+            className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-white/90 outline-none hover:bg-zinc-900 focus:bg-zinc-900 data-[highlighted]:bg-zinc-900 data-[highlighted]:text-white"
             onSelect={() => router.push("/settings")}
           >
             <User className="h-4 w-4 shrink-0" />
             Profile
           </DropdownMenuItem>
           <DropdownMenuItem
-            className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-white/90 outline-none hover:bg-zinc-900 focus:bg-zinc-900 data-[highlighted]:bg-zinc-900 data-[highlighted]:text-orange-400"
+            className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-white/90 outline-none hover:bg-zinc-900 focus:bg-zinc-900 data-[highlighted]:bg-zinc-900 data-[highlighted]:text-white"
             onSelect={() => router.push("/settings?tab=billing")}
           >
             <CreditCard className="h-4 w-4 shrink-0" />
             Billing
           </DropdownMenuItem>
           <DropdownMenuItem
-            className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-white/90 outline-none hover:bg-zinc-900 focus:bg-zinc-900 data-[highlighted]:bg-zinc-900 data-[highlighted]:text-orange-400"
+            className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-white/90 outline-none hover:bg-zinc-900 focus:bg-zinc-900 data-[highlighted]:bg-zinc-900 data-[highlighted]:text-white"
             onSelect={() => router.push("/settings")}
           >
             <Settings className="h-4 w-4 shrink-0" />
@@ -116,7 +116,7 @@ export function UserNav() {
           </DropdownMenuItem>
           <DropdownMenuSeparator className="my-1 h-px bg-zinc-800" />
           <DropdownMenuItem
-            className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-white/90 outline-none hover:bg-orange-500/10 hover:text-orange-400 focus:bg-orange-500/10 data-[highlighted]:bg-orange-500/10 data-[highlighted]:text-orange-400"
+            className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-white/90 outline-none hover:bg-zinc-900 focus:bg-zinc-900 data-[highlighted]:bg-zinc-900 data-[highlighted]:text-white"
             onSelect={() => router.push("/login")}
           >
             <LogOut className="h-4 w-4 shrink-0" />

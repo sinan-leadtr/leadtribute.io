@@ -40,7 +40,7 @@ const initialIntegrations: Integration[] = [
   { key: "google_ads", name: "Google Ads", status: "not_connected", color: "bg-amber-400" },
   { key: "meta_ads", name: "Meta Ads", status: "not_connected", color: "bg-blue-500" },
   { key: "tiktok_ads", name: "TikTok Ads", status: "not_connected", color: "bg-neutral-200" },
-  { key: "reddit_ads", name: "Reddit Ads", status: "not_connected", color: "bg-orange-500" },
+  { key: "reddit_ads", name: "Reddit Ads", status: "not_connected", color: "bg-zinc-700" },
   { key: "linkedin_ads", name: "LinkedIn Ads", status: "not_connected", color: "bg-sky-500" },
 ];
 
@@ -74,8 +74,8 @@ export default function IntegrationsPage() {
     <div className="relative flex min-h-screen overflow-hidden bg-black text-white" style={{ backgroundColor: "#000000" }}>
       {/* M3 Expressive: subtle background blobs */}
       <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden>
-        <div className="absolute -right-[10%] top-0 h-[50vmax] w-[50vmax] rounded-full bg-orange-500/10 blur-[100px]" />
-        <div className="absolute bottom-0 -left-[10%] h-[40vmax] w-[40vmax] rounded-full bg-amber-600/8 blur-[80px]" />
+        <div className="absolute -right-[10%] top-0 h-[50vmax] w-[50vmax] rounded-full bg-sky-500/15 blur-[100px]" />
+        <div className="absolute bottom-0 -left-[10%] h-[40vmax] w-[40vmax] rounded-full bg-violet-600/10 blur-[80px]" />
         <div className="absolute inset-0 bg-gradient-to-b from-black via-black/95 to-black" />
       </div>
 
@@ -112,7 +112,7 @@ export default function IntegrationsPage() {
           <div className="hidden items-center gap-3 sm:flex">
             <motion.button
               type="button"
-              className="inline-flex items-center gap-2 rounded-full border border-zinc-700 bg-zinc-900/80 px-5 py-2.5 text-sm font-medium text-white/90 transition hover:-translate-y-0.5 hover:border-orange-500 hover:bg-orange-500/10 hover:text-orange-400 hover:shadow-[0_0_24px_-6px_rgba(249,115,22,0.35)]"
+              className="inline-flex items-center gap-2 rounded-full border border-zinc-700 bg-zinc-900/80 px-5 py-2.5 text-sm font-medium text-white/90 transition hover:-translate-y-0.5 hover:border-white/60 hover:bg-white/5"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -147,7 +147,7 @@ export default function IntegrationsPage() {
                     ...cardStagger.transition,
                     delay: index * 0.06,
                   }}
-                  className="group flex flex-col justify-between rounded-[28px] border border-zinc-800/80 bg-zinc-950/90 p-5 text-sm shadow-lg shadow-black/50 transition hover:-translate-y-1 hover:border-orange-500/40 hover:shadow-[0_0_40px_-10px_rgba(249,115,22,0.28)]"
+                  className="group flex flex-col justify-between rounded-[28px] border border-zinc-800/80 bg-zinc-950/90 p-5 text-sm shadow-lg shadow-black/50 transition hover:-translate-y-1 hover:border-white/60 hover:shadow-[0_0_48px_-16px_rgba(0,0,0,0.9)]"
                 >
                   <div className="mb-3 flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
@@ -198,8 +198,8 @@ export default function IntegrationsPage() {
                       whileTap={!isLoading ? { scale: 0.98 } : {}}
                       className={`inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition ${
                         isActive
-                          ? "bg-orange-500 text-black hover:bg-orange-400 hover:shadow-[0_0_20px_-4px_rgba(249,115,22,0.4)]"
-                          : "border border-white/15 bg-black/80 text-white hover:border-orange-500 hover:bg-orange-500/10 hover:text-orange-400 hover:shadow-[0_0_20px_-6px_rgba(249,115,22,0.25)]"
+                          ? "btn-black"
+                          : "border border-white/15 bg-black/80 text-white hover:border-white/60 hover:bg-white/5"
                       } ${isLoading ? "cursor-wait opacity-80" : ""}`}
                     >
                       {isLoading && (

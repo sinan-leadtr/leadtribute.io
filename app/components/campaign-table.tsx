@@ -60,7 +60,7 @@ function RoasCell({ roas }: { roas: number }) {
     ? "text-red-400"
     : isHigh
       ? "text-emerald-400"
-      : "text-orange-400";
+      : "text-sky-400";
   return <span className={`font-medium tabular-nums ${className}`}>{roas.toFixed(1)}x</span>;
 }
 
@@ -99,7 +99,7 @@ export function CampaignTable({ campaigns = [] }: CampaignTableProps) {
                   tabIndex={0}
                   onClick={() => router.push(`/campaigns/${row.id}`)}
                   onKeyDown={(e) => e.key === "Enter" && router.push(`/campaigns/${row.id}`)}
-                  className="cursor-pointer border-b border-white/5 transition-colors hover:bg-zinc-900 hover:bg-orange-500/5 last:border-0"
+                  className="cursor-pointer border-b border-white/5 transition-colors hover:bg-zinc-900 last:border-0"
                 >
                   <td className="py-3 pr-4">
                     <div className="flex items-center gap-2">

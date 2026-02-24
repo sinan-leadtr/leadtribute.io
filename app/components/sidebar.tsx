@@ -38,8 +38,8 @@ export function Sidebar() {
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto py-6">
         {/* Logo / Home → Dashboard */}
         <Link href="/dashboard" className="mb-8 flex items-center gap-2 px-2">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-orange-500/10 ring-1 ring-orange-400/60">
-            <span className="text-lg font-semibold text-orange-400">LT</span>
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-white/5 ring-1 ring-white/40">
+            <span className="text-lg font-semibold text-white">LT</span>
           </div>
           {!isCollapsed && (
             <div className="min-w-0 flex-1">
@@ -63,10 +63,10 @@ export function Sidebar() {
             "flex w-full items-center gap-3 rounded-2xl px-3 py-2 transition";
 
           const activeClasses =
-            "bg-white/10 text-orange-400 ring-1 ring-orange-500/40";
+            "bg-white text-black ring-1 ring-white";
 
           const idleClasses =
-            "text-white/80 hover:bg-orange-500/10 hover:text-orange-500";
+            "text-white/80 hover:bg-white/10 hover:text-white";
 
           const Icon = item.icon;
 
@@ -81,7 +81,7 @@ export function Sidebar() {
             >
               <span
                 className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-black text-white/60 ${
-                  isActive ? "text-orange-400" : ""
+                  isActive ? "text-white" : ""
                 }`}
               >
                 <Icon className="h-3.5 w-3.5" />
@@ -109,7 +109,7 @@ export function Sidebar() {
           <button
             type="button"
             onClick={() => setIsCollapsed((c) => !c)}
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/10 text-white/70 transition hover:border-orange-500 hover:bg-orange-500/10 hover:text-orange-400"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/10 text-white/70 transition hover:border-white/60 hover:bg-white/10"
             aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             {isCollapsed ? (

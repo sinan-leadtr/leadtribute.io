@@ -70,7 +70,7 @@ function CustomTooltip(props: {
         </div>
         <div className="flex items-center justify-between gap-4">
           <span className="text-white/60">ROAS</span>
-          <span className="font-medium text-orange-400">{Number(roasItem.value).toFixed(1)}x</span>
+          <span className="font-medium text-sky-400">{Number(roasItem.value).toFixed(1)}x</span>
         </div>
       </div>
     </div>
@@ -105,7 +105,7 @@ export default function CampaignDetailPage() {
         <div className="mb-6">
           <Link
             href="/dashboard"
-            className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-transparent px-3 py-2 text-sm font-medium text-white/80 transition hover:border-orange-500 hover:bg-orange-500/10 hover:text-orange-400"
+            className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-transparent px-3 py-2 text-sm font-medium text-white/80 transition hover:border-white/60 hover:bg-white/5"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Dashboard
@@ -125,19 +125,19 @@ export default function CampaignDetailPage() {
 
         {/* KPI cards */}
         <section className="mb-6 grid gap-4 sm:grid-cols-3">
-          <article className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:-translate-y-0.5 hover:border-orange-500/40 hover:shadow-[0_0_30px_-10px_rgba(249,115,22,0.25)]">
+          <article className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:-translate-y-0.5 hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)]">
             <p className="text-xs font-medium uppercase tracking-[0.16em] text-white/60">Spend</p>
             <p className="mt-1 text-xl font-bold tabular-nums text-white sm:text-2xl">
               € {campaign.spend.toLocaleString("de-DE")}
             </p>
           </article>
-          <article className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:-translate-y-0.5 hover:border-orange-500/40 hover:shadow-[0_0_30px_-10px_rgba(249,115,22,0.25)]">
+          <article className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:-translate-y-0.5 hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)]">
             <p className="text-xs font-medium uppercase tracking-[0.16em] text-white/60">ROAS</p>
-            <p className="mt-1 text-xl font-bold tabular-nums text-orange-400 sm:text-2xl">
+            <p className="mt-1 text-xl font-bold tabular-nums text-sky-400 sm:text-2xl">
               {campaign.roas > 0 ? `${campaign.roas.toFixed(1)}x` : "—"}
             </p>
           </article>
-          <article className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:-translate-y-0.5 hover:border-orange-500/40 hover:shadow-[0_0_30px_-10px_rgba(249,115,22,0.25)]">
+          <article className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:-translate-y-0.5 hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)]">
             <p className="text-xs font-medium uppercase tracking-[0.16em] text-white/60">Revenue</p>
             <p className="mt-1 text-xl font-bold tabular-nums text-white sm:text-2xl">
               € {campaign.revenue.toLocaleString("de-DE")}
@@ -170,7 +170,7 @@ export default function CampaignDetailPage() {
                   orientation="right"
                   tickLine={false}
                   axisLine={false}
-                  tick={{ fill: "#f97316", fontSize: 10 }}
+                  tick={{ fill: "#38bdf8", fontSize: 10 }}
                   tickFormatter={(v) => `${Number(v).toFixed(1)}x`}
                 />
                 <Tooltip cursor={{ fill: "rgba(15,23,42,0.75)" }} content={<CustomTooltip />} />
@@ -189,9 +189,9 @@ export default function CampaignDetailPage() {
                   type="monotone"
                   dataKey="roas"
                   name="ROAS"
-                  stroke="#f97316"
+                  stroke="#6366f1"
                   strokeWidth={2.4}
-                  dot={{ r: 3, strokeWidth: 1.5, stroke: "#fed7aa", fill: "#f97316" }}
+                  dot={{ r: 3, strokeWidth: 1.5, stroke: "#c7d2fe", fill: "#6366f1" }}
                   activeDot={{ r: 4.5 }}
                 />
               </ComposedChart>
@@ -237,15 +237,15 @@ export default function CampaignDetailPage() {
                       € {row.spend.toLocaleString("de-DE")}
                     </td>
                     <td className="py-3 pr-4 text-right">
-                      <span
-                        className={
-                          row.roas >= 4
-                            ? "text-emerald-400"
-                            : row.roas < 2
-                              ? "text-red-400"
-                              : "text-orange-400"
-                        }
-                      >
+                        <span
+                          className={
+                            row.roas >= 4
+                              ? "text-emerald-400"
+                              : row.roas < 2
+                                ? "text-red-400"
+                                : "text-sky-400"
+                          }
+                        >
                         {row.roas.toFixed(1)}x
                       </span>
                     </td>

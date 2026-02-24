@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
-/* AMOLED True Black – nichts überschreibt #000000 */
+/* Base design tokens – light by default, dark via .dark */
 :root {
-  --background: 0 0% 0%;
-  --foreground: 0 0% 98%;
-  --card: 0 0% 4%;
-  --card-foreground: 0 0% 98%;
-  --border: 0 0% 12%;
-  --input: 0 0% 12%;
+  --background: 0 0% 100%;
+  --foreground: 222 47% 11%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  --border: 215 16% 84%;
+  --input: 215 16% 84%;
 }
 
 .dark {
@@ -21,12 +21,12 @@
 
 @layer base {
   html {
-    background-color: #000000 !important;
+    background-color: hsl(var(--background));
   }
 
   body {
-    background-color: #000000 !important;
-    color: #fafafa;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
     font-family: var(--font-geist-sans), system-ui, -apple-system,
       BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
@@ -39,4 +39,153 @@
   --color-card-foreground: hsl(var(--card-foreground));
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
+}
+
+@keyframes hero-shimmer {
+  0% {
+    background-position: 0% 50%;
+    filter: brightness(1);
+  }
+  50% {
+    background-position: 100% 50%;
+    filter: brightness(1.08);
+  }
+  100% {
+    background-position: 0% 50%;
+    filter: brightness(1);
+  }
+}
+
+.hero-shimmer {
+  background-image: linear-gradient(
+    120deg,
+    /* fein gemischter Verlauf: mehrere nahe Farbstops für „blurry“ Look */
+    #a855f7,
+    #7c3aed,
+    #6366f1,
+    #4f46e5,
+    #38bdf8,
+    #22d3ee,
+    #22c55e,
+    #0ea5e9,
+    #6366f1,
+    #a855f7
+  );
+  background-size: 300% 100%;
+  /* ping-pong: hin und zurück, dadurch kein sichtbarer Loop-Sprung */
+  animation: hero-shimmer 10s ease-in-out infinite;
+}
+
+/* Reusable black CTA button with multi-color hover glow */
+.btn-black {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background-color: #000000;
+  color: #ffffff;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+
+.btn-black::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background-image: linear-gradient(
+    120deg,
+    #a855f7,
+    #7c3aed,
+    #6366f1,
+    #4f46e5,
+    #38bdf8,
+    #22d3ee,
+    #22c55e,
+    #0ea5e9,
+    #6366f1,
+    #a855f7
+  );
+  background-size: 300% 100%;
+  opacity: 0;
+  animation: hero-shimmer 10s linear infinite;
+  transition: opacity 0.4s ease-out;
+}
+
+.btn-black::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: inherit;
+  background-color: #000000;
+  z-index: 0;
+}
+
+.btn-black span {
+  position: relative;
+  z-index: 10;
+}
+
+.btn-black:hover {
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.4);
+}
+
+.btn-black:hover::before {
+  opacity: 1;
+}
+
+/* Animated gradient ring for small pill controls (e.g. dashboard tabs) */
+@keyframes tab-ring-shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+.tab-ring {
+  position: relative;
+  border-radius: 9999px;
+  padding: 1px;
+  background-image: linear-gradient(
+    120deg,
+    #a855f7,
+    #6366f1,
+    #38bdf8,
+    #22d3ee,
+    #22c55e,
+    #0ea5e9,
+    #6366f1,
+    #a855f7
+  );
+  background-size: 250% 250%;
+  animation: tab-ring-shimmer 8s linear infinite;
+}
+
+@keyframes attribution-orbit {
+  0% {
+    transform: translateX(0) translateY(0) scale(0.9);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateX(10px) translateY(-3px) scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(20px) translateY(0) scale(0.9);
+    opacity: 0.85;
+  }
+}
+
+.attribution-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 30% 30%, #22c55e, #0ea5e9 65%, transparent 70%);
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.9);
+  animation: attribution-orbit 2.4s ease-in-out infinite alternate;
 }

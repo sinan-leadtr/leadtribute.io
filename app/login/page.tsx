@@ -9,7 +9,7 @@ import { createClient } from "@/lib/supabase/client";
 type Tab = "login" | "signup";
 
 const inputBase =
-  "w-full rounded-2xl border border-zinc-800 bg-black/40 px-4 py-3 text-sm text-white placeholder:text-zinc-500 transition focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50 disabled:opacity-60";
+  "w-full rounded-2xl border border-zinc-800 bg-black/40 px-4 py-3 text-sm text-white placeholder:text-zinc-500 transition focus:border-white focus:outline-none focus:ring-2 focus:ring-white/60 disabled:opacity-60";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -112,15 +112,15 @@ export default function LoginPage() {
       style={{ backgroundColor: "#000000" }}
     >
       <div
-        className="pointer-events-none absolute left-1/2 top-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange-500 opacity-20 blur-3xl"
+        className="pointer-events-none absolute left-1/2 top-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-violet-500 opacity-20 blur-3xl"
         aria-hidden
       />
 
-      <div className="relative z-10 w-full max-w-[400px] rounded-3xl border border-zinc-800 bg-zinc-950 px-8 py-8 shadow-2xl shadow-black/50 transition-colors hover:border-orange-500/40 hover:shadow-[0_0_50px_-15px_rgba(249,115,22,0.2)] focus-within:border-orange-500/60">
+      <div className="relative z-10 w-full max-w-[400px] rounded-3xl border border-zinc-800 bg-zinc-950 px-8 py-8 shadow-2xl shadow-black/50 transition-colors hover:border-white/60 hover:shadow-[0_0_60px_-18px_rgba(0,0,0,0.9)] focus-within:border-white/70">
         {/* Logo + Headline */}
         <div className="mb-6 flex flex-col items-center text-center">
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/10 ring-1 ring-orange-400/60">
-            <span className="text-xl font-semibold text-orange-400">LT</span>
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-white/5 ring-1 ring-white/40">
+            <span className="text-xl font-semibold text-white">LT</span>
           </div>
           <h1 className="text-xl font-semibold tracking-tight text-white">
             {tab === "login" ? "Willkommen zurück" : "Account erstellen"}
@@ -133,26 +133,26 @@ export default function LoginPage() {
         </div>
 
         {/* Tabs */}
-        <div className="mb-6 flex rounded-2xl border border-zinc-800 bg-black/40 p-1">
+            <div className="mb-6 flex rounded-2xl border border-zinc-800 bg-black/40 p-1">
           <button
             type="button"
             onClick={() => { setTab("login"); setError(null); }}
-            className={`flex-1 rounded-xl py-2.5 text-sm font-medium transition ${
+              className={`flex-1 rounded-xl py-2.5 text-sm font-medium transition ${
               tab === "login"
-                ? "bg-orange-500 text-black shadow-lg shadow-orange-500/20"
+                ? "bg-white text-black"
                 : "text-white/70 hover:text-white hover:bg-white/5"
-            }`}
+              }`}
           >
             Anmelden
           </button>
           <button
             type="button"
             onClick={() => { setTab("signup"); setError(null); }}
-            className={`flex-1 rounded-xl py-2.5 text-sm font-medium transition ${
+              className={`flex-1 rounded-xl py-2.5 text-sm font-medium transition ${
               tab === "signup"
-                ? "bg-orange-500 text-black shadow-lg shadow-orange-500/20"
+                ? "bg-white text-black"
                 : "text-white/70 hover:text-white hover:bg-white/5"
-            }`}
+              }`}
           >
             Registrieren
           </button>
@@ -193,7 +193,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="flex w-full items-center justify-center gap-2 rounded-full bg-orange-500 px-6 py-3.5 text-sm font-semibold text-black transition hover:bg-orange-400 hover:shadow-[0_0_30px_-5px_rgba(249,115,22,0.4)] focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-zinc-950 disabled:opacity-70"
+              className="btn-black flex w-full items-center justify-center gap-2 px-6 py-3.5 text-sm font-semibold"
             >
               {isLoading ? (
                 <>
@@ -254,7 +254,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="flex w-full items-center justify-center gap-2 rounded-full bg-orange-500 px-6 py-3.5 text-sm font-semibold text-black transition hover:bg-orange-400 hover:shadow-[0_0_30px_-5px_rgba(249,115,22,0.4)] focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-zinc-950 disabled:opacity-70"
+              className="btn-black flex w-full items-center justify-center gap-2 px-6 py-3.5 text-sm font-semibold"
             >
               {isLoading ? (
                 <>
@@ -283,7 +283,7 @@ export default function LoginPage() {
               type="button"
               disabled={isLoading}
               onClick={handleGoogleLogin}
-              className="flex flex-1 items-center justify-center gap-2 rounded-full border border-zinc-700 bg-black/40 px-4 py-3 text-sm font-medium text-white/90 transition hover:border-orange-500/50 hover:bg-orange-500/10 hover:text-orange-400 disabled:opacity-60"
+            className="flex flex-1 items-center justify-center gap-2 rounded-full border border-zinc-700 bg-black/40 px-4 py-3 text-sm font-medium text-white/90 transition hover:border-white/60 hover:bg-white/5 disabled:opacity-60"
             >
               <GoogleIcon className="h-4 w-4 shrink-0" />
               Google
@@ -292,7 +292,7 @@ export default function LoginPage() {
               type="button"
               disabled={isLoading}
               onClick={handleAppleLogin}
-              className="flex flex-1 items-center justify-center gap-2 rounded-full border border-zinc-700 bg-black/40 px-4 py-3 text-sm font-medium text-white/90 transition hover:border-orange-500/50 hover:bg-orange-500/10 hover:text-orange-400 disabled:opacity-60"
+            className="flex flex-1 items-center justify-center gap-2 rounded-full border border-zinc-700 bg-black/40 px-4 py-3 text-sm font-medium text-white/90 transition hover:border-white/60 hover:bg-white/5 disabled:opacity-60"
             >
               <AppleIcon className="h-4 w-4 shrink-0" />
               Apple

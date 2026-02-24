@@ -76,12 +76,12 @@ export function Pricing() {
     <section className="relative z-10 px-6 py-24 sm:px-8 sm:py-32">
       <div className="mx-auto max-w-6xl">
         <motion.h2
-          className="text-center text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl"
+          className="text-center text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl"
           {...sectionFade}
         >
           Einfaches Pricing
         </motion.h2>
-        <p className="mx-auto mt-4 max-w-xl text-center text-white/60">
+        <p className="mx-auto mt-4 max-w-xl text-center text-black/60">
           Starte kostenlos. Wechsle jederzeit.
         </p>
 
@@ -90,7 +90,7 @@ export function Pricing() {
           className="mt-10 flex flex-wrap items-center justify-center gap-4"
           {...sectionFade}
         >
-          <span className={`text-sm font-medium ${!yearly ? "text-white" : "text-white/50"}`}>
+          <span className={`text-sm font-medium ${!yearly ? "text-black" : "text-black/50"}`}>
             Monatlich
           </span>
           <button
@@ -98,13 +98,13 @@ export function Pricing() {
             role="switch"
             aria-checked={yearly}
             onClick={() => setYearly((v) => !v)}
-            className="relative h-8 w-14 rounded-full border border-white/20 bg-zinc-900/80 transition hover:border-orange-500/40 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+            className="relative h-8 w-14 rounded-full border border-black/10 bg-black/80 transition hover:border-black focus:outline-none focus:ring-2 focus:ring-black/50"
           >
             <span
-              className={`absolute top-1 left-1 h-6 w-6 rounded-full bg-orange-500 shadow-lg shadow-orange-500/30 transition-transform ${yearly ? "translate-x-6" : "translate-x-0"}`}
+              className={`absolute top-1 left-1 h-6 w-6 rounded-full bg-white shadow-lg shadow-black/40 transition-transform ${yearly ? "translate-x-6" : "translate-x-0"}`}
             />
           </button>
-          <span className={`text-sm font-medium ${yearly ? "text-white" : "text-white/50"}`}>
+            <span className={`text-sm font-medium ${yearly ? "text-black" : "text-black/50"}`}>
             Jährlich
           </span>
           <span className="rounded-full bg-emerald-500/20 px-2.5 py-0.5 text-xs font-semibold text-emerald-400 ring-1 ring-emerald-500/40">
@@ -122,7 +122,7 @@ export function Pricing() {
                 key={tier.id}
                 className={`relative flex flex-col rounded-3xl border p-6 sm:p-8 ${
                   tier.highlighted
-                    ? "border-2 border-orange-500/50 bg-zinc-950/90 shadow-[0_0_40px_-10px_rgba(249,115,22,0.25)] lg:-mt-2 lg:scale-[1.02]"
+                    ? "border-2 border-black bg-zinc-950/90 shadow-[0_0_60px_-20px_rgba(0,0,0,0.7)] lg:-mt-2 lg:scale-[1.02]"
                     : "border-zinc-800/80 bg-zinc-900/50"
                 }`}
                 initial={{ opacity: 0, y: 30 }}
@@ -131,7 +131,7 @@ export function Pricing() {
                 transition={{ duration: 0.45, delay: i * 0.1 }}
               >
                 {tier.badge && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-orange-500 px-3 py-1 text-xs font-semibold text-black">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-white px-3 py-1 text-xs font-semibold text-black">
                     {tier.badge}
                   </div>
                 )}
@@ -162,13 +162,13 @@ export function Pricing() {
                 <div className="mt-auto pt-8">
                   <Link
                     href={tier.href}
-                    className={`inline-flex w-full justify-center rounded-full px-4 py-3 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-black ${
+                    className={`inline-flex w-full justify-center rounded-full px-4 py-3 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 focus:ring-offset-black ${
                       tier.highlighted
-                        ? "bg-orange-500 text-black shadow-lg shadow-orange-500/25 hover:bg-orange-400 hover:shadow-orange-500/35"
-                        : "border border-white/20 bg-transparent text-white hover:border-orange-500/50 hover:bg-orange-500/10 hover:text-orange-400"
+                        ? "btn-black"
+                        : "border border-white/20 bg-transparent text-white hover:border-white/50 hover:bg-white/10"
                     }`}
                   >
-                    {tier.cta}
+                    {tier.highlighted ? <span>{tier.cta}</span> : tier.cta}
                   </Link>
                 </div>
               </motion.div>

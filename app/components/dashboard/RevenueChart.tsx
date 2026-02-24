@@ -10,7 +10,7 @@ import {
   YAxis,
 } from "recharts";
 
-const LEADRITUTE_ORANGE = "#f97316";
+const LEADTRIBUTE_ACCENT = "#6366f1";
 
 // Simulierter Umsatzverlauf der letzten 7 Tage
 function getLast7DaysData(): { day: string; revenue: number }[] {
@@ -33,9 +33,9 @@ export function RevenueChart() {
           margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
         >
           <defs>
-            <linearGradient id="revenueOrangeGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={LEADRITUTE_ORANGE} stopOpacity={0.4} />
-              <stop offset="100%" stopColor={LEADRITUTE_ORANGE} stopOpacity={0} />
+            <linearGradient id="revenueAccentGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={LEADTRIBUTE_ACCENT} stopOpacity={0.4} />
+              <stop offset="100%" stopColor={LEADTRIBUTE_ACCENT} stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid
@@ -71,9 +71,9 @@ export function RevenueChart() {
           <Area
             type="monotone"
             dataKey="revenue"
-            stroke={LEADRITUTE_ORANGE}
+            stroke={LEADTRIBUTE_ACCENT}
             strokeWidth={2}
-            fill="url(#revenueOrangeGradient)"
+            fill="url(#revenueAccentGradient)"
           />
         </AreaChart>
       </ResponsiveContainer>

@@ -22,9 +22,9 @@ function Switch({
         role="switch"
         aria-checked={checked}
         onClick={() => onCheckedChange(!checked)}
-        className={`relative h-6 w-11 shrink-0 rounded-full border transition focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-zinc-950 ${
+        className={`relative h-6 w-11 shrink-0 rounded-full border transition focus:outline-none focus:ring-2 focus:ring-white/70 focus:ring-offset-2 focus:ring-offset-zinc-950 ${
           checked
-            ? "border-orange-500/50 bg-orange-500/30"
+            ? "border-white/70 bg-white/20"
             : "border-zinc-700 bg-zinc-900"
         }`}
       >
@@ -93,12 +93,12 @@ export default function SettingsPage() {
             <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
               <div className="flex flex-col items-center gap-3 sm:shrink-0">
                 <div className="flex h-24 w-24 items-center justify-center rounded-full border-2 border-zinc-700 bg-zinc-900">
-                  <span className="text-2xl font-semibold text-orange-400">S</span>
+                  <span className="text-2xl font-semibold text-white">S</span>
                 </div>
                 <button
                   type="button"
                   onClick={() => toast.info("Photo upload is coming soon.")}
-                  className="rounded-full border border-zinc-700 bg-zinc-900 px-4 py-2 text-xs font-medium text-white/80 transition hover:border-orange-500/50 hover:bg-orange-500/10 hover:text-orange-400"
+                  className="rounded-full border border-zinc-700 bg-zinc-900 px-4 py-2 text-xs font-medium text-white/80 transition hover:border-white/60 hover:bg-white/5"
                 >
                   Change Photo
                 </button>
@@ -113,7 +113,7 @@ export default function SettingsPage() {
                     type="text"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="w-full rounded-2xl border border-zinc-800 bg-zinc-900 px-4 py-2.5 text-sm text-white placeholder:text-zinc-500 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+                    className="w-full rounded-2xl border border-zinc-800 bg-zinc-900 px-4 py-2.5 text-sm text-white placeholder:text-zinc-500 focus:border-white focus:outline-none focus:ring-2 focus:ring-white/60"
                   />
                 </div>
                 <div>
@@ -125,15 +125,15 @@ export default function SettingsPage() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full rounded-2xl border border-zinc-800 bg-zinc-900 px-4 py-2.5 text-sm text-white placeholder:text-zinc-500 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+                    className="w-full rounded-2xl border border-zinc-800 bg-zinc-900 px-4 py-2.5 text-sm text-white placeholder:text-zinc-500 focus:border-white focus:outline-none focus:ring-2 focus:ring-white/60"
                   />
                 </div>
                 <button
                   type="button"
                   onClick={handleSave}
-                  className="rounded-full bg-orange-500 px-6 py-3 text-sm font-semibold text-black transition hover:bg-orange-400 hover:shadow-[0_0_30px_-5px_rgba(249,115,22,0.4)] focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-zinc-950"
+                  className="btn-black px-6 py-3 text-sm font-semibold"
                 >
-                  {saved ? "Saved!" : "Save Changes"}
+                  <span>{saved ? "Saved!" : "Save Changes"}</span>
                 </button>
               </div>
             </div>
@@ -182,7 +182,7 @@ export default function SettingsPage() {
                   onClick={() =>
                     toast.info("Redirecting to Stripe Customer Portal...")
                   }
-                  className="mt-4 rounded-full border border-zinc-700 bg-transparent px-5 py-2.5 text-sm font-medium text-white/90 transition hover:border-orange-500 hover:bg-orange-500/10 hover:text-orange-400 hover:shadow-[0_0_20px_-5px_rgba(249,115,22,0.25)]"
+                  className="mt-4 rounded-full border border-zinc-700 bg-transparent px-5 py-2.5 text-sm font-medium text-white/90 transition hover:border-white/60 hover:bg-white/5"
                 >
                   Manage Subscription
                 </button>

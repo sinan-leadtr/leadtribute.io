@@ -65,7 +65,7 @@ function Label({
 function Input({ className = "", ...props }: any) {
   return (
     <input
-      className={`w-full rounded-xl border border-zinc-700 bg-zinc-900/80 px-4 py-2.5 text-sm text-white placeholder:text-white/40 focus:border-orange-500/50 focus:outline-none focus:ring-1 focus:ring-orange-500/30 ${className}`}
+      className={`w-full rounded-xl border border-zinc-700 bg-zinc-900/80 px-4 py-2.5 text-sm text-white placeholder:text-white/40 focus:border-white/70 focus:outline-none focus:ring-1 focus:ring-white/50 ${className}`}
       {...props}
     />
   );
@@ -78,10 +78,10 @@ function Button({
 }: any) {
   return (
     <button
-      className={`inline-flex items-center justify-center gap-2 rounded-full bg-orange-500 px-5 py-2.5 text-sm font-semibold text-black shadow-lg shadow-orange-500/25 transition hover:bg-orange-400 disabled:opacity-60 ${className}`}
+      className={`btn-black inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold ${className}`}
       {...props}
     >
-      {children}
+      <span>{children}</span>
     </button>
   );
 }
@@ -136,9 +136,9 @@ function ProviderCard({ title, icon, connected, saving, onSave, children }: Card
           type="button"
           onClick={onSave}
           disabled={saving}
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-orange-500 px-5 py-2.5 text-sm font-semibold text-black shadow-lg shadow-orange-500/25 transition hover:bg-orange-400 disabled:opacity-60"
+          className="btn-black inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold disabled:opacity-60"
         >
-          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save Connection"}
+          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <span>Save Connection</span>}
         </button>
       </div>
     </div>
@@ -183,7 +183,7 @@ export function IntegrationsForm({ initialKeys }: Props) {
   };
 
   const inputClass =
-    "w-full rounded-xl border border-zinc-700 bg-zinc-900/80 px-4 py-2.5 text-sm text-white placeholder:text-white/40 focus:border-orange-500/50 focus:outline-none focus:ring-1 focus:ring-orange-500/30";
+    "w-full rounded-xl border border-zinc-700 bg-zinc-900/80 px-4 py-2.5 text-sm text-white placeholder:text-white/40 focus:border-white/70 focus:outline-none focus:ring-1 focus:ring-white/50";
 
   return (
     <div className="flex min-h-screen bg-black text-white">

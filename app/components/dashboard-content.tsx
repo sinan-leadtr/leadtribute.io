@@ -82,7 +82,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
         ? "sky"
         : forecastTrend >= 0
             ? "emerald"
-            : "orange";
+            : "sky";
 
     const chartData =
         blended.length > 0
@@ -121,7 +121,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
     }
 
     return (
-        <div className="flex min-h-screen bg-black text-white" style={{ backgroundColor: "#000000" }}>
+        <div className="flex min-h-screen bg-white text-slate-900">
             <Sidebar />
 
             {/* Main content – no background so body black shows through */}
@@ -152,7 +152,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                         <button
                             type="button"
                             onClick={handleSyncData}
-                            className="inline-flex items-center gap-1.5 rounded-full border border-orange-500/60 bg-orange-500 px-3 py-1.5 text-xs font-semibold text-black shadow-sm shadow-orange-500/40 transition hover:bg-orange-400 hover:border-orange-300"
+                            className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-black px-3 py-1.5 text-xs font-semibold text-white shadow-sm shadow-black/40 transition hover:bg-black/80"
                             disabled={syncLoading}
                         >
                             {syncLoading ? (
@@ -172,9 +172,9 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                         <button
                             type="button"
                             onClick={() => toast.info("You have no new notifications.")}
-                            className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-black/80 text-white/70 shadow-sm shadow-black/30 transition hover:border-orange-500 hover:bg-orange-500/10 hover:text-orange-400"
+                            className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-black/10 bg-white/70 text-black/70 shadow-sm shadow-black/10 transition hover:bg-white hover:border-black/20"
                         >
-                            <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-orange-400 shadow-sm shadow-orange-400/80" />
+                            <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400/80" />
                             <span className="h-4 w-4 border-b border-white/40" />
                         </button>
 
@@ -193,7 +193,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                                 { id: "google" as const, label: "Google" },
                                 { id: "tiktok" as const, label: "TikTok" },
                             ] as const
-                        ).map(({ id, label }) => (
+                            ).map(({ id, label }) => (
                             <button
                                 key={id}
                                 onClick={() => {
@@ -204,10 +204,11 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                                             : `Filtering for ${label} Ads...`;
                                     toast(msg, { duration: 2000 });
                                 }}
-                                className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${channel === id
-                                    ? "bg-orange-500 text-black shadow-lg shadow-orange-500/20"
-                                    : "border border-white/10 bg-black/80 text-white/70 hover:border-white/20 hover:bg-white/5 hover:text-white"
-                                    }`}
+                                className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
+                                    channel === id
+                                        ? "bg-white text-black shadow-lg shadow-black/20"
+                                        : "border border-white/10 bg-black/80 text-white/70 hover:border-white/20 hover:bg-white/5 hover:text-white"
+                                }`}
                             >
                                 {label}
                             </button>
@@ -229,13 +230,13 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                         label="Total Spend"
                         value={`€ ${totalSpend.toLocaleString("de-DE")}`}
                         chip="Last 30 days"
-                        chipTone="orange"
+                        chipTone="sky"
                     />
                     <KpiCard
                         label="ROAS"
                         value={`${totalRoas.toFixed(2)}x`}
                         chip="Blended ROAS (30d)"
-                        chipTone="orange"
+                        chipTone="emerald"
                     />
                     <KpiCard
                         label="Revenue"
@@ -253,10 +254,10 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                 </section>
 
                 {/* Chart + Monthly pacing */}
-                <section className="flex flex-1 flex-col gap-4 rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:shadow-[0_0_40px_-10px_rgba(249,115,22,0.15)]">
+                <section className="flex flex-1 flex-col gap-4 rounded-3xl border border-slate-200 bg-white p-4 shadow-xl shadow-black/5">
                     <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
                         {/* Monthly pacing card */}
-                        <div className="w-full rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-4 text-sm shadow-lg shadow-black/50 lg:w-72">
+                        <div className="w-full rounded-3xl border border-slate-200 bg-white p-4 text-sm shadow-lg shadow-black/5 lg:w-72">
                             <div className="mb-3 flex items-center justify-between gap-2">
                                 <div>
                                     <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/60">
@@ -337,7 +338,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                                     </p>
                                 </div>
                                 <div className="flex flex-wrap items-center gap-2 text-xs">
-                                    <button className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] font-medium text-white/90 shadow-sm shadow-black/30 transition hover:border-orange-500 hover:bg-orange-500/10 hover:text-orange-400">
+                                    <button className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] font-medium text-white/90 shadow-sm shadow-black/30 transition hover:border-white/60 hover:bg-white/10">
                                         Last 30 days
                                     </button>
                                     <button className="rounded-full border border-transparent bg-white/5 px-2.5 py-1 text-[11px] font-medium text-white/60 transition hover:border-white/10 hover:bg-white/5 hover:text-white">
@@ -346,7 +347,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                                 </div>
                             </div>
 
-                            <div className="h-[320px] w-full rounded-2xl border border-zinc-800/80 bg-zinc-950/80 p-2 sm:h-[360px] lg:h-[400px]">
+                            <div className="h-[320px] w-full rounded-2xl border border-slate-200 bg-white p-2 sm:h-[360px] lg:h-[400px]">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <ComposedChart
                                         data={chartData}
@@ -376,7 +377,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                                             orientation="right"
                                             tickLine={false}
                                             axisLine={false}
-                                            tick={{ fill: "#f97316", fontSize: 10 }}
+                                            tick={{ fill: "#38bdf8", fontSize: 10 }}
                                             tickFormatter={(v) => `${v.toFixed ? v.toFixed(1) : v}x`}
                                         />
                                         <Tooltip
@@ -398,9 +399,9 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                                             type="monotone"
                                             dataKey="revenue"
                                             name="Revenue"
-                                            stroke="#f97316"
+                                            stroke="#6366f1"
                                             strokeWidth={2.4}
-                                            dot={{ r: 3, strokeWidth: 1.5, stroke: "#fed7aa", fill: "#f97316" }}
+                                            dot={{ r: 3, strokeWidth: 1.5, stroke: "#c7d2fe", fill: "#6366f1" }}
                                             activeDot={{ r: 4.5 }}
                                         />
                                     </ComposedChart>
@@ -415,7 +416,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                     <h2 className="mb-4 text-sm font-semibold text-white">Profitability & Unit Economics</h2>
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                         {/* Shopify Revenue */}
-                        <div className="flex flex-col gap-2 rounded-2xl border border-zinc-800 bg-zinc-950/80 p-4 transition hover:border-orange-500/30 hover:shadow-[0_0_30px_-10px_rgba(249,115,22,0.2)]">
+                        <div className="flex flex-col gap-2 rounded-2xl border border-zinc-800 bg-zinc-950/80 p-4 transition hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)]">
                             <div className="flex items-center gap-2">
                                 <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400">
                                     <ShoppingBag className="h-4 w-4" />
@@ -431,7 +432,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                         </div>
 
                         {/* MER */}
-                        <div className="flex flex-col gap-2 rounded-2xl border border-zinc-800 bg-zinc-950/80 p-4 transition hover:border-orange-500/30 hover:shadow-[0_0_30px_-10px_rgba(249,115,22,0.2)]">
+                        <div className="flex flex-col gap-2 rounded-2xl border border-zinc-800 bg-zinc-950/80 p-4 transition hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)]">
                             <span className="text-xs font-medium uppercase tracking-wider text-white/50">
                                 MER (Marketing Efficiency Ratio)
                             </span>
@@ -447,7 +448,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
 
                         {/* Net Profit (Est.) */}
                         <div
-                            className="group relative flex flex-col gap-2 rounded-2xl border border-zinc-800 bg-zinc-950/80 p-4 transition hover:border-orange-500/30 hover:shadow-[0_0_30px_-10px_rgba(249,115,22,0.2)]"
+                            className="group relative flex flex-col gap-2 rounded-2xl border border-zinc-800 bg-zinc-950/80 p-4 transition hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)]"
                             title="Based on estimated 30% COGS"
                         >
                             <span className="text-xs font-medium uppercase tracking-wider text-white/50">
@@ -461,7 +462,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                         </div>
 
                         {/* New Customer Rate */}
-                        <div className="flex flex-col gap-2 rounded-2xl border border-zinc-800 bg-zinc-950/80 p-4 transition hover:border-orange-500/30 hover:shadow-[0_0_30px_-10px_rgba(249,115,22,0.2)]">
+                        <div className="flex flex-col gap-2 rounded-2xl border border-zinc-800 bg-zinc-950/80 p-4 transition hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)]">
                             <span className="text-xs font-medium uppercase tracking-wider text-white/50">
                                 New Customer Rate
                             </span>
@@ -474,7 +475,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                 {/* Email & Retention Performance (Klaviyo Mock) */}
                 <section className="mt-6">
                     <h2 className="mb-4 text-sm font-semibold text-white">Email & Retention Performance</h2>
-                    <div className="rounded-3xl border border-zinc-800 border-l-4 border-l-[#25D366] bg-zinc-950/80 p-4 transition hover:border-orange-500/20 hover:shadow-[0_0_30px_-10px_rgba(249,115,22,0.15)] lg:p-5">
+                    <div className="rounded-3xl border border-zinc-800 border-l-4 border-l-[#25D366] bg-zinc-950/80 p-4 transition hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)] lg:p-5">
                         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                             {/* Left: Email Revenue + List Growth */}
                             <div className="space-y-4">
@@ -542,10 +543,10 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
 
                 {/* Analytics Charts – Cards über der Tabelle */}
                 <section className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <div className="rounded-2xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:border-orange-500/20 hover:shadow-[0_0_30px_-10px_rgba(249,115,22,0.15)]">
+                    <div className="rounded-2xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)]">
                         <RevenueChart />
                     </div>
-                    <div className="rounded-2xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:border-orange-500/20 hover:shadow-[0_0_30px_-10px_rgba(249,115,22,0.15)]">
+                    <div className="rounded-2xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)]">
                         <PlatformSpendChart />
                     </div>
                 </section>
@@ -557,8 +558,8 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                 <section id="campaigns" className="mt-6 scroll-mt-4">
                     {campaigns.length === 0 ? (
                         <div className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-10 text-center shadow-xl shadow-black/50 sm:p-14">
-                            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-500/10 ring-1 ring-orange-500/30">
-                                <Sparkles className="h-7 w-7 text-orange-400" />
+                            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-500/10 ring-1 ring-violet-500/40">
+                                <Sparkles className="h-7 w-7 text-violet-300" />
                             </div>
                             <h2 className="mt-5 text-xl font-semibold text-white">
                                 No campaigns yet
@@ -570,7 +571,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                                 type="button"
                                 onClick={handleGenerateDemo}
                                 disabled={demoLoading}
-                                className="mt-6 inline-flex items-center gap-2 rounded-full bg-orange-500 px-6 py-3 text-sm font-semibold text-black shadow-lg shadow-orange-500/25 transition hover:bg-orange-400 hover:shadow-orange-500/35 disabled:opacity-70 disabled:cursor-wait"
+                                className="btn-black mt-6 inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold disabled:opacity-70 disabled:cursor-wait"
                             >
                                 {demoLoading ? (
                                     <>Creating…</>
@@ -598,7 +599,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                 {aiOpen && (
                     <div className="w-full max-w-sm rounded-3xl border border-zinc-800 bg-zinc-950/95 shadow-2xl shadow-black/80 backdrop-blur-sm sm:max-w-xs">
                         <div className="border-b border-white/10 px-4 py-3">
-                            <p className="text-xs font-semibold text-orange-400">AI Copilot</p>
+                            <p className="text-xs font-semibold text-sky-400">AI Copilot</p>
                             <p className="text-[10px] text-white/50">Leadtribute Assistant</p>
                         </div>
                         <div className="space-y-3 p-4">
@@ -611,9 +612,9 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                                 <div className="flex flex-wrap gap-2">
                                     <button
                                         onClick={() => setAiReply("ja")}
-                                        className="rounded-full bg-orange-500 px-3 py-1.5 text-xs font-medium text-black transition hover:bg-orange-400"
+                                        className="btn-black px-3 py-1.5 text-xs font-medium"
                                     >
-                                        Ja, mach +20%
+                                        <span>Ja, mach +20%</span>
                                     </button>
                                     <button
                                         onClick={() => setAiReply("nein")}
@@ -634,7 +635,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                 )}
                 <button
                     onClick={() => setAiOpen((o) => !o)}
-                    className="flex h-14 w-14 items-center justify-center rounded-full bg-orange-500 text-white shadow-lg shadow-orange-500/20 transition hover:bg-orange-400 hover:shadow-orange-500/30"
+                    className="btn-black flex h-14 w-14 items-center justify-center text-white"
                     aria-label="AI Copilot öffnen"
                 >
                     <Bot className="h-7 w-7" />
@@ -663,27 +664,27 @@ function KpiCard({
 }: KpiCardProps) {
     const chipBase =
         chipTone === "orange"
-            ? "bg-orange-500/10 text-orange-300 border-orange-400/40"
+            ? "bg-violet-500/10 text-violet-300 border-violet-400/40"
             : chipTone === "sky"
                 ? "bg-sky-500/10 text-sky-300 border-sky-400/40"
-                : "bg-emerald-500/10 text-emerald-300 border-emerald-400/40"; // Added default emerald handling
+                : "bg-emerald-500/10 text-emerald-300 border-emerald-400/40";
 
     const dotBase =
         chipTone === "orange"
-            ? "bg-orange-400 shadow-orange-400/70"
+            ? "bg-violet-400 shadow-violet-400/70"
             : chipTone === "sky"
                 ? "bg-sky-400 shadow-sky-400/70"
                 : "bg-emerald-400 shadow-emerald-400/70";
 
     return (
-        <article className="group relative overflow-hidden rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-orange-500/50 hover:bg-orange-500/10 hover:shadow-[0_0_40px_-10px_rgba(249,115,22,0.4)]">
+        <article className="group relative overflow-hidden rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-white/60 hover:bg-zinc-900 hover:shadow-[0_0_50px_-16px_rgba(0,0,0,0.9)]">
             <div className="relative flex flex-col gap-3">
                 <div className="flex items-center justify-between gap-2">
                     <p className="inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-[0.16em] text-white/60">
                         {icon}
                         {label}
                     </p>
-                    <span className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-medium backdrop-blur-sm transition group-hover:border-orange-400/60 group-hover:text-orange-200">
+                    <span className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-medium backdrop-blur-sm transition group-hover:border-white/70 group-hover:text-white">
                         <span
                             className={`h-1.5 w-1.5 rounded-full shadow ${dotBase}`}
                         />
@@ -740,10 +741,10 @@ function CustomDualAxisTooltip({ active, payload, label }: TooltipProps) {
                 </div>
                 <div className="flex items-center justify-between gap-4">
                     <span className="inline-flex items-center gap-1 text-white/60">
-                        <span className="h-2 w-2 rounded-full bg-orange-400" />
+                        <span className="h-2 w-2 rounded-full bg-sky-400" />
                         Revenue
                     </span>
-                    <span className="font-medium text-orange-300">
+                    <span className="font-medium text-sky-300">
                         € {revenueItem.value.toLocaleString("de-DE")}
                     </span>
                 </div>

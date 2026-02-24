@@ -7,7 +7,7 @@ export default function ImpressumPage() {
       <div className="mx-auto max-w-3xl px-6 py-16 sm:px-8 sm:py-24">
         <Link
           href="/"
-          className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-white/90 transition hover:border-orange-500 hover:bg-orange-500/10 hover:text-orange-400"
+          className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-white/90 transition hover:border-white/60 hover:bg-white/10"
         >
           <ArrowLeft className="h-4 w-4 shrink-0" />
           Back to Home

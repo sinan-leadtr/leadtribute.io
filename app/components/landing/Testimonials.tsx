@@ -9,7 +9,7 @@ const testimonials = [
     name: "Martin S.",
     title: "E-Com Founder",
     initials: "MS",
-    accent: "bg-orange-500/20 text-orange-400 ring-1 ring-orange-500/40",
+    accent: "bg-violet-500/20 text-violet-400 ring-1 ring-violet-500/40",
   },
   {
     quote:
@@ -25,7 +25,7 @@ const testimonials = [
     name: "Tim B.",
     title: "Agency Owner",
     initials: "TB",
-    accent: "bg-violet-500/20 text-violet-400 ring-1 ring-violet-500/40",
+    accent: "bg-sky-500/20 text-sky-400 ring-1 ring-sky-500/40",
   },
 ];
 
@@ -41,7 +41,7 @@ export function Testimonials() {
     <section className="relative z-10 px-6 py-20 sm:px-8 sm:py-28">
       <div className="mx-auto max-w-6xl">
         <motion.p
-          className="text-center text-sm font-medium uppercase tracking-widest text-white/50 sm:text-base"
+          className="text-center text-sm font-medium uppercase tracking-widest text-black/40 sm:text-base"
           {...sectionFade}
         >
           Trusted by growth teams.
@@ -50,7 +50,7 @@ export function Testimonials() {
           {testimonials.map((item, i) => (
             <motion.div
               key={item.name}
-              className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-6 shadow-xl shadow-black/50 transition hover:border-orange-500/20 hover:shadow-[0_0_30px_-10px_rgba(249,115,22,0.12)] sm:p-8"
+              className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-6 shadow-xl shadow-black/50 transition hover:border-white/60 hover:shadow-[0_0_50px_-14px_rgba(0,0,0,0.9)] sm:p-8"
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}

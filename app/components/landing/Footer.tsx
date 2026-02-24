@@ -21,90 +21,62 @@ const legalLinks = [
 
 export function Footer() {
   return (
-    <footer className="relative z-10 border-t border-white/5 bg-zinc-950/95">
-      <div className="mx-auto max-w-6xl px-6 py-16 sm:px-8 sm:py-20">
-        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-16">
-          {/* Logo & Slogan */}
-          <div className="lg:col-span-1">
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-black"
-            >
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-500/10 ring-1 ring-orange-500/20">
-                <span className="text-lg font-bold text-orange-400">LT</span>
+    <footer className="relative z-10 border-t border-black/5 bg-white">
+      <div className="mx-auto flex max-w-6xl flex-col gap-16 px-6 py-16 sm:px-8 sm:py-20">
+        {/* Link-Spalten */}
+        <div className="grid gap-8 text-sm sm:grid-cols-3">
+          <div className="space-y-2">
+            {productLinks.map(({ label, href }) => (
+              <div key={label}>
+                <Link
+                  href={href}
+                  className="text-sm text-black/70 transition hover:text-black"
+                >
+                  {label}
+                </Link>
               </div>
-              <span className="text-lg font-semibold tracking-tight text-white">
-                Leadtribute
-              </span>
-            </Link>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/60">
-              One source of truth for your ad spend.
-            </p>
+            ))}
           </div>
-
-          {/* Product */}
-          <div>
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-white/50">
-              Product
-            </h3>
-            <ul className="mt-4 space-y-3">
-              {productLinks.map(({ label, href }) => (
-                <li key={label}>
-                  <Link
-                    href={href}
-                    className="text-sm text-white/50 transition hover:text-white"
-                  >
-                    {label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          <div className="space-y-2">
+            {companyLinks.map(({ label, href }) => (
+              <div key={label}>
+                <Link
+                  href={href}
+                  className="text-sm text-black/70 transition hover:text-black"
+                >
+                  {label}
+                </Link>
+              </div>
+            ))}
           </div>
-
-          {/* Company */}
-          <div>
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-white/50">
-              Company
-            </h3>
-            <ul className="mt-4 space-y-3">
-              {companyLinks.map(({ label, href }) => (
-                <li key={label}>
-                  <Link
-                    href={href}
-                    className="text-sm text-white/50 transition hover:text-white"
-                  >
-                    {label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Legal (rechtssicher für Deutschland) */}
-          <div>
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-white/50">
-              Legal
-            </h3>
-            <ul className="mt-4 space-y-3">
-              {legalLinks.map(({ label, href }) => (
-                <li key={label}>
-                  <Link
-                    href={href}
-                    className="text-sm text-white/50 transition hover:text-white"
-                  >
-                    {label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          <div className="space-y-2">
+            {legalLinks.map(({ label, href }) => (
+              <div key={label}>
+                <Link
+                  href={href}
+                  className="text-sm text-black/70 transition hover:text-black"
+                >
+                  {label}
+                </Link>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Copyright */}
-        <div className="mt-16 border-t border-white/5 pt-8 text-center sm:mt-20 sm:pt-10">
-          <p className="text-sm text-white/50">
-            © 2026 Leadtribute. Made in Düsseldorf 🇩🇪
-          </p>
+        {/* Leadtribute Wortmarke + Copyright */}
+        <div className="border-t border-black/5 pt-10 pb-2">
+          <div className="text-center text-[48px] font-semibold tracking-tight text-black sm:text-[64px] md:text-[80px]">
+            <span className="relative inline-flex items-center justify-center">
+              <span>Leadtribute</span>
+              <span
+                className="attribution-dot ml-3 mt-2"
+                aria-hidden
+              />
+            </span>
+          </div>
+          <div className="mt-2 text-center text-xs text-black/40">
+            © 2026 Leadtribute. Made in Düsseldorf
+          </div>
         </div>
       </div>
     </footer>
