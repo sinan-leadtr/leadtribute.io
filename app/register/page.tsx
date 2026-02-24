@@ -71,24 +71,6 @@ export default function RegisterPage() {
     toast.info("Redirecting to Google…");
   }
 
-  async function handleGoogleSignUp() {
-    if (isLoading) return;
-    setIsLoading(true);
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${typeof window !== "undefined" ? window.location.origin : ""}/auth/callback`,
-      },
-    });
-    if (error) {
-      toast.error(error.message);
-      setIsLoading(false);
-      return;
-    }
-    toast.info("Redirecting to Google…");
-  }
-
   async function handleAppleSignUp() {
     if (isLoading) return;
     setIsLoading(true);
