@@ -4,8 +4,8 @@
   "description": "Leadtribute – Final Performance Dashboard (ad analytics, ROAS, campaigns)",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "dev:clean": "lsof -ti :3000 | xargs kill -9 2>/dev/null; next dev",
+    "dev": "next dev --hostname 127.0.0.1",
+    "dev:clean": "lsof -ti :3000 | xargs kill -9 2>/dev/null; next dev --hostname 127.0.0.1",
     "open-app": "open http://localhost:3000",
     "build": "next build",
     "start": "next start",

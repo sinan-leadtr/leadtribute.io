@@ -6,7 +6,8 @@ import { revalidatePath } from "next/cache";
 const DEMO_CAMPAIGNS = [
   { name: "Q1 Brand Awareness", platform: "meta" as const, status: "active" as const, spend: 4250, revenue: 17850 },
   { name: "Search - High Intent", platform: "google" as const, status: "active" as const, spend: 1890, revenue: 9639 },
-  { name: "UGC Test - Gen Z", platform: "tiktok" as const, status: "learning" as const, spend: 620, revenue: 868 },
+  // Use only statuses allowed by the Supabase CHECK constraint ('active', 'paused')
+  { name: "UGC Test - Gen Z", platform: "tiktok" as const, status: "active" as const, spend: 620, revenue: 868 },
   { name: "Retargeting - Cart Abandoners", platform: "meta" as const, status: "active" as const, spend: 2100, revenue: 8190 },
   { name: "Stories - Product Launch", platform: "meta" as const, status: "active" as const, spend: 1250, revenue: 3500 },
 ];
@@ -135,4 +136,232 @@ export async function saveApiKeys(
   }
   revalidatePath("/dashboard/integrations");
   return { ok: true };
+}
+
+// --- Analytics (daily aggregates) ---
+
+export type AnalyticsDailyRow = {
+  id: string;
+  user_id: string;
+  created_at: string;
+  date: string;
+  platform: "meta" | "google" | "shopify" | "tiktok" | "klaviyo" | "blended";
+  spend: number;
+  revenue: number;
+  roas: number;
+  impressions: number | null;
+  clicks: number | null;
+};
+
+export type SyncDataResult = { ok: true } | { ok: false; error: string };
+
+function randomInRange(min: number, max: number): number {
+  return min + Math.random() * (max - min);
+}
+
+function lastNDatesUTC(n: number): string[] {
+  const dates: string[] = [];
+  const today = new Date();
+  for (let i = n - 1; i >= 0; i--) {
+    const d = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() - i));
+    dates.push(d.toISOString().slice(0, 10));
+  }
+  return dates;
+}
+
+export async function syncData(): Promise<SyncDataResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return { ok: false, error: "Not logged in" };
+  }
+
+  const { data: apiKeys, error: apiError } = await supabase
+    .from("api_keys")
+    .select("service, api_key, account_id, shop_url")
+    .eq("user_id", user.id);
+
+  if (apiError) {
+    return { ok: false, error: apiError.message };
+  }
+
+  const services = (apiKeys ?? []).map((k) => k.service as ApiKeyService);
+  const hasMeta = services.includes("meta");
+  const hasGoogle = services.includes("google");
+  const hasShopify = services.includes("shopify");
+
+  if (!hasMeta && !hasGoogle && !hasShopify) {
+    return { ok: false, error: "No connected integrations found. Connect Meta, Google or Shopify first." };
+  }
+
+  const dates = lastNDatesUTC(30);
+  const rows: Omit<AnalyticsDailyRow, "id" | "created_at">[] = [];
+
+  dates.forEach((date, idx) => {
+    let totalSpend = 0;
+    let totalRevenue = 0;
+
+    if (hasMeta) {
+      const spend = Math.round(randomInRange(120, 380) + idx * 2);
+      const roas = Number(randomInRange(2.2, 4.1).toFixed(2));
+      const revenue = Math.round(spend * roas);
+      const impressions = Math.round(spend * randomInRange(80, 140));
+      const clicks = Math.round(impressions * randomInRange(0.01, 0.03));
+
+      rows.push({
+        user_id: user.id,
+        date,
+        platform: "meta",
+        spend,
+        revenue,
+        roas,
+        impressions,
+        clicks,
+      });
+      totalSpend += spend;
+      totalRevenue += revenue;
+    }
+
+    if (hasGoogle) {
+      const spend = Math.round(randomInRange(60, 220) + idx * 1.5);
+      const roas = Number(randomInRange(2.5, 4.5).toFixed(2));
+      const revenue = Math.round(spend * roas);
+      const impressions = Math.round(spend * randomInRange(90, 160));
+      const clicks = Math.round(impressions * randomInRange(0.015, 0.035));
+
+      rows.push({
+        user_id: user.id,
+        date,
+        platform: "google",
+        spend,
+        revenue,
+        roas,
+        impressions,
+        clicks,
+      });
+      totalSpend += spend;
+      totalRevenue += revenue;
+    }
+
+    if (hasShopify) {
+      const base = 700 + idx * 20;
+      const revenue = Math.round(randomInRange(base, base + 800));
+      rows.push({
+        user_id: user.id,
+        date,
+        platform: "shopify",
+        spend: 0,
+        revenue,
+        roas: 0,
+        impressions: null,
+        clicks: null,
+      });
+      totalRevenue += revenue;
+    }
+
+    if (totalSpend > 0 || totalRevenue > 0) {
+      rows.push({
+        user_id: user.id,
+        date,
+        platform: "blended",
+        spend: totalSpend,
+        revenue: totalRevenue,
+        roas: totalSpend > 0 ? Number((totalRevenue / totalSpend).toFixed(2)) : 0,
+        impressions: null,
+        clicks: null,
+      });
+    }
+  });
+
+  const upsertPayload = rows.map((r) => ({
+    ...r,
+  }));
+
+  const { error } = await supabase.from("analytics_daily").upsert(upsertPayload, {
+    onConflict: "user_id,date,platform",
+  });
+  if (error) {
+    return { ok: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard");
+  return { ok: true };
+}
+
+export type ForecastResult =
+  | { ok: true; forecastedRevenue: number; trendPercentage: number }
+  | { ok: false; error: string };
+
+export async function getForecast(): Promise<ForecastResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return { ok: false, error: "Not logged in" };
+  }
+
+  const today = new Date();
+  const start = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() - 29));
+  const startDate = start.toISOString().slice(0, 10);
+
+  const { data, error } = await supabase
+    .from("analytics_daily")
+    .select("date, revenue")
+    .eq("user_id", user.id)
+    .eq("platform", "blended")
+    .gte("date", startDate)
+    .order("date", { ascending: true });
+
+  if (error) {
+    return { ok: false, error: error.message };
+  }
+
+  const rows = (data ?? []).map((r) => ({ date: r.date as string, revenue: Number(r.revenue ?? 0) }));
+  if (rows.length === 0) {
+    return { ok: true, forecastedRevenue: 0, trendPercentage: 0 };
+  }
+  if (rows.length === 1) {
+    return { ok: true, forecastedRevenue: rows[0].revenue, trendPercentage: 0 };
+  }
+
+  const n = rows.length;
+  let sumX = 0;
+  let sumY = 0;
+  let sumXY = 0;
+  let sumX2 = 0;
+
+  rows.forEach((row, i) => {
+    const x = i;
+    const y = row.revenue;
+    sumX += x;
+    sumY += y;
+    sumXY += x * y;
+    sumX2 += x * x;
+  });
+
+  const denom = n * sumX2 - sumX * sumX;
+  const slope = denom !== 0 ? (n * sumXY - sumX * sumY) / denom : 0;
+  const intercept = n !== 0 ? (sumY - slope * sumX) / n : 0;
+
+  const lastIdx = n - 1;
+  const lastDate = new Date(rows[lastIdx].date + "T00:00:00Z");
+  const endOfMonth = new Date(Date.UTC(lastDate.getUTCFullYear(), lastDate.getUTCMonth() + 1, 0));
+  const diffDays = Math.max(
+    0,
+    Math.round((endOfMonth.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24))
+  );
+
+  const forecastIndex = lastIdx + diffDays;
+  const forecastedRevenueRaw = slope * forecastIndex + intercept;
+  const forecastedRevenue = Number(Math.max(0, forecastedRevenueRaw).toFixed(0));
+
+  const firstRev = rows[0].revenue;
+  const lastRev = rows[lastIdx].revenue;
+  const trendPercentage =
+    firstRev > 0 ? Number((((lastRev - firstRev) / firstRev) * 100).toFixed(1)) : 0;
+
+  return { ok: true, forecastedRevenue, trendPercentage };
 }

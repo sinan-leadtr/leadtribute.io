@@ -11,7 +11,7 @@ import { CreativesGrid } from "./creatives-grid";
 import { Sidebar } from "./sidebar";
 import { UserNav } from "./user-nav";
 import { Bot, Calendar, ShoppingBag, Sparkles } from "lucide-react";
-import { generateDemoData } from "@/app/dashboard/actions";
+import { generateDemoData, syncData } from "@/app/dashboard/actions";
 import {
     Bar,
     BarChart,
@@ -26,7 +26,7 @@ import {
     ComposedChart,
 } from "recharts";
 
-const dualAxisData = Array.from({ length: 30 }).map((_, index) => {
+const fallbackDualAxisData = Array.from({ length: 30 }).map((_, index) => {
     const day = index + 1;
     const baseSpend = 350 + Math.sin(index / 3) * 60 + (index % 5) * 18;
     const baseRoas = 3.6 + Math.cos(index / 4) * 0.5 + (index % 7) * 0.03;
@@ -50,14 +50,51 @@ type ChannelFilter = "all" | "meta" | "google" | "tiktok";
 interface DashboardContentProps {
     campaigns: Campaign[];
     integrations: { id: string; platform: string; status: string; connected_at: string }[];
+    analytics: {
+        blended: { date: string; spend: number; revenue: number; roas: number }[];
+        totals: { totalSpend: number; totalRevenue: number; roas: number };
+    };
+    forecast: { forecastedRevenue: number; trendPercentage: number } | null;
 }
 
-export function DashboardContent({ campaigns, integrations = [] }: DashboardContentProps) {
+export function DashboardContent({ campaigns, integrations = [], analytics, forecast }: DashboardContentProps) {
     const router = useRouter();
     const [channel, setChannel] = useState<ChannelFilter>("all");
     const [aiOpen, setAiOpen] = useState(false);
     const [aiReply, setAiReply] = useState<"ja" | "nein" | null>(null);
     const [demoLoading, setDemoLoading] = useState(false);
+    const [syncLoading, setSyncLoading] = useState(false);
+
+    const blended = analytics?.blended ?? [];
+    const totals = analytics?.totals ?? { totalSpend: 0, totalRevenue: 0, roas: 0 };
+
+    const totalSpend = totals.totalSpend;
+    const totalRevenue = totals.totalRevenue;
+    const totalRoas = totals.roas;
+
+    const hasForecast = !!forecast && forecast.forecastedRevenue > 0;
+    const forecastRevenue = hasForecast ? forecast!.forecastedRevenue : 0;
+    const forecastTrend = hasForecast ? forecast!.trendPercentage : 0;
+    const forecastChip = hasForecast
+        ? `AI model • ${forecastTrend >= 0 ? "+" : ""}${forecastTrend.toFixed(1)}% vs. start`
+        : "No forecast yet";
+    const forecastTone: KpiTone = !hasForecast
+        ? "sky"
+        : forecastTrend >= 0
+            ? "emerald"
+            : "orange";
+
+    const chartData =
+        blended.length > 0
+            ? blended.map((d) => ({
+                  day: new Date(d.date + "T00:00:00Z").toLocaleDateString("de-DE", {
+                      day: "2-digit",
+                      month: "short",
+                  }),
+                  spend: Math.round(d.spend),
+                  revenue: Math.round(d.revenue),
+              }))
+            : fallbackDualAxisData;
 
     async function handleGenerateDemo() {
         setDemoLoading(true);
@@ -65,6 +102,18 @@ export function DashboardContent({ campaigns, integrations = [] }: DashboardCont
         setDemoLoading(false);
         if (result.ok) {
             toast.success("5 demo campaigns created. Refreshing…");
+            router.refresh();
+        } else {
+            toast.error(result.error);
+        }
+    }
+
+    async function handleSyncData() {
+        setSyncLoading(true);
+        const result = await syncData();
+        setSyncLoading(false);
+        if (result.ok) {
+            toast.success("Analytics synced for the last 30 days.");
             router.refresh();
         } else {
             toast.error(result.error);
@@ -102,10 +151,21 @@ export function DashboardContent({ campaigns, integrations = [] }: DashboardCont
                     <div className="flex items-center gap-3">
                         <button
                             type="button"
-                            onClick={() => toast.success("Report export started. PDF will be ready shortly.")}
-                            className="hidden rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/90 shadow-sm shadow-black/30 transition hover:border-orange-500 hover:bg-orange-500/10 hover:text-orange-400 sm:inline-flex"
+                            onClick={handleSyncData}
+                            className="inline-flex items-center gap-1.5 rounded-full border border-orange-500/60 bg-orange-500 px-3 py-1.5 text-xs font-semibold text-black shadow-sm shadow-orange-500/40 transition hover:bg-orange-400 hover:border-orange-300"
+                            disabled={syncLoading}
                         >
-                            Export report
+                            {syncLoading ? (
+                                <>
+                                    <span className="h-3 w-3 animate-spin rounded-full border border-black/20 border-t-black" />
+                                    Syncing…
+                                </>
+                            ) : (
+                                <>
+                                    <Sparkles className="h-3.5 w-3.5" />
+                                    Sync Data
+                                </>
+                            )}
                         </button>
 
                         {/* Notifications */}
@@ -167,27 +227,28 @@ export function DashboardContent({ campaigns, integrations = [] }: DashboardCont
                 <section className="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                     <KpiCard
                         label="Total Spend"
-                        value="€ 128.4K"
-                        chip="+12.4% vs. last period"
+                        value={`€ ${totalSpend.toLocaleString("de-DE")}`}
+                        chip="Last 30 days"
                         chipTone="orange"
                     />
                     <KpiCard
                         label="ROAS"
-                        value="4.32x"
-                        chip="+0.41 uplift"
+                        value={`${totalRoas.toFixed(2)}x`}
+                        chip="Blended ROAS (30d)"
                         chipTone="orange"
                     />
                     <KpiCard
                         label="Revenue"
-                        value="€ 554.2K"
-                        chip="+96.2K vs. target"
+                        value={`€ ${totalRevenue.toLocaleString("de-DE")}`}
+                        chip="Last 30 days"
                         chipTone="sky"
                     />
                     <KpiCard
-                        label="CPR"
-                        value="€ 18.67"
-                        chip="-7.8% cost per lead"
-                        chipTone="orange"
+                        label="AI Forecast (Revenue)"
+                        value={`€ ${forecastRevenue.toLocaleString("de-DE")}`}
+                        chip={forecastChip}
+                        chipTone={forecastTone}
+                        icon={<Bot className="h-3 w-3 text-emerald-300" />}
                     />
                 </section>
 
@@ -288,7 +349,7 @@ export function DashboardContent({ campaigns, integrations = [] }: DashboardCont
                             <div className="h-[320px] w-full rounded-2xl border border-zinc-800/80 bg-zinc-950/80 p-2 sm:h-[360px] lg:h-[400px]">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <ComposedChart
-                                        data={dualAxisData}
+                                        data={chartData}
                                         margin={{ top: 12, right: 32, left: 0, bottom: 8 }}
                                     >
                                         <CartesianGrid
@@ -322,12 +383,7 @@ export function DashboardContent({ campaigns, integrations = [] }: DashboardCont
                                             cursor={{ fill: "rgba(15,23,42,0.75)" }}
                                             content={<CustomDualAxisTooltip />}
                                         />
-                                        <Legend
-                                            wrapperStyle={{ fontSize: 11 }}
-                                            formatter={(value) =>
-                                                value === "spend" ? "Ad Spend" : "ROAS"
-                                            }
-                                        />
+                                        <Legend wrapperStyle={{ fontSize: 11 }} />
                                         <Bar
                                             yAxisId="left"
                                             dataKey="spend"
@@ -338,10 +394,10 @@ export function DashboardContent({ campaigns, integrations = [] }: DashboardCont
                                             maxBarSize={18}
                                         />
                                         <Line
-                                            yAxisId="right"
+                                            yAxisId="left"
                                             type="monotone"
-                                            dataKey="roas"
-                                            name="ROAS"
+                                            dataKey="revenue"
+                                            name="Revenue"
                                             stroke="#f97316"
                                             strokeWidth={2.4}
                                             dot={{ r: 3, strokeWidth: 1.5, stroke: "#fed7aa", fill: "#f97316" }}
@@ -595,6 +651,7 @@ interface KpiCardProps {
     value: string;
     chip: string;
     chipTone?: KpiTone;
+    icon?: React.ReactNode;
 }
 
 function KpiCard({
@@ -602,6 +659,7 @@ function KpiCard({
     value,
     chip,
     chipTone = "emerald",
+    icon,
 }: KpiCardProps) {
     const chipBase =
         chipTone === "orange"
@@ -621,7 +679,8 @@ function KpiCard({
         <article className="group relative overflow-hidden rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-orange-500/50 hover:bg-orange-500/10 hover:shadow-[0_0_40px_-10px_rgba(249,115,22,0.4)]">
             <div className="relative flex flex-col gap-3">
                 <div className="flex items-center justify-between gap-2">
-                    <p className="text-xs font-medium uppercase tracking-[0.16em] text-white/60">
+                    <p className="inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-[0.16em] text-white/60">
+                        {icon}
                         {label}
                     </p>
                     <span className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-medium backdrop-blur-sm transition group-hover:border-orange-400/60 group-hover:text-orange-200">
@@ -662,9 +721,9 @@ function CustomDualAxisTooltip({ active, payload, label }: TooltipProps) {
     if (!active || !payload || payload.length === 0) return null;
 
     const spendItem = payload.find((p) => p.dataKey === "spend");
-    const roasItem = payload.find((p) => p.dataKey === "roas");
+    const revenueItem = payload.find((p) => p.dataKey === "revenue");
 
-    if (!spendItem || !roasItem) return null;
+    if (!spendItem || !revenueItem) return null;
 
     return (
         <div className="rounded-2xl border border-zinc-800 bg-zinc-950/95 px-3 py-2 text-xs text-white shadow-2xl shadow-black/70">
@@ -682,10 +741,10 @@ function CustomDualAxisTooltip({ active, payload, label }: TooltipProps) {
                 <div className="flex items-center justify-between gap-4">
                     <span className="inline-flex items-center gap-1 text-white/60">
                         <span className="h-2 w-2 rounded-full bg-orange-400" />
-                        ROAS
+                        Revenue
                     </span>
                     <span className="font-medium text-orange-300">
-                        {roasItem.value.toFixed(2)}x
+                        € {revenueItem.value.toLocaleString("de-DE")}
                     </span>
                 </div>
             </div>
