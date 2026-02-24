@@ -52,7 +52,7 @@ const heroWord = {
     opacity: 1,
     x: 0,
     y: 0,
-    transition: { duration: 1.1, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 1.1 },
   },
 };
 
