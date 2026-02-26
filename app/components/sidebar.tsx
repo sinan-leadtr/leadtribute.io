@@ -59,13 +59,13 @@ export function Sidebar() {
                 : pathname.startsWith(pathOnly);
 
             const baseClasses =
-              "group flex w-full items-center gap-3 rounded-2xl px-3 py-2 transition";
+              "group flex w-full items-center gap-3 rounded-full px-3.5 py-2.5 transition";
 
             const activeClasses =
-              "bg-black text-white border border-black shadow-[0_0_40px_-20px_rgba(0,0,0,0.8)]";
+              "bg-black text-white border-2 border-violet-500 shadow-[0_10px_30px_-18px_rgba(0,0,0,0.9)]";
 
             const idleClasses =
-              "border border-black/10 bg-white text-black/70 hover:bg-black/5 hover:text-black hover:border-black/30";
+              "border border-black/10 bg-white text-black/70 hover:bg-black/5 hover:text-black hover:border-black/20";
 
             const Icon = item.icon;
 
@@ -79,13 +79,13 @@ export function Sidebar() {
                 title={isCollapsed ? item.label : undefined}
               >
                 <span
-                  className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-xl transition ${
+                  className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl text-sm font-medium transition ${
                     isActive
-                      ? "bg-white/10 text-white"
+                      ? "bg-violet-500 text-white shadow-[0_0_0_1px_rgba(255,255,255,0.2)]"
                       : "bg-black/5 text-black/60 group-hover:bg-black/10 group-hover:text-black"
                   }`}
                 >
-                  <Icon className="h-3.5 w-3.5" />
+                  <Icon className="h-4 w-4" />
                 </span>
                 {!isCollapsed && <span className="truncate">{item.label}</span>}
               </Link>
