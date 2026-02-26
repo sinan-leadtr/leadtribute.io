@@ -638,7 +638,15 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                     className="btn-black flex h-14 w-14 items-center justify-center text-white"
                     aria-label="AI Copilot öffnen"
                 >
-                    <Bot className="h-7 w-7" />
+                    <span className="relative flex h-9 w-9 items-center justify-center rounded-full bg-black">
+                        <span
+                            className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-tr from-sky-500 via-violet-500 to-emerald-400 opacity-80 blur-sm"
+                            aria-hidden
+                        />
+                        <span className="relative flex h-7 w-7 items-center justify-center rounded-full bg-black">
+                            <Bot className="h-4 w-4 text-white" />
+                        </span>
+                    </span>
                 </button>
             </div>
         </div>
