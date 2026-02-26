@@ -51,46 +51,48 @@ export function Sidebar() {
           )}
         </Link>
 
-      <nav className="flex-1 space-y-1 text-sm font-medium">
-        {navItems.map((item) => {
-          const pathOnly = item.href.split("#")[0];
-          const isActive =
-            item.label === "Dashboard"
-              ? pathname === "/dashboard"
-              : pathname.startsWith(pathOnly);
+        <nav className="flex-1 space-y-1 text-sm font-medium">
+          {navItems.map((item) => {
+            const pathOnly = item.href.split("#")[0];
+            const isActive =
+              item.label === "Dashboard"
+                ? pathname === "/dashboard"
+                : pathname.startsWith(pathOnly);
 
-          const baseClasses =
-            "flex w-full items-center gap-3 rounded-2xl px-3 py-2 transition";
+            const baseClasses =
+              "group flex w-full items-center gap-3 rounded-2xl px-3 py-2 transition";
 
-          const activeClasses =
-            "bg-white text-black ring-1 ring-white";
+            const activeClasses =
+              "bg-white text-black border border-black/10 shadow-sm";
 
-          const idleClasses =
-            "text-white/80 hover:bg-white/10 hover:text-white";
+            const idleClasses =
+              "border border-white/10 text-white/80 hover:bg-white/10 hover:text-white hover:border-white/40";
 
-          const Icon = item.icon;
+            const Icon = item.icon;
 
-          return (
-            <Link
-              key={item.href + item.label}
-              href={item.href}
-              className={`${baseClasses} ${isCollapsed ? "justify-center px-0" : ""} ${
-                isActive ? activeClasses : idleClasses
-              }`}
-              title={isCollapsed ? item.label : undefined}
-            >
-              <span
-                className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-black text-white/60 ${
-                  isActive ? "text-white" : ""
+            return (
+              <Link
+                key={item.href + item.label}
+                href={item.href}
+                className={`${baseClasses} ${isCollapsed ? "justify-center px-0" : ""} ${
+                  isActive ? activeClasses : idleClasses
                 }`}
+                title={isCollapsed ? item.label : undefined}
               >
-                <Icon className="h-3.5 w-3.5" />
-              </span>
-              {!isCollapsed && <span className="truncate">{item.label}</span>}
-            </Link>
-          );
-        })}
-      </nav>
+                <span
+                  className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-xl transition ${
+                    isActive
+                      ? "bg-black text-white"
+                      : "bg-white/5 text-white/60 group-hover:bg-white/10 group-hover:text-white"
+                  }`}
+                >
+                  <Icon className="h-3.5 w-3.5" />
+                </span>
+                {!isCollapsed && <span className="truncate">{item.label}</span>}
+              </Link>
+            );
+          })}
+        </nav>
 
         {/* Today's Pulse (when open) – gehört zum scrollbaren Bereich */}
         {!isCollapsed && (
