@@ -704,7 +704,7 @@ function KpiCard({
                     {value}
                 </p>
 
-                <div className="mt-1 inline-flex w-fit items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium backdrop-blur-sm transition group-hover:shadow-[0_0_0_1px_rgba(249,115,22,0.65)] group-hover:brightness-110">
+                <div className="mt-1 inline-flex w-fit items-center gap-1.5 rounded-full border border-white/10 px-2.5 py-1 text-[11px] font-medium backdrop-blur-sm transition group-hover:border-white/80 group-hover:shadow-[0_0_0_1px_rgba(255,255,255,0.6)] group-hover:brightness-110">
                     <span className={`rounded-full px-1.5 py-0.5 text-[9px] ${chipBase}`}>
                         {chip}
                     </span>
