@@ -124,26 +124,26 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
         <div className="flex min-h-screen bg-white text-slate-900">
             <Sidebar />
 
-            {/* Main content – no background so body black shows through */}
+            {/* Main content */}
             <main className="flex min-h-screen flex-1 flex-col px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
                 {/* Header */}
                 <header className="mb-4 flex items-center justify-between gap-4">
                     <div className="space-y-1">
-                        <nav className="flex items-center gap-2 text-xs font-medium text-white/60">
-                            <span className="cursor-pointer transition hover:text-white/90">
+                        <nav className="flex items-center gap-2 text-xs font-medium text-slate-500">
+                            <span className="cursor-pointer transition hover:text-slate-900">
                                 Home
                             </span>
-                            <span className="text-white/40">/</span>
-                            <span className="cursor-pointer transition hover:text-white/90">
+                            <span className="text-slate-400">/</span>
+                            <span className="cursor-pointer transition hover:text-slate-900">
                                 Analytics
                             </span>
-                            <span className="text-white/40">/</span>
-                            <span className="text-white/90">Leadtribute Dashboard</span>
+                            <span className="text-slate-400">/</span>
+                            <span className="text-slate-900">Leadtribute Dashboard</span>
                         </nav>
-                        <h1 className="text-xl font-semibold tracking-tight text-white sm:text-2xl">
+                        <h1 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
                             Leadtribute Performance Overview
                         </h1>
-                        <p className="text-xs text-white/60">
+                        <p className="text-xs text-slate-500">
                             Last 30 days • All channels • UTC
                         </p>
                     </div>
@@ -184,7 +184,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
 
                 {/* Control Bar – Filter & Date */}
                 <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <h2 className="text-sm font-semibold text-white">Performance Overview</h2>
+                    <h2 className="text-sm font-semibold text-slate-900">Performance Overview</h2>
                     <div className="flex flex-wrap items-center gap-2">
                         {(
                             [
@@ -216,7 +216,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                         <button
                             type="button"
                             onClick={() => toast("Date range: Last 30 Days", { duration: 2000 })}
-                            className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-black/80 px-3 py-1.5 text-xs font-medium text-white/70 transition hover:border-white/20 hover:bg-white/5 hover:text-white"
+                            className="inline-flex items-center gap-1.5 rounded-full border border-slate-300 bg-slate-900 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-black hover:border-black"
                         >
                             <Calendar className="h-3.5 w-3.5" aria-hidden />
                             <span>Last 30 Days</span>
@@ -257,13 +257,13 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                 <section className="flex flex-1 flex-col gap-4 rounded-3xl border border-slate-200 bg-white p-4 shadow-xl shadow-black/5">
                     <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
                         {/* Monthly pacing card */}
-                        <div className="w-full rounded-3xl border border-slate-200 bg-white p-4 text-sm shadow-lg shadow-black/5 lg:w-72">
+                        <div className="w-full rounded-3xl border border-slate-200 bg-white p-4 text-sm text-slate-900 shadow-lg shadow-black/5 lg:w-72">
                             <div className="mb-3 flex items-center justify-between gap-2">
                                 <div>
-                                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/60">
+                                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
                                         Monthly Pacing
                                     </p>
-                                    <p className="mt-1 text-sm font-semibold text-white">
+                                    <p className="mt-1 text-sm font-semibold text-slate-900">
                                         Budget alignment
                                     </p>
                                 </div>
@@ -278,19 +278,19 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                             </div>
 
                             <div className="mb-3 flex items-baseline justify-between text-xs">
-                                <span className="text-white/60">
+                                <span className="text-slate-600">
                                     Spent:{" "}
-                                    <span className="font-semibold text-white">
+                                    <span className="font-semibold text-slate-900">
                                         € {pacingSpent.toLocaleString("de-DE")}
                                     </span>{" "}
                                     / € {pacingTarget.toLocaleString("de-DE")}
                                 </span>
-                                <span className="font-medium text-white/70">
+                                <span className="font-medium text-slate-700">
                                     {pacingPct.toFixed(0)}%
                                 </span>
                             </div>
 
-                            <div className="relative mb-2 h-2 w-full overflow-hidden rounded-full bg-white/5">
+                            <div className="relative mb-2 h-2 w-full overflow-hidden rounded-full bg-slate-100">
                                 {/* Planned line */}
                                 <div
                                     className="pointer-events-none absolute inset-y-0 w-[2px] bg-white/20"
@@ -304,7 +304,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                                 />
                             </div>
 
-                            <p className="text-xs text-white/60">
+                            <p className="text-xs text-slate-600">
                                 {pacingIsOver ? (
                                     <>
                                         Du bist{" "}
@@ -316,7 +316,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                                 ) : (
                                     <>
                                         Du liegst{" "}
-                                        <span className="font-semibold text-emerald-300">
+                                        <span className="font-semibold text-emerald-600">
                                             {Math.abs(pacingDelta).toFixed(1)}% unter
                                         </span>{" "}
                                         dem geplanten Budget – stabil.
@@ -329,19 +329,19 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                         <div className="flex-1">
                             <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
                                 <div>
-                                    <h2 className="text-sm font-semibold text-white">
+                                    <h2 className="text-sm font-semibold text-slate-900">
                                         Spend &amp; ROAS – last 30 days
                                     </h2>
-                                    <p className="text-xs text-white/60">
+                                    <p className="text-xs text-slate-500">
                                         Kombinierter Überblick: Tages-Spend (Balken) &amp; ROAS
                                         (Linie).
                                     </p>
                                 </div>
                                 <div className="flex flex-wrap items-center gap-2 text-xs">
-                                    <button className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] font-medium text-white/90 shadow-sm shadow-black/30 transition hover:border-white/60 hover:bg-white/10">
+                                    <button className="rounded-full border border-slate-300 bg-slate-900 px-2.5 py-1 text-[11px] font-medium text-white shadow-sm shadow-black/30 transition hover:bg-black hover:border-black">
                                         Last 30 days
                                     </button>
-                                    <button className="rounded-full border border-transparent bg-white/5 px-2.5 py-1 text-[11px] font-medium text-white/60 transition hover:border-white/10 hover:bg-white/5 hover:text-white">
+                                    <button className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-medium text-slate-700 transition hover:bg-slate-100 hover:border-slate-300 hover:text-slate-900">
                                         Compare period
                                     </button>
                                 </div>
@@ -413,7 +413,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
 
                 {/* Profitability & Unit Economics */}
                 <section className="mt-6">
-                    <h2 className="mb-4 text-sm font-semibold text-white">Profitability & Unit Economics</h2>
+                    <h2 className="mb-4 text-sm font-semibold text-slate-900">Profitability & Unit Economics</h2>
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                         {/* Shopify Revenue */}
                         <div className="flex flex-col gap-2 rounded-2xl border border-zinc-800 bg-zinc-950/80 p-4 transition hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)]">
