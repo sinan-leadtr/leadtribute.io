@@ -653,7 +653,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
     );
 }
 
-type KpiTone = "orange" | "sky" | "emerald";
+type KpiTone = "violet" | "sky" | "emerald";
 
 interface KpiCardProps {
     label: string;
@@ -671,14 +671,14 @@ function KpiCard({
     icon,
 }: KpiCardProps) {
     const chipBase =
-        chipTone === "orange"
+        chipTone === "violet"
             ? "bg-violet-500/10 text-violet-300 border-violet-400/40"
             : chipTone === "sky"
                 ? "bg-sky-500/10 text-sky-300 border-sky-400/40"
                 : "bg-emerald-500/10 text-emerald-300 border-emerald-400/40";
 
     const dotBase =
-        chipTone === "orange"
+        chipTone === "violet"
             ? "bg-violet-400 shadow-violet-400/70"
             : chipTone === "sky"
                 ? "bg-sky-400 shadow-sky-400/70"
@@ -692,7 +692,7 @@ function KpiCard({
                         {icon}
                         {label}
                     </p>
-                    <span className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-medium backdrop-blur-sm transition group-hover:border-white/70 group-hover:text-white">
+                    <span className="inline-flex items-center gap-1 rounded-full border border-white/40 px-2 py-0.5 text-[10px] font-medium backdrop-blur-sm transition group-hover:border-white group-hover:text-white">
                         <span
                             className={`h-1.5 w-1.5 rounded-full shadow ${dotBase}`}
                         />

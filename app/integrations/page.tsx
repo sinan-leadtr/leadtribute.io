@@ -124,7 +124,7 @@ export default function IntegrationsPage() {
 
         {/* Integrations grid */}
         <motion.section
-          className="flex-1 rounded-[32px] border border-zinc-800/80 bg-zinc-950/90 p-5 shadow-xl shadow-black/50 transition hover:shadow-[0_0_48px_-12px_rgba(249,115,22,0.15)]"
+          className="flex-1 rounded-[32px] border border-zinc-800/80 bg-zinc-950/90 p-5 shadow-xl shadow-black/50 transition hover:shadow-[0_0_48px_-12px_rgba(99,102,241,0.2)]"
           {...sectionFade}
         >
           <div className="mb-5 flex items-center justify-between gap-2">

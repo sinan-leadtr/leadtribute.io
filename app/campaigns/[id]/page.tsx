@@ -146,7 +146,7 @@ export default function CampaignDetailPage() {
         </section>
 
         {/* Chart */}
-        <section className="mb-6 rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:shadow-[0_0_40px_-10px_rgba(249,115,22,0.12)]">
+        <section className="mb-6 rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.2)]">
           <h2 className="mb-3 text-sm font-semibold text-white">Spend & ROAS – this campaign</h2>
           <div className="h-[360px] w-full rounded-2xl border border-zinc-800 bg-zinc-950/80 p-2 sm:h-[400px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -200,7 +200,7 @@ export default function CampaignDetailPage() {
         </section>
 
         {/* Ad Sets & Creatives */}
-        <section className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:shadow-[0_0_40px_-10px_rgba(249,115,22,0.12)]">
+        <section className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.2)]">
           <div className="mb-4 flex items-center justify-between gap-2">
             <h2 className="text-sm font-semibold text-white">Ad Sets & Creatives</h2>
             <span className="text-[10px] text-white/50">Images & videos • Performance</span>

@@ -180,14 +180,14 @@ export default function Home() {
             style={{
               transform: "perspective(1200px) rotateX(4deg) rotateY(-2deg)",
               boxShadow:
-                "0 0 0 1px rgba(255,255,255,0.05), 0 40px 80px -20px rgba(0,0,0,0.6), 0 0 60px -20px rgba(249,115,22,0.15)",
+                "0 0 0 1px rgba(255,255,255,0.05), 0 40px 80px -20px rgba(0,0,0,0.6), 0 0 60px -20px rgba(99,102,241,0.2)",
             }}
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
             whileHover={{
               boxShadow:
-                "0 0 0 1px rgba(255,255,255,0.08), 0 50px 100px -20px rgba(0,0,0,0.7), 0 0 80px -15px rgba(249,115,22,0.25)",
+                "0 0 0 1px rgba(255,255,255,0.08), 0 50px 100px -20px rgba(0,0,0,0.7), 0 0 80px -15px rgba(99,102,241,0.3)",
             }}
           >
             <HeroDashboardPreview />
@@ -195,7 +195,7 @@ export default function Home() {
               className="pointer-events-none absolute inset-0 rounded-3xl"
               style={{
                 background:
-                  "linear-gradient(135deg, rgba(249,115,22,0.03) 0%, transparent 50%)",
+                  "linear-gradient(135deg, rgba(99,102,241,0.06) 0%, transparent 50%)",
               }}
               aria-hidden
             />

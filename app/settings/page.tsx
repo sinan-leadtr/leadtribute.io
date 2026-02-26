@@ -86,7 +86,7 @@ export default function SettingsPage() {
 
         <div className="space-y-8">
           {/* 1. Profile & Account */}
-          <section className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-6 shadow-xl shadow-black/50 transition hover:shadow-[0_0_40px_-10px_rgba(249,115,22,0.12)]">
+          <section className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-6 shadow-xl shadow-black/50 transition hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.2)]">
             <h2 className="mb-6 text-sm font-semibold uppercase tracking-wider text-white/80">
               Profile &amp; Account
             </h2>
@@ -140,7 +140,7 @@ export default function SettingsPage() {
           </section>
 
           {/* 2. Notifications */}
-          <section className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-6 shadow-xl shadow-black/50 transition hover:shadow-[0_0_40px_-10px_rgba(249,115,22,0.12)]">
+          <section className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-6 shadow-xl shadow-black/50 transition hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.2)]">
             <h2 className="mb-6 text-sm font-semibold uppercase tracking-wider text-white/80">
               Notifications
             </h2>
@@ -164,7 +164,7 @@ export default function SettingsPage() {
           </section>
 
           {/* 3. Billing & Plan */}
-          <section className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-6 shadow-xl shadow-black/50 transition hover:shadow-[0_0_40px_-10px_rgba(249,115,22,0.12)]">
+          <section className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-6 shadow-xl shadow-black/50 transition hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.2)]">
             <h2 className="mb-6 text-sm font-semibold uppercase tracking-wider text-white/80">
               Billing &amp; Plan
             </h2>

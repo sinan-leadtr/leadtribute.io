@@ -44,8 +44,8 @@ export function RevenueChart({ campaigns }: { campaigns: Campaign[] }) {
         >
           <defs>
             <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="rgb(249,115,22)" stopOpacity={0.4} />
-              <stop offset="100%" stopColor="rgb(249,115,22)" stopOpacity={0} />
+              <stop offset="0%" stopColor="rgb(99,102,241)" stopOpacity={0.4} />
+              <stop offset="100%" stopColor="rgb(99,102,241)" stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid
@@ -83,7 +83,7 @@ export function RevenueChart({ campaigns }: { campaigns: Campaign[] }) {
           <Area
             type="monotone"
             dataKey="revenue"
-            stroke="rgb(249,115,22)"
+            stroke="rgb(99,102,241)"
             strokeWidth={2}
             fill="url(#revenueGradient)"
           />
