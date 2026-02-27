@@ -18,7 +18,7 @@ type BasicProps = { className?: string; children: React.ReactNode };
 function Card({ className = "", children }: BasicProps) {
   return (
     <div
-      className={`rounded-2xl border border-zinc-800/80 bg-zinc-950/90 p-6 shadow-xl shadow-black/30 ${className}`}
+      className={`rounded-2xl border border-black/5 bg-white p-6 shadow-[0_10px_40px_-24px_rgba(15,23,42,0.3)] ${className}`}
     >
       {children}
     </div>
@@ -33,13 +33,13 @@ function CardHeader({ className = "", children }: BasicProps) {
 
 function CardTitle({ className = "", children }: BasicProps) {
   return (
-    <h2 className={`text-base font-medium text-white ${className}`}>{children}</h2>
+    <h2 className={`text-base font-medium text-slate-900 ${className}`}>{children}</h2>
   );
 }
 
 function CardDescription({ className = "", children }: BasicProps) {
   return (
-    <p className={`text-xs text-white/60 ${className}`}>{children}</p>
+    <p className={`text-xs text-slate-500 ${className}`}>{children}</p>
   );
 }
 
@@ -54,7 +54,7 @@ function Label({
 }: any) {
   return (
     <label
-      className={`text-xs font-medium text-white/60 ${className}`}
+      className={`text-xs font-medium text-slate-600 ${className}`}
       {...props}
     >
       {children}
@@ -65,7 +65,7 @@ function Label({
 function Input({ className = "", ...props }: any) {
   return (
     <input
-      className={`w-full rounded-xl border border-zinc-700 bg-zinc-900/80 px-4 py-2.5 text-sm text-white placeholder:text-white/40 focus:border-white/70 focus:outline-none focus:ring-1 focus:ring-white/50 ${className}`}
+      className={`w-full rounded-xl border border-black/10 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-black focus:outline-none focus:ring-1 focus:ring-black ${className}`}
       {...props}
     />
   );
@@ -120,13 +120,13 @@ type CardProps = {
 
 function ProviderCard({ title, icon, connected, saving, onSave, children }: CardProps) {
   return (
-    <div className="rounded-2xl border border-zinc-800/80 bg-zinc-950/90 p-6 shadow-xl shadow-black/30">
+    <div className="rounded-2xl border border-black/5 bg-white p-6 shadow-[0_10px_40px_-24px_rgba(15,23,42,0.3)]">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="flex h-12 min-w-12 items-center justify-center rounded-xl border border-white/10 bg-white/5 px-3 text-2xl">
+          <div className="flex h-12 min-w-12 items-center justify-center rounded-xl border border-black/10 bg-black/90 px-3 text-2xl text-white">
             {icon}
           </div>
-          {title ? <h2 className="text-lg font-semibold text-white">{title}</h2> : null}
+          {title ? <h2 className="text-lg font-semibold text-slate-900">{title}</h2> : null}
         </div>
         {connected && <ConnectedBadge />}
       </div>
@@ -183,22 +183,22 @@ export function IntegrationsForm({ initialKeys }: Props) {
   };
 
   const inputClass =
-    "w-full rounded-xl border border-zinc-700 bg-zinc-900/80 px-4 py-2.5 text-sm text-white placeholder:text-white/40 focus:border-white/70 focus:outline-none focus:ring-1 focus:ring-white/50";
+    "w-full rounded-xl border border-black/10 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-black focus:outline-none focus:ring-1 focus:ring-black";
 
   return (
-    <div className="flex min-h-screen bg-black text-white">
+    <div className="flex min-h-screen bg-white text-black">
       <Sidebar />
       <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
         <header className="mb-8">
-          <nav className="flex items-center gap-2 text-xs font-medium text-white/60">
-            <Link href="/dashboard" className="transition hover:text-white/90">Home</Link>
-            <span className="text-white/40">/</span>
-            <span className="text-white/90">Integrations</span>
+          <nav className="flex items-center gap-2 text-xs font-medium text-slate-500">
+            <Link href="/dashboard" className="transition hover:text-slate-900">Home</Link>
+            <span className="text-slate-400">/</span>
+            <span className="text-slate-900">Integrations</span>
           </nav>
-          <h1 className="mt-1 text-xl font-semibold tracking-tight text-white sm:text-2xl">
+          <h1 className="mt-1 text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
             Integrations
           </h1>
-          <p className="mt-1 text-sm text-white/60">
+          <p className="mt-1 text-sm text-slate-600">
             Connect your ad and e‑commerce accounts. Keys are stored securely per account.
           </p>
         </header>
@@ -258,7 +258,7 @@ export function IntegrationsForm({ initialKeys }: Props) {
             onSave={() => handleSave("meta", { api_key: metaToken, account_id: metaAccountId })}
           >
             <div>
-              <label className="mb-1.5 block text-xs font-medium text-white/60">Access Token</label>
+              <label className="mb-1.5 block text-xs font-medium text-slate-600">Access Token</label>
               <input
                 type="password"
                 placeholder="EAAxxxx…"
@@ -268,7 +268,7 @@ export function IntegrationsForm({ initialKeys }: Props) {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-medium text-white/60">Ad Account ID</label>
+              <label className="mb-1.5 block text-xs font-medium text-slate-600">Ad Account ID</label>
               <input
                 type="text"
                 placeholder="act_123456789"
@@ -288,7 +288,7 @@ export function IntegrationsForm({ initialKeys }: Props) {
             onSave={() => handleSave("google", { api_key: googleToken, account_id: googleCustomerId })}
           >
             <div>
-              <label className="mb-1.5 block text-xs font-medium text-white/60">Developer Token</label>
+              <label className="mb-1.5 block text-xs font-medium text-slate-600">Developer Token</label>
               <input
                 type="password"
                 placeholder="xxxx…"
@@ -298,7 +298,7 @@ export function IntegrationsForm({ initialKeys }: Props) {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-medium text-white/60">Customer ID</label>
+              <label className="mb-1.5 block text-xs font-medium text-slate-600">Customer ID</label>
               <input
                 type="text"
                 placeholder="123-456-7890"
@@ -317,7 +317,7 @@ export function IntegrationsForm({ initialKeys }: Props) {
             onSave={() => handleSave("tiktok", { api_key: tiktokToken })}
           >
             <div>
-              <label className="mb-1.5 block text-xs font-medium text-white/60">Access Token</label>
+              <label className="mb-1.5 block text-xs font-medium text-slate-600">Access Token</label>
               <input
                 type="password"
                 placeholder="Placeholder – coming soon"
@@ -336,7 +336,7 @@ export function IntegrationsForm({ initialKeys }: Props) {
             onSave={() => handleSave("klaviyo", { api_key: klaviyoToken })}
           >
             <div>
-              <label className="mb-1.5 block text-xs font-medium text-white/60">Private API Key</label>
+              <label className="mb-1.5 block text-xs font-medium text-slate-600">Private API Key</label>
               <input
                 type="password"
                 placeholder="Placeholder – coming soon"
