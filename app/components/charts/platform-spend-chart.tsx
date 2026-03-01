@@ -70,7 +70,10 @@ export function PlatformSpendChart({ campaigns }: { campaigns: Campaign[] }) {
               border: "1px solid rgba(255,255,255,0.1)",
               borderRadius: "12px",
               fontSize: "12px",
+              color: "#e5e7eb",
             }}
+            labelStyle={{ color: "#e5e7eb" }}
+            itemStyle={{ color: "#e5e7eb" }}
             formatter={(value: any, _name: any, props: any) => [
               `€ ${Number(value ?? 0).toLocaleString("de-DE")}`,
               props?.payload?.platform ?? "",

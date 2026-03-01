@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { CampaignTable, Campaign } from "./campaign-table";
 import { RevenueChart } from "./dashboard/RevenueChart";
-import { PlatformSpendChart } from "./dashboard/PlatformSpendChart";
+import { PlatformSpendChart } from "./charts/platform-spend-chart";
 import { Integrations } from "./dashboard/Integrations";
 import { CreativesGrid } from "./creatives-grid";
 import { Sidebar } from "./sidebar";
@@ -547,7 +547,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                         <RevenueChart />
                     </div>
                     <div className="rounded-2xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)]">
-                        <PlatformSpendChart />
+                        <PlatformSpendChart campaigns={campaigns} />
                     </div>
                 </section>
 
