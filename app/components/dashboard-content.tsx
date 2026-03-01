@@ -390,7 +390,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                                             dataKey="spend"
                                             name="Ad Spend"
                                             radius={[4, 4, 0, 0]}
-                                            fill="#e5e7eb"
+                                            fill="#38bdf8"
                                             opacity={0.9}
                                             maxBarSize={18}
                                         />
