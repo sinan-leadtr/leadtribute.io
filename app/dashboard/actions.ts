@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { fetchShopifyRevenue } from "@/app/lib/shopify";
 
 const DEMO_CAMPAIGNS = [
   { name: "Q1 Brand Awareness", platform: "meta" as const, status: "active" as const, spend: 4250, revenue: 17850 },
@@ -187,10 +188,13 @@ export async function syncData(): Promise<SyncDataResult> {
     return { ok: false, error: apiError.message };
   }
 
-  const services = (apiKeys ?? []).map((k) => k.service as ApiKeyService);
-  const hasMeta = services.includes("meta");
-  const hasGoogle = services.includes("google");
-  const hasShopify = services.includes("shopify");
+  const keys = apiKeys ?? [];
+  const hasMeta = keys.some((k) => k.service === "meta");
+  const hasGoogle = keys.some((k) => k.service === "google");
+  const shopifyKey = keys.find(
+    (k) => k.service === "shopify" && k.shop_url && k.api_key,
+  );
+  const hasShopify = !!shopifyKey;
 
   if (!hasMeta && !hasGoogle && !hasShopify) {
     return { ok: false, error: "No connected integrations found. Connect Meta, Google or Shopify first." };
@@ -199,13 +203,52 @@ export async function syncData(): Promise<SyncDataResult> {
   const dates = lastNDatesUTC(30);
   const rows: Omit<AnalyticsDailyRow, "id" | "created_at">[] = [];
 
+  // Shopify: real revenue per day via Admin API
+  let shopifyByDate: Record<string, number> = {};
+  if (hasShopify && shopifyKey) {
+    try {
+      const data = await fetchShopifyRevenue(
+        shopifyKey.shop_url as string,
+        shopifyKey.api_key as string,
+        30,
+      );
+      shopifyByDate = data.reduce<Record<string, number>>((acc, row) => {
+        acc[row.date] = (acc[row.date] ?? 0) + row.revenue;
+        return acc;
+      }, {});
+    } catch (error: any) {
+      console.error("Failed to sync Shopify revenue", error);
+      return {
+        ok: false,
+        error: "Shopify API request failed. Please check your credentials.",
+      };
+    }
+  }
+
   dates.forEach((date, idx) => {
     let totalSpend = 0;
     let totalRevenue = 0;
 
+    // Real Shopify revenue (no spend)
+    const shopifyRevenue = shopifyByDate[date] ?? 0;
+    if (hasShopify && shopifyRevenue > 0) {
+      rows.push({
+        user_id: user.id,
+        date,
+        platform: "shopify",
+        spend: 0,
+        revenue: shopifyRevenue,
+        roas: 0,
+        impressions: null,
+        clicks: null,
+      });
+      totalRevenue += shopifyRevenue;
+    }
+
+    // Meta mock data: spend about 20–30% of its own revenue (ROAS ~ 3.3–4.5)
     if (hasMeta) {
-      const spend = Math.round(randomInRange(120, 380) + idx * 2);
-      const roas = Number(randomInRange(2.2, 4.1).toFixed(2));
+      const spend = Math.round(randomInRange(80, 260) + idx * 1.5);
+      const roas = Number(randomInRange(3.3, 4.5).toFixed(2));
       const revenue = Math.round(spend * roas);
       const impressions = Math.round(spend * randomInRange(80, 140));
       const clicks = Math.round(impressions * randomInRange(0.01, 0.03));
@@ -224,9 +267,10 @@ export async function syncData(): Promise<SyncDataResult> {
       totalRevenue += revenue;
     }
 
+    // Google mock data: spend about 20–30% of its own revenue (ROAS ~ 3.3–4.5)
     if (hasGoogle) {
-      const spend = Math.round(randomInRange(60, 220) + idx * 1.5);
-      const roas = Number(randomInRange(2.5, 4.5).toFixed(2));
+      const spend = Math.round(randomInRange(40, 180) + idx);
+      const roas = Number(randomInRange(3.3, 4.5).toFixed(2));
       const revenue = Math.round(spend * roas);
       const impressions = Math.round(spend * randomInRange(90, 160));
       const clicks = Math.round(impressions * randomInRange(0.015, 0.035));
@@ -245,22 +289,6 @@ export async function syncData(): Promise<SyncDataResult> {
       totalRevenue += revenue;
     }
 
-    if (hasShopify) {
-      const base = 700 + idx * 20;
-      const revenue = Math.round(randomInRange(base, base + 800));
-      rows.push({
-        user_id: user.id,
-        date,
-        platform: "shopify",
-        spend: 0,
-        revenue,
-        roas: 0,
-        impressions: null,
-        clicks: null,
-      });
-      totalRevenue += revenue;
-    }
-
     if (totalSpend > 0 || totalRevenue > 0) {
       rows.push({
         user_id: user.id,
@@ -275,15 +303,28 @@ export async function syncData(): Promise<SyncDataResult> {
     }
   });
 
-  const upsertPayload = rows.map((r) => ({
-    ...r,
-  }));
+  const startDate = dates[0];
+  const endDate = dates[dates.length - 1];
 
-  const { error } = await supabase.from("analytics_daily").upsert(upsertPayload, {
-    onConflict: "user_id,date,platform",
-  });
-  if (error) {
-    return { ok: false, error: error.message };
+  // Clean out previous data for this user & date range to avoid duplicates
+  const { error: deleteError } = await supabase
+    .from("analytics_daily")
+    .delete()
+    .eq("user_id", user.id)
+    .gte("date", startDate)
+    .lte("date", endDate);
+
+  if (deleteError) {
+    return { ok: false, error: deleteError.message };
+  }
+
+  if (rows.length > 0) {
+    const { error: insertError } = await supabase
+      .from("analytics_daily")
+      .insert(rows);
+    if (insertError) {
+      return { ok: false, error: insertError.message };
+    }
   }
 
   revalidatePath("/dashboard");

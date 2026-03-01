@@ -163,7 +163,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                             ) : (
                                 <>
                                     <Sparkles className="h-3.5 w-3.5" />
-                                    Sync Data
+                                    Sync Now
                                 </>
                             )}
                         </button>
