@@ -8,9 +8,11 @@ import { Sidebar } from "@/app/components/sidebar";
 import { MetaLogo, GoogleLogo, ShopifyLogo, TikTokLogo, KlaviyoLogo } from "@/app/components/icons";
 import {
   saveApiKeys,
+  syncData,
   type ApiKeyRow,
   type ApiKeyService,
 } from "@/app/dashboard/actions";
+import { useRouter } from "next/navigation";
 
 // Lightweight UI primitives to mirror Card / Input / Button semantics
 type BasicProps = { className?: string; children: React.ReactNode };
@@ -86,11 +88,15 @@ function Button({
   );
 }
 
-function keyMap(rows: ApiKeyRow[]): Record<ApiKeyService, ApiKeyRow | null> {
-  const map: Record<ApiKeyService, ApiKeyRow | null> = {
+function keyMap(rows: ApiKeyRow[]): Partial<Record<ApiKeyService, ApiKeyRow | null>> {
+  const map: Partial<Record<ApiKeyService, ApiKeyRow | null>> = {
     meta: null,
     google: null,
     shopify: null,
+    woocommerce: null,
+    bigcommerce: null,
+    magento: null,
+    wix: null,
     tiktok: null,
     klaviyo: null,
   };
@@ -147,7 +153,10 @@ function ProviderCard({ title, icon, connected, saving, onSave, children }: Card
 
 type Props = { initialKeys: ApiKeyRow[] };
 
+const SYNC_ON_SAVE: ApiKeyService[] = ["shopify", "meta", "google"];
+
 export function IntegrationsForm({ initialKeys }: Props) {
+  const router = useRouter();
   const [keys, setKeys] = useState(keyMap(initialKeys));
   const [saving, setSaving] = useState<ApiKeyService | null>(null);
   const [metaToken, setMetaToken] = useState(keys.meta?.api_key ?? "");
@@ -165,6 +174,15 @@ export function IntegrationsForm({ initialKeys }: Props) {
     setSaving(null);
     if (result.ok) {
       toast.success(`${service} connection saved`);
+      if (SYNC_ON_SAVE.includes(service)) {
+        const syncResult = await syncData();
+        if (syncResult.ok) {
+          toast.success("Dashboard analytics updated.");
+          router.refresh();
+        } else {
+          toast.error(syncResult.error);
+        }
+      }
       setKeys((prev) => ({
         ...prev,
         [service]: {
@@ -199,7 +217,8 @@ export function IntegrationsForm({ initialKeys }: Props) {
             Integrations
           </h1>
           <p className="mt-1 text-sm text-slate-600">
-            Connect your ad and e‑commerce accounts. Keys are stored securely per account.
+            Connect ad platforms and commerce stores (Shopify, WooCommerce, and more).
+            Keys are stored securely per account.
           </p>
         </header>
 

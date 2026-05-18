@@ -3,6 +3,14 @@ export type ShopifyRevenuePoint = {
   revenue: number;
 };
 
+export type ShopifyOrderRow = {
+  id: string;
+  revenue: number;
+  occurredAt: string;
+  landingSite: string | null;
+  referringSite: string | null;
+};
+
 function lastNDatesUTC(n: number): string[] {
   const dates: string[] = [];
   const today = new Date();
@@ -27,81 +35,110 @@ function normaliseShopUrl(shopUrl: string): string {
   return withProtocol.replace(/\/+$/, "");
 }
 
-/**
- * Fetch aggregated Shopify revenue per day for the last `days` days.
- *
- * Uses the Admin REST Orders API:
- *   /admin/api/2024-01/orders.json
- *
- * The caller is responsible for passing a valid `shopUrl` and `accessToken`.
- */
-export async function fetchShopifyRevenue(
+function parseNextLink(linkHeader: string | null): string | null {
+  if (!linkHeader) return null;
+  const parts = linkHeader.split(",");
+  for (const part of parts) {
+    const match = part.match(/<([^>]+)>;\s*rel="next"/);
+    if (match) return match[1];
+  }
+  return null;
+}
+
+async function fetchShopifyOrdersRaw(
   shopUrl: string,
   accessToken: string,
-  days: number = 30,
-): Promise<ShopifyRevenuePoint[]> {
-  if (!shopUrl || !accessToken) {
-    return [];
-  }
+  days: number,
+): Promise<ShopifyOrderRow[]> {
+  if (!shopUrl || !accessToken) return [];
 
   const baseUrl = normaliseShopUrl(shopUrl);
-
   const createdAtMin = new Date();
   createdAtMin.setUTCDate(createdAtMin.getUTCDate() - days);
 
   const params = new URLSearchParams({
     status: "any",
     created_at_min: createdAtMin.toISOString(),
-    fields: "created_at,total_price,current_total_price",
+    fields:
+      "id,created_at,total_price,current_total_price,landing_site,referring_site",
     limit: "250",
   });
 
-  const url = `${baseUrl}/admin/api/2024-01/orders.json?${params.toString()}`;
+  let nextUrl: string | null =
+    `${baseUrl}/admin/api/2024-01/orders.json?${params.toString()}`;
+  const rows: ShopifyOrderRow[] = [];
 
-  const res = await fetch(url, {
-    method: "GET",
-    headers: {
-      "X-Shopify-Access-Token": accessToken,
-      Accept: "application/json",
-    },
-    cache: "no-store",
-  });
-
-  if (!res.ok) {
-    const body = await res.text().catch(() => "");
-    console.error("Shopify orders fetch failed", {
-      status: res.status,
-      statusText: res.statusText,
-      body,
+  while (nextUrl) {
+    const res = await fetch(nextUrl, {
+      method: "GET",
+      headers: {
+        "X-Shopify-Access-Token": accessToken,
+        Accept: "application/json",
+      },
+      cache: "no-store",
     });
-    throw new Error("Failed to fetch Shopify orders from Shopify API");
+
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      console.error("Shopify orders fetch failed", {
+        status: res.status,
+        statusText: res.statusText,
+        body,
+      });
+      throw new Error("Failed to fetch Shopify orders from Shopify API");
+    }
+
+    const json: { orders?: unknown[] } = await res.json();
+    const orders = Array.isArray(json?.orders) ? json.orders : [];
+
+    for (const order of orders) {
+      const o = order as {
+        id?: number | string;
+        created_at?: string;
+        current_total_price?: string;
+        total_price?: string;
+        landing_site?: string | null;
+        referring_site?: string | null;
+      };
+      const createdAt = o?.created_at;
+      if (!createdAt || o.id == null) continue;
+
+      const raw =
+        typeof o.current_total_price === "string"
+          ? o.current_total_price
+          : typeof o.total_price === "string"
+            ? o.total_price
+            : "0";
+      const revenue = Number.parseFloat(raw) || 0;
+      if (revenue <= 0) continue;
+
+      rows.push({
+        id: String(o.id),
+        revenue,
+        occurredAt: createdAt,
+        landingSite: o.landing_site ?? null,
+        referringSite: o.referring_site ?? null,
+      });
+    }
+
+    nextUrl = parseNextLink(res.headers.get("link"));
   }
 
-  const json: any = await res.json();
-  const orders: any[] = Array.isArray(json?.orders) ? json.orders : [];
+  return rows;
+}
 
+/** Fetch aggregated Shopify revenue per day for the last `days` days. */
+export async function fetchShopifyRevenue(
+  shopUrl: string,
+  accessToken: string,
+  days: number = 30,
+): Promise<ShopifyRevenuePoint[]> {
+  const orders = await fetchShopifyOrdersRaw(shopUrl, accessToken, days);
   const byDate = new Map<string, number>();
-
-  for (const order of orders) {
-    const createdAt: string | undefined = order?.created_at;
-    if (!createdAt) continue;
-
-    const dt = new Date(createdAt);
-    if (Number.isNaN(dt.getTime())) continue;
-
-    const dateKey = dt.toISOString().slice(0, 10);
-    const raw =
-      typeof order?.current_total_price === "string"
-        ? order.current_total_price
-        : typeof order?.total_price === "string"
-          ? order.total_price
-          : "0";
-    const value = Number.parseFloat(raw) || 0;
-    if (value <= 0) continue;
-
-    byDate.set(dateKey, (byDate.get(dateKey) ?? 0) + value);
+  for (const o of orders) {
+    const dateKey = new Date(o.occurredAt).toISOString().slice(0, 10);
+    byDate.set(dateKey, (byDate.get(dateKey) ?? 0) + o.revenue);
   }
-
   const dates = lastNDatesUTC(days);
   return dates.map((date) => ({
     date,
@@ -109,3 +146,11 @@ export async function fetchShopifyRevenue(
   }));
 }
 
+/** Orders with fields needed for multi-touch attribution. */
+export async function fetchShopifyOrders(
+  shopUrl: string,
+  accessToken: string,
+  days: number = 30,
+): Promise<ShopifyOrderRow[]> {
+  return fetchShopifyOrdersRaw(shopUrl, accessToken, days);
+}

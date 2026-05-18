@@ -26,18 +26,6 @@ import {
     ComposedChart,
 } from "recharts";
 
-const fallbackDualAxisData = Array.from({ length: 30 }).map((_, index) => {
-    const day = index + 1;
-    const baseSpend = 350 + Math.sin(index / 3) * 60 + (index % 5) * 18;
-    const baseRoas = 3.6 + Math.cos(index / 4) * 0.5 + (index % 7) * 0.03;
-
-    return {
-        day: `Day ${day}`,
-        spend: Math.round(baseSpend),
-        roas: Number(baseRoas.toFixed(2)),
-    };
-});
-
 const pacingTarget = 20000;
 const pacingSpent = 12500;
 const pacingPct = (pacingSpent / pacingTarget) * 100;
@@ -53,6 +41,7 @@ interface DashboardContentProps {
     analytics: {
         blended: { date: string; spend: number; revenue: number; roas: number }[];
         totals: { totalSpend: number; totalRevenue: number; roas: number };
+        platformSpend: { platform: string; spend: number }[];
     };
     forecast: { forecastedRevenue: number; trendPercentage: number } | null;
 }
@@ -66,7 +55,9 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
     const [syncLoading, setSyncLoading] = useState(false);
 
     const blended = analytics?.blended ?? [];
+    const platformSpend = analytics?.platformSpend ?? [];
     const totals = analytics?.totals ?? { totalSpend: 0, totalRevenue: 0, roas: 0 };
+    const hasAnalytics = blended.length > 0;
 
     const totalSpend = totals.totalSpend;
     const totalRevenue = totals.totalRevenue;
@@ -84,17 +75,17 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
             ? "emerald"
             : "sky";
 
-    const chartData =
-        blended.length > 0
-            ? blended.map((d) => ({
-                  day: new Date(d.date + "T00:00:00Z").toLocaleDateString("de-DE", {
-                      day: "2-digit",
-                      month: "short",
-                  }),
-                  spend: Math.round(d.spend),
-                  revenue: Math.round(d.revenue),
-              }))
-            : fallbackDualAxisData;
+    const chartData = blended.map((d) => ({
+        day: new Date(d.date + "T00:00:00Z").toLocaleDateString("de-DE", {
+            day: "2-digit",
+            month: "short",
+        }),
+        spend: Math.round(d.spend),
+        revenue: Math.round(d.revenue),
+        roas: d.roas,
+    }));
+
+    const revenueChartData = chartData;
 
     async function handleGenerateDemo() {
         setDemoLoading(true);
@@ -348,10 +339,29 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                             </div>
 
                             <div className="h-[320px] w-full rounded-2xl border border-slate-200 bg-white p-2 sm:h-[360px] lg:h-[400px]">
+                                {!hasAnalytics ? (
+                                    <div className="flex h-full flex-col items-center justify-center gap-3 px-4 text-center">
+                                        <p className="text-sm font-medium text-slate-900">
+                                            No analytics yet
+                                        </p>
+                                        <p className="max-w-sm text-xs text-slate-500">
+                                            Connect Shopify under Data Sources, then click Sync
+                                            Now to load your last 30 days.
+                                        </p>
+                                        <button
+                                            type="button"
+                                            onClick={handleSyncData}
+                                            disabled={syncLoading}
+                                            className="inline-flex items-center gap-1.5 rounded-full bg-black px-4 py-2 text-xs font-semibold text-white"
+                                        >
+                                            {syncLoading ? "Syncing…" : "Sync Now"}
+                                        </button>
+                                    </div>
+                                ) : (
                                 <ResponsiveContainer width="100%" height="100%">
                                     <ComposedChart
                                         data={chartData}
-                                        margin={{ top: 12, right: 32, left: 0, bottom: 8 }}
+                                        margin={{ top: 12, right: 16, left: 0, bottom: 8 }}
                                     >
                                         <CartesianGrid
                                             stroke="#1e293b"
@@ -371,14 +381,6 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                                             axisLine={false}
                                             tick={{ fill: "#64748b", fontSize: 10 }}
                                             tickFormatter={(v) => `€${v}`}
-                                        />
-                                        <YAxis
-                                            yAxisId="right"
-                                            orientation="right"
-                                            tickLine={false}
-                                            axisLine={false}
-                                            tick={{ fill: "#38bdf8", fontSize: 10 }}
-                                            tickFormatter={(v) => `${v.toFixed ? v.toFixed(1) : v}x`}
                                         />
                                         <Tooltip
                                             cursor={{ fill: "rgba(15,23,42,0.75)" }}
@@ -406,6 +408,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                                         />
                                     </ComposedChart>
                                 </ResponsiveContainer>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -426,7 +429,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                                 </span>
                             </div>
                             <p className="text-2xl font-bold tracking-tight text-white">
-                                154.000 €
+                                € {totalRevenue.toLocaleString("de-DE")}
                             </p>
                             <p className="text-[11px] text-emerald-400/90">+15% vs last month</p>
                         </div>
@@ -544,10 +547,10 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                 {/* Analytics Charts – Cards über der Tabelle */}
                 <section className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
                     <div className="rounded-2xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)]">
-                        <RevenueChart />
+                        <RevenueChart data={revenueChartData} />
                     </div>
                     <div className="rounded-2xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)]">
-                        <PlatformSpendChart campaigns={campaigns} />
+                        <PlatformSpendChart platformSpend={platformSpend} />
                     </div>
                 </section>
 
@@ -732,28 +735,27 @@ function CustomDualAxisTooltip({ active, payload, label }: TooltipProps) {
     const spendItem = payload.find((p) => p.dataKey === "spend");
     const revenueItem = payload.find((p) => p.dataKey === "revenue");
 
-    if (!spendItem || !revenueItem) return null;
 
     return (
         <div className="rounded-2xl border border-zinc-800 bg-zinc-950/95 px-3 py-2 text-xs text-white shadow-2xl shadow-black/70">
-            <p className="mb-1 text-[11px] font-medium text-white/70">{label}</p>
+            <p className="mb-1 text-[11px] font-medium text-white">{label}</p>
             <div className="space-y-1">
                 <div className="flex items-center justify-between gap-4">
-                    <span className="inline-flex items-center gap-1 text-white/60">
-                        <span className="h-2 w-2 rounded-sm bg-white/30" />
+                    <span className="inline-flex items-center gap-1 text-white/90">
+                        <span className="h-2 w-2 rounded-sm bg-sky-400" />
                         Ad Spend
                     </span>
                     <span className="font-medium text-white">
-                        € {spendItem.value.toLocaleString("de-DE")}
+                        € {Number(spendItem?.value ?? 0).toLocaleString("de-DE")}
                     </span>
                 </div>
                 <div className="flex items-center justify-between gap-4">
-                    <span className="inline-flex items-center gap-1 text-white/60">
-                        <span className="h-2 w-2 rounded-full bg-sky-400" />
+                    <span className="inline-flex items-center gap-1 text-white/90">
+                        <span className="h-2 w-2 rounded-full bg-violet-400" />
                         Revenue
                     </span>
-                    <span className="font-medium text-sky-300">
-                        € {revenueItem.value.toLocaleString("de-DE")}
+                    <span className="font-medium text-violet-200">
+                        € {Number(revenueItem?.value ?? 0).toLocaleString("de-DE")}
                     </span>
                 </div>
             </div>

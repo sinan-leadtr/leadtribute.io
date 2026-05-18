@@ -12,20 +12,33 @@ import {
 
 const LEADTRIBUTE_ACCENT = "#6366f1";
 
-// Simulierter Umsatzverlauf der letzten 7 Tage
-function getLast7DaysData(): { day: string; revenue: number }[] {
-  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  const base = [4200, 5100, 3800, 6200, 5800, 7400, 6100];
-  return days.map((day, i) => ({ day, revenue: base[i] }));
-}
+export type RevenueChartPoint = {
+  day: string;
+  revenue: number;
+};
 
-const chartData = getLast7DaysData();
+export function RevenueChart({ data }: { data: RevenueChartPoint[] }) {
+  const hasData = data.some((d) => d.revenue > 0);
 
-export function RevenueChart() {
+  if (!hasData) {
+    return (
+      <div className="flex h-[280px] w-full flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-700 bg-zinc-950/50 p-6 text-center">
+        <p className="text-xs font-semibold uppercase tracking-wider text-white/60">
+          Revenue (last 30 days)
+        </p>
+        <p className="mt-3 text-sm text-white/50">
+          Run Sync Now after connecting Shopify to load revenue.
+        </p>
+      </div>
+    );
+  }
+
+  const chartData = data.slice(-14);
+
   return (
     <div className="h-[280px] w-full">
       <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-white/60">
-        Revenue (last 7 days)
+        Revenue (last 14 days)
       </p>
       <ResponsiveContainer width="100%" height="100%" minHeight={200}>
         <AreaChart
@@ -51,12 +64,14 @@ export function RevenueChart() {
             tickLine={false}
           />
           <YAxis
-            tickFormatter={(v) => `€ ${(v / 1000).toFixed(1)}k`}
+            tickFormatter={(v) =>
+              v >= 1000 ? `€ ${(v / 1000).toFixed(1)}k` : `€ ${v}`
+            }
             stroke="rgba(255,255,255,0.4)"
             tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 11 }}
             axisLine={false}
             tickLine={false}
-            width={44}
+            width={48}
           />
           <Tooltip
             contentStyle={{
@@ -64,9 +79,14 @@ export function RevenueChart() {
               border: "1px solid rgba(255,255,255,0.1)",
               borderRadius: "12px",
               fontSize: "12px",
+              color: "#e5e7eb",
             }}
-            formatter={(value: any) => [`€ ${Number(value ?? 0).toLocaleString("de-DE")}`, "Revenue"]}
-            labelClassName="text-white/70"
+            labelStyle={{ color: "#e5e7eb" }}
+            itemStyle={{ color: "#e5e7eb" }}
+            formatter={(value) => [
+              `€ ${Number(value ?? 0).toLocaleString("de-DE")}`,
+              "Revenue",
+            ]}
           />
           <Area
             type="monotone"

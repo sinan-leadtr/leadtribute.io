@@ -39,7 +39,33 @@ type BlendedPoint = {
   roas: number;
 };
 
+export type PlatformSpendPoint = {
+  platform: string;
+  spend: number;
+};
+
 type ForecastShape = { forecastedRevenue: number; trendPercentage: number } | null;
+
+const PLATFORM_LABELS: Record<string, string> = {
+  meta: "Meta",
+  google: "Google",
+  tiktok: "TikTok",
+};
+
+function aggregatePlatformSpend(
+  rows: { platform: string; spend: number }[],
+): PlatformSpendPoint[] {
+  const totals: Record<string, number> = { meta: 0, google: 0, tiktok: 0 };
+  for (const row of rows) {
+    if (row.platform in totals) {
+      totals[row.platform] += Number(row.spend ?? 0);
+    }
+  }
+  return (["meta", "google", "tiktok"] as const).map((platform) => ({
+    platform: PLATFORM_LABELS[platform] ?? platform,
+    spend: Math.round(totals[platform] ?? 0),
+  }));
+}
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -48,6 +74,7 @@ export default async function DashboardPage() {
   let campaigns: Campaign[] = [];
   let integrations: Integration[] = [];
   let blended: BlendedPoint[] = [];
+  let platformSpend: PlatformSpendPoint[] = [];
   let totals = { totalSpend: 0, totalRevenue: 0, roas: 0 };
   let forecast: ForecastShape = null;
 
@@ -56,7 +83,7 @@ export default async function DashboardPage() {
     const start = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() - 29));
     const startDate = start.toISOString().slice(0, 10);
 
-    const [campaignsRes, integrationsRes, analyticsRes, forecastRes] = await Promise.all([
+    const [campaignsRes, integrationsRes, analyticsRes, platformRes, forecastRes] = await Promise.all([
       supabase
         .from("campaigns")
         .select("*")
@@ -73,6 +100,12 @@ export default async function DashboardPage() {
         .eq("platform", "blended")
         .gte("date", startDate)
         .order("date", { ascending: true }),
+      supabase
+        .from("analytics_daily")
+        .select("platform, spend")
+        .eq("user_id", user.id)
+        .in("platform", ["meta", "google", "tiktok"])
+        .gte("date", startDate),
       getForecast(),
     ]);
 
@@ -100,6 +133,12 @@ export default async function DashboardPage() {
       };
     }
 
+    if (platformRes.data && Array.isArray(platformRes.data)) {
+      platformSpend = aggregatePlatformSpend(
+        platformRes.data as { platform: string; spend: number }[],
+      );
+    }
+
     if (forecastRes && forecastRes.ok) {
       forecast = {
         forecastedRevenue: forecastRes.forecastedRevenue,
@@ -112,7 +151,7 @@ export default async function DashboardPage() {
     <DashboardContent
       campaigns={campaigns}
       integrations={integrations}
-      analytics={{ blended, totals }}
+      analytics={{ blended, totals, platformSpend }}
       forecast={forecast}
     />
   );

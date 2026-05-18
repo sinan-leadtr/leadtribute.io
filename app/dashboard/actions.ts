@@ -2,7 +2,13 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import { fetchShopifyRevenue } from "@/app/lib/shopify";
+import { fetchShopifyOrders, fetchShopifyRevenue } from "@/app/lib/shopify";
+import { touchpointsFromOrderContext } from "@/lib/attribution/utm";
+import {
+  computeAttribution,
+  type AttributionModelId,
+  type Journey,
+} from "@/lib/attribution/models";
 
 const DEMO_CAMPAIGNS = [
   { name: "Q1 Brand Awareness", platform: "meta" as const, status: "active" as const, spend: 4250, revenue: 17850 },
@@ -91,7 +97,27 @@ export async function disconnectIntegration(platform: "google" | "meta"): Promis
 }
 
 // --- API Keys (Integrations credentials) ---
-export type ApiKeyService = "meta" | "google" | "shopify" | "tiktok" | "klaviyo";
+export type ApiKeyService =
+  | "meta"
+  | "google"
+  | "shopify"
+  | "woocommerce"
+  | "bigcommerce"
+  | "magento"
+  | "wix"
+  | "tiktok"
+  | "klaviyo";
+
+export type CommercePlatformId =
+  | "shopify"
+  | "woocommerce"
+  | "bigcommerce"
+  | "magento"
+  | "wix"
+  | "squarespace"
+  | "shopware"
+  | "prestashop"
+  | "custom";
 
 export type ApiKeyRow = {
   id: string;
@@ -136,6 +162,7 @@ export async function saveApiKeys(
     return { ok: false, error: error.message };
   }
   revalidatePath("/dashboard/integrations");
+  revalidatePath("/dashboard");
   return { ok: true };
 }
 
@@ -225,13 +252,13 @@ export async function syncData(): Promise<SyncDataResult> {
     }
   }
 
-  dates.forEach((date, idx) => {
+  dates.forEach((date) => {
     let totalSpend = 0;
     let totalRevenue = 0;
 
-    // Real Shopify revenue (no spend)
     const shopifyRevenue = shopifyByDate[date] ?? 0;
-    if (hasShopify && shopifyRevenue > 0) {
+
+    if (hasShopify) {
       rows.push({
         user_id: user.id,
         date,
@@ -245,11 +272,16 @@ export async function syncData(): Promise<SyncDataResult> {
       totalRevenue += shopifyRevenue;
     }
 
-    // Meta mock data: spend about 20–30% of its own revenue (ROAS ~ 3.3–4.5)
-    if (hasMeta) {
-      const spend = Math.round(randomInRange(80, 260) + idx * 1.5);
-      const roas = Number(randomInRange(3.3, 4.5).toFixed(2));
-      const revenue = Math.round(spend * roas);
+    // Ad spend ≈ 20–30% of daily revenue (Shopify); fallback baseline if ads-only
+    const revenueBase =
+      shopifyRevenue > 0 ? shopifyRevenue : hasMeta || hasGoogle ? 900 : 0;
+    const totalAdSpendPct = randomInRange(0.2, 0.3);
+    const totalAdSpend =
+      revenueBase > 0 ? Math.round(revenueBase * totalAdSpendPct) : 0;
+
+    if (hasMeta && totalAdSpend > 0) {
+      const metaShare = hasGoogle ? 0.6 : 1;
+      const spend = Math.max(1, Math.round(totalAdSpend * metaShare));
       const impressions = Math.round(spend * randomInRange(80, 140));
       const clicks = Math.round(impressions * randomInRange(0.01, 0.03));
 
@@ -258,20 +290,17 @@ export async function syncData(): Promise<SyncDataResult> {
         date,
         platform: "meta",
         spend,
-        revenue,
-        roas,
+        revenue: 0,
+        roas: 0,
         impressions,
         clicks,
       });
       totalSpend += spend;
-      totalRevenue += revenue;
     }
 
-    // Google mock data: spend about 20–30% of its own revenue (ROAS ~ 3.3–4.5)
-    if (hasGoogle) {
-      const spend = Math.round(randomInRange(40, 180) + idx);
-      const roas = Number(randomInRange(3.3, 4.5).toFixed(2));
-      const revenue = Math.round(spend * roas);
+    if (hasGoogle && totalAdSpend > 0) {
+      const googleShare = hasMeta ? 0.4 : 1;
+      const spend = Math.max(1, Math.round(totalAdSpend * googleShare));
       const impressions = Math.round(spend * randomInRange(90, 160));
       const clicks = Math.round(impressions * randomInRange(0.015, 0.035));
 
@@ -280,16 +309,15 @@ export async function syncData(): Promise<SyncDataResult> {
         date,
         platform: "google",
         spend,
-        revenue,
-        roas,
+        revenue: 0,
+        roas: 0,
         impressions,
         clicks,
       });
       totalSpend += spend;
-      totalRevenue += revenue;
     }
 
-    if (totalSpend > 0 || totalRevenue > 0) {
+    if (hasShopify || hasMeta || hasGoogle) {
       rows.push({
         user_id: user.id,
         date,
@@ -327,8 +355,197 @@ export async function syncData(): Promise<SyncDataResult> {
     }
   }
 
+  if (hasShopify && shopifyKey) {
+    const attrResult = await syncShopifyConversionsAndAttribution(
+      supabase,
+      user.id,
+      shopifyKey.shop_url as string,
+      shopifyKey.api_key as string,
+      startDate,
+      endDate,
+    );
+    if (!attrResult.ok) {
+      return attrResult;
+    }
+  }
+
   revalidatePath("/dashboard");
   return { ok: true };
+}
+
+async function syncShopifyConversionsAndAttribution(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  userId: string,
+  shopUrl: string,
+  accessToken: string,
+  periodStart: string,
+  periodEnd: string,
+): Promise<SyncDataResult> {
+  try {
+    const orders = await fetchShopifyOrders(shopUrl, accessToken, 30);
+
+    await supabase
+      .from("conversion_events")
+      .delete()
+      .eq("user_id", userId)
+      .eq("commerce_platform", "shopify")
+      .gte("occurred_at", `${periodStart}T00:00:00Z`)
+      .lte("occurred_at", `${periodEnd}T23:59:59Z`);
+
+    await supabase
+      .from("marketing_touchpoints")
+      .delete()
+      .eq("user_id", userId)
+      .gte("occurred_at", `${periodStart}T00:00:00Z`)
+      .lte("occurred_at", `${periodEnd}T23:59:59Z`);
+
+    const journeys: Journey[] = [];
+
+    for (const order of orders) {
+      const { data: conversion, error: convError } = await supabase
+        .from("conversion_events")
+        .upsert(
+          {
+            user_id: userId,
+            commerce_platform: "shopify",
+            external_order_id: order.id,
+            revenue: order.revenue,
+            currency: "EUR",
+            occurred_at: order.occurredAt,
+            landing_site: order.landingSite,
+            referring_site: order.referringSite,
+          },
+          { onConflict: "user_id,commerce_platform,external_order_id" },
+        )
+        .select("id")
+        .single();
+
+      if (convError || !conversion) continue;
+
+      const touches = touchpointsFromOrderContext({
+        landingSite: order.landingSite,
+        referringSite: order.referringSite,
+        occurredAt: order.occurredAt,
+      });
+
+      const touchRows = touches.map((t) => ({
+        user_id: userId,
+        conversion_id: conversion.id,
+        channel: t.channel,
+        touch_type: t.touchType,
+        source_platform: "shopify",
+        occurred_at: t.occurredAt,
+      }));
+
+      if (touchRows.length > 0) {
+        await supabase.from("marketing_touchpoints").insert(touchRows);
+      }
+
+      journeys.push({
+        conversionId: conversion.id,
+        revenue: order.revenue,
+        touches: touches.map((t) => ({
+          channel: t.channel,
+          occurredAt: t.occurredAt,
+        })),
+      });
+    }
+
+    const models: AttributionModelId[] = [
+      "markov",
+      "last_click",
+      "first_click",
+      "linear",
+    ];
+
+    for (const model of models) {
+      const credits = computeAttribution(model, journeys);
+      const { data: run, error: runError } = await supabase
+        .from("attribution_runs")
+        .insert({
+          user_id: userId,
+          model,
+          period_start: periodStart,
+          period_end: periodEnd,
+          status: journeys.length > 0 ? "completed" : "completed",
+          metadata: { order_count: journeys.length },
+        })
+        .select("id")
+        .single();
+
+      if (runError || !run) continue;
+
+      if (credits.length > 0) {
+        await supabase.from("attribution_credits").insert(
+          credits.map((c) => ({
+            run_id: run.id,
+            user_id: userId,
+            channel: c.channel,
+            credited_revenue: c.creditedRevenue,
+            credit_share: c.creditShare,
+            order_count: Math.round(c.orderCount),
+          })),
+        );
+      }
+    }
+
+    return { ok: true };
+  } catch (e) {
+    console.error("Attribution sync failed", e);
+    return {
+      ok: false,
+      error: "Failed to sync order journeys for attribution.",
+    };
+  }
+}
+
+export type AttributionCreditsResult =
+  | {
+      ok: true;
+      model: AttributionModelId;
+      credits: { channel: string; creditedRevenue: number; creditShare: number }[];
+    }
+  | { ok: false; error: string };
+
+export async function getAttributionCredits(
+  model: AttributionModelId = "markov",
+): Promise<AttributionCreditsResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: "Not logged in" };
+
+  const { data: run } = await supabase
+    .from("attribution_runs")
+    .select("id")
+    .eq("user_id", user.id)
+    .eq("model", model)
+    .order("computed_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (!run) {
+    return { ok: true, model, credits: [] };
+  }
+
+  const { data: credits, error } = await supabase
+    .from("attribution_credits")
+    .select("channel, credited_revenue, credit_share")
+    .eq("run_id", run.id)
+    .order("credited_revenue", { ascending: false });
+
+  if (error) return { ok: false, error: error.message };
+
+  return {
+    ok: true,
+    model,
+    credits: (credits ?? []).map((c) => ({
+      channel: c.channel as string,
+      creditedRevenue: Number(c.credited_revenue ?? 0),
+      creditShare: Number(c.credit_share ?? 0),
+    })),
+  };
 }
 
 export type ForecastResult =

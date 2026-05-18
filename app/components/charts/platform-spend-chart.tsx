@@ -9,34 +9,47 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import type { Campaign } from "../campaign-table";
 
 const PLATFORM_COLORS: Record<string, string> = {
-  meta: "#1877F2",
-  google: "#FBBC05",
-  tiktok: "#EE1D52",
+  Meta: "#1877F2",
+  Google: "#FBBC05",
+  TikTok: "#EE1D52",
 };
 
-function aggregateSpendByPlatform(campaigns: Campaign[]): { platform: string; spend: number; fill: string }[] {
-  const order = ["meta", "google", "tiktok"] as const;
-  const byPlatform: Record<string, number> = { meta: 0, google: 0, tiktok: 0 };
-  for (const c of campaigns) {
-    byPlatform[c.platform] = (byPlatform[c.platform] ?? 0) + c.spend;
-  }
-  return order.map((platform) => ({
-    platform: platform.charAt(0).toUpperCase() + platform.slice(1),
-    spend: byPlatform[platform] ?? 0,
-    fill: PLATFORM_COLORS[platform] ?? "rgba(255,255,255,0.5)",
-  }));
-}
+export type PlatformSpendPoint = {
+  platform: string;
+  spend: number;
+};
 
-export function PlatformSpendChart({ campaigns }: { campaigns: Campaign[] }) {
-  const data = aggregateSpendByPlatform(campaigns);
+export function PlatformSpendChart({
+  platformSpend,
+}: {
+  platformSpend: PlatformSpendPoint[];
+}) {
+  const data = platformSpend.map((row) => ({
+    ...row,
+    fill: PLATFORM_COLORS[row.platform] ?? "#a1a1aa",
+  }));
+
+  const hasData = data.some((d) => d.spend > 0);
+
+  if (!hasData) {
+    return (
+      <div className="flex h-[280px] w-full flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-700 bg-zinc-950/50 p-6 text-center">
+        <p className="text-xs font-semibold uppercase tracking-wider text-white/60">
+          Ad Spend by platform
+        </p>
+        <p className="mt-3 text-sm text-white/50">
+          Connect integrations and run Sync Now to see platform spend.
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div className="h-[280px] w-full rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50">
+    <div className="h-[280px] w-full">
       <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-white/60">
-        Spend by platform
+        Ad Spend by platform
       </p>
       <ResponsiveContainer width="100%" height="100%" minHeight={200}>
         <BarChart
@@ -74,13 +87,13 @@ export function PlatformSpendChart({ campaigns }: { campaigns: Campaign[] }) {
             }}
             labelStyle={{ color: "#e5e7eb" }}
             itemStyle={{ color: "#e5e7eb" }}
-            formatter={(value: any, _name: any, props: any) => [
+            formatter={(value) => [
               `€ ${Number(value ?? 0).toLocaleString("de-DE")}`,
-              props?.payload?.platform ?? "",
+              "Spend",
             ]}
             cursor={{ fill: "rgba(255,255,255,0.04)" }}
           />
-          <Bar dataKey="spend" radius={[6, 6, 0, 0]} isAnimationActive />
+          <Bar dataKey="spend" radius={[6, 6, 0, 0]} isAnimationActive={false} />
         </BarChart>
       </ResponsiveContainer>
     </div>

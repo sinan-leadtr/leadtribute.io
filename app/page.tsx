@@ -16,6 +16,8 @@ import {
   Check,
 } from "lucide-react";
 import { HeroDashboardPreview } from "./components/landing/HeroDashboardPreview";
+import { AttributionShowcase } from "./components/landing/AttributionShowcase";
+import { COMMERCE_PLATFORMS } from "@/lib/commerce/platforms";
 import { Pricing } from "./components/landing/Pricing";
 import { Footer } from "./components/landing/Footer";
 import { Testimonials } from "./components/landing/Testimonials";
@@ -59,7 +61,7 @@ const heroWord = {
 const faqItems = [
   {
     q: "Do you support TikTok?",
-    a: "Yes. We integrate with TikTok Ads, Meta, Google, Shopify, and Klaviyo so you see everything in one place.",
+    a: "Yes. We integrate with TikTok Ads, Meta, Google, Klaviyo, and major commerce stacks — Shopify, WooCommerce, BigCommerce, and more — in one place.",
   },
   {
     q: "Is my data safe?",
@@ -71,7 +73,7 @@ const faqItems = [
   },
   {
     q: "How long does setup take?",
-    a: "Most teams are live in under 15 minutes. Connect your ad accounts and Shopify, and we sync historical data automatically.",
+    a: "Most teams are live in under 15 minutes. Connect your ad accounts and commerce store (Shopify, WooCommerce, etc.), and we sync historical data automatically.",
   },
   {
     q: "Do you offer a free trial?",
@@ -152,8 +154,9 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
           >
-            Stop guessing. Start scaling. Integrate Meta, Google, and Shopify in
-            one real-time dashboard.
+            Stop guessing. Start scaling. Unify Meta, Google, TikTok, and your
+            commerce stack — Shopify, WooCommerce, and more — with Markov
+            multi-touch attribution in one dashboard.
           </motion.p>
           <motion.div
             className="mt-10 flex flex-wrap items-center justify-center gap-4"
@@ -294,6 +297,14 @@ export default function Home() {
             <ShopifyLogo size={28} className="h-7 w-7 sm:h-8 sm:w-8 shrink-0" />
             <span className="text-sm font-semibold sm:text-base">Shopify</span>
           </span>
+          {COMMERCE_PLATFORMS.filter((p) => p.id !== "shopify").slice(0, 3).map((p) => (
+            <span
+              key={p.id}
+              className="text-sm font-semibold text-zinc-500 transition hover:text-black sm:text-base"
+            >
+              {p.label}
+            </span>
+          ))}
           <span
             className="flex items-center gap-2 text-zinc-500 transition hover:text-[#F26522]"
             aria-label="Klaviyo"
@@ -324,7 +335,7 @@ export default function Home() {
               {
                 title: "Attribution Hell",
                 icon: LineChart,
-                text: "Meta says 10 sales. Shopify says 4. Who is lying?",
+                text: "Meta says 10 sales. Your store says 4. Markov shows who actually drove them.",
                 accent: "black",
               },
               {
@@ -383,6 +394,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <AttributionShowcase />
 
       {/* ─── Testimonials (Trusted by growth teams – Lösung nach „Stop flying blind“) ─── */}
       <Testimonials />
@@ -512,8 +525,9 @@ export default function Home() {
                 Connect everything.
               </h3>
               <p className="mt-4">
-                Link Meta, Google, TikTok, Shopify, and Klaviyo in minutes. One
-                dashboard, one source of truth.
+                Link ad platforms and commerce stores — Shopify, WooCommerce,
+                BigCommerce, and more — plus Klaviyo. One dashboard, one source
+                of truth.
               </p>
             </div>
           </motion.div>
