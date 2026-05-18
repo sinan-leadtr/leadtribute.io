@@ -615,46 +615,64 @@ export default function Home() {
           >
             Built for scale
           </motion.h2>
-          <p className="mx-auto mt-3 max-w-xl text-center text-white/60">
+          <p className="mx-auto mt-3 max-w-xl text-center text-black/60">
             Everything you need to run performance marketing like a pro.
           </p>
-          <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
               {
                 icon: BarChart3,
                 title: "Real-time ROAS",
                 text: "See ROAS and spend update live. No more guessing from yesterday's numbers.",
+                accent: "sky" as const,
               },
               {
                 icon: TrendingUp,
                 title: "Profit First",
                 text: "MER calculation built in. Know your true margin before you scale.",
+                accent: "emerald" as const,
               },
               {
                 icon: Sparkles,
                 title: "Creative Insights",
                 text: "Know which ad scales. Creative-level performance at a glance.",
+                accent: "violet" as const,
               },
-            ].map((item) => (
+            ].map((item, i) => (
               <motion.div
                 key={item.title}
                 className={`group p-6 sm:p-8 ${landingDarkCard}`}
-                initial={false}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.45, delay: i * 0.08 }}
                 whileHover={{
                   y: -6,
                   boxShadow:
-                    "0 0 0 1px rgba(255,255,255,0.18), 0 25px 60px -12px rgba(0,0,0,0.8), 0 0 70px -18px rgba(129,140,248,0.55)",
-                  transition: { duration: 0.25 },
+                    "0 22px 60px rgba(0,0,0,0.9), 0 0 70px -16px rgba(148,163,184,0.55)",
                 }}
-                transition={{ duration: 0.25 }}
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-black/5 ring-1 ring-black/10 transition group-hover:ring-black/60">
-                  <item.icon className="h-6 w-6 text-white" />
+                <div
+                  className={`flex h-14 w-14 items-center justify-center rounded-2xl ${
+                    item.accent === "sky"
+                      ? "bg-sky-500/10 ring-1 ring-sky-500/30"
+                      : item.accent === "emerald"
+                        ? "bg-emerald-500/10 ring-1 ring-emerald-500/30"
+                        : "bg-violet-500/10 ring-1 ring-violet-500/30"
+                  }`}
+                >
+                  <item.icon
+                    className={`h-7 w-7 ${
+                      item.accent === "sky"
+                        ? "text-sky-400"
+                        : item.accent === "emerald"
+                          ? "text-emerald-400"
+                          : "text-violet-400"
+                    }`}
+                  />
                 </div>
-                <h3 className="mt-5 text-xl font-semibold">
-                  {item.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed">
+                <h3 className="mt-5 text-xl font-semibold">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-white/70">
                   {item.text}
                 </p>
               </motion.div>
