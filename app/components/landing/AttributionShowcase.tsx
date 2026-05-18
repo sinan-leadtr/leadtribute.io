@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { GitBranch, Layers, Sparkles } from "lucide-react";
 import { ChannelLogo } from "@/app/components/icons";
 import { COMMERCE_PLATFORMS } from "@/lib/commerce/platforms";
+import { AttributionCreditRow } from "./AttributionCreditRow";
 import { CommercePlatformChip } from "./CommercePlatformChip";
 import { PreviewTabs } from "./PreviewTabs";
 import {
@@ -48,35 +49,35 @@ const MODEL_TABS: ModelTab[] = [
 
 const DEMO_CREDITS: Record<
   string,
-  { channel: string; channelId: string; share: number; color: string }[]
+  { channel: string; channelId: string; share: number }[]
 > = {
   markov: [
-    { channel: "Meta", channelId: "meta", share: 38, color: "bg-[#0668E1]" },
-    { channel: "Google", channelId: "google", share: 31, color: "bg-[#4285F4]" },
-    { channel: "TikTok", channelId: "tiktok", share: 18, color: "bg-zinc-600" },
-    { channel: "Email", channelId: "email", share: 9, color: "bg-[#F26522]" },
-    { channel: "Organic", channelId: "organic", share: 4, color: "bg-emerald-500" },
+    { channel: "Meta", channelId: "meta", share: 38 },
+    { channel: "Google", channelId: "google", share: 31 },
+    { channel: "TikTok", channelId: "tiktok", share: 18 },
+    { channel: "Email", channelId: "email", share: 9 },
+    { channel: "Organic", channelId: "organic", share: 4 },
   ],
   last_click: [
-    { channel: "Meta", channelId: "meta", share: 52, color: "bg-[#0668E1]" },
-    { channel: "Google", channelId: "google", share: 28, color: "bg-[#4285F4]" },
-    { channel: "TikTok", channelId: "tiktok", share: 12, color: "bg-zinc-600" },
-    { channel: "Email", channelId: "email", share: 5, color: "bg-[#F26522]" },
-    { channel: "Organic", channelId: "organic", share: 3, color: "bg-emerald-500" },
+    { channel: "Meta", channelId: "meta", share: 52 },
+    { channel: "Google", channelId: "google", share: 28 },
+    { channel: "TikTok", channelId: "tiktok", share: 12 },
+    { channel: "Email", channelId: "email", share: 5 },
+    { channel: "Organic", channelId: "organic", share: 3 },
   ],
   first_click: [
-    { channel: "Google", channelId: "google", share: 41, color: "bg-[#4285F4]" },
-    { channel: "Meta", channelId: "meta", share: 29, color: "bg-[#0668E1]" },
-    { channel: "TikTok", channelId: "tiktok", share: 16, color: "bg-zinc-600" },
-    { channel: "Email", channelId: "email", share: 10, color: "bg-[#F26522]" },
-    { channel: "Organic", channelId: "organic", share: 4, color: "bg-emerald-500" },
+    { channel: "Google", channelId: "google", share: 41 },
+    { channel: "Meta", channelId: "meta", share: 29 },
+    { channel: "TikTok", channelId: "tiktok", share: 16 },
+    { channel: "Email", channelId: "email", share: 10 },
+    { channel: "Organic", channelId: "organic", share: 4 },
   ],
   linear: [
-    { channel: "Meta", channelId: "meta", share: 34, color: "bg-[#0668E1]" },
-    { channel: "Google", channelId: "google", share: 34, color: "bg-[#4285F4]" },
-    { channel: "TikTok", channelId: "tiktok", share: 17, color: "bg-zinc-600" },
-    { channel: "Email", channelId: "email", share: 9, color: "bg-[#F26522]" },
-    { channel: "Organic", channelId: "organic", share: 6, color: "bg-emerald-500" },
+    { channel: "Meta", channelId: "meta", share: 34 },
+    { channel: "Google", channelId: "google", share: 34 },
+    { channel: "TikTok", channelId: "tiktok", share: 17 },
+    { channel: "Email", channelId: "email", share: 9 },
+    { channel: "Organic", channelId: "organic", share: 6 },
   ],
 };
 
@@ -159,9 +160,10 @@ export function AttributionShowcase() {
             />
           </div>
 
-          <div className="grid gap-6 p-6 sm:gap-8 sm:p-8 lg:grid-cols-2 lg:gap-12">
+          <motion.div className="grid gap-6 p-6 sm:gap-8 sm:p-8 lg:grid-cols-2 lg:gap-10">
             <motion.div
               key={activeModel}
+              className="min-w-0"
               initial={{ opacity: 0, x: -12 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.35 }}
@@ -188,39 +190,20 @@ export function AttributionShowcase() {
                 </div>
               </div>
 
-              <motion.div className="mt-8 space-y-4">
+              <div className="mt-8 space-y-2.5">
                 {credits.map((row, i) => (
-                  <motion.div
-                    key={row.channel}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: i * 0.06, duration: 0.4 }}
-                  >
-                    <div className="mb-1.5 flex items-center justify-between gap-2 text-sm">
-                      <span className="flex items-center gap-2 font-medium">
-                        <ChannelLogo channel={row.channelId} size={18} />
-                        {row.channel}
-                      </span>
-                      <span className="text-white/50">{row.share}% credited</span>
-                    </div>
-                    <div className="h-2.5 overflow-hidden rounded-full bg-white/10">
-                      <motion.div
-                        className={`h-full rounded-full ${row.color}`}
-                        initial={{ width: 0 }}
-                        animate={{ width: `${row.share}%` }}
-                        transition={{
-                          duration: 0.6,
-                          delay: i * 0.08,
-                          ease: [0.22, 1, 0.36, 1],
-                        }}
-                      />
-                    </div>
-                  </motion.div>
+                  <AttributionCreditRow
+                    key={`${activeModel}-${row.channelId}`}
+                    channel={row.channel}
+                    channelId={row.channelId}
+                    share={row.share}
+                    index={i}
+                  />
                 ))}
-              </motion.div>
+              </div>
             </motion.div>
 
-            <div className={`flex flex-col justify-center p-6 ${previewCard}`}>
+            <motion.div className={`flex flex-col justify-center min-w-0 p-6 ${previewCard}`}>
               <div className="flex items-center gap-2 text-sm font-medium text-white/80">
                 <Layers className="h-4 w-4 text-violet-300" />
                 Sample journey
@@ -229,10 +212,10 @@ export function AttributionShowcase() {
                 {JOURNEY_STEPS.map((step, i) => (
                   <motion.span
                     key={`${step.id}-${i}`}
-                    className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium ${
+                    className={`inline-flex items-center gap-2 rounded-xl border px-3 py-2 font-medium ${
                       step.id === "purchase"
-                        ? "bg-emerald-500/20 text-emerald-300 ring-1 ring-emerald-500/40"
-                        : `${previewPanel} bg-black/20 text-white/90`
+                        ? "border-emerald-500/40 bg-emerald-500/20 text-emerald-300"
+                        : "border-white/10 bg-white/5 text-white/90"
                     }`}
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -267,8 +250,8 @@ export function AttributionShowcase() {
                   MER & ROAS on blended spend vs. store revenue
                 </li>
               </ul>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           <motion.div
             className="pointer-events-none absolute inset-0 rounded-[32px]"
