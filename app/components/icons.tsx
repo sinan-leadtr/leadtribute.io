@@ -5,7 +5,19 @@
  * Klaviyo is not in Simple Icons – we use a text fallback with brand color.
  */
 
-import { SiMeta, SiShopify, SiTiktok } from "react-icons/si";
+import {
+  SiBigcommerce,
+  SiMagento,
+  SiMeta,
+  SiPrestashop,
+  SiShopify,
+  SiShopware,
+  SiSquarespace,
+  SiTiktok,
+  SiWix,
+  SiWoocommerce,
+} from "react-icons/si";
+import type { CommercePlatformId } from "@/lib/commerce/platforms";
 
 const defaultSize = 32;
 
@@ -19,7 +31,16 @@ const COLORS = {
   googleGreen: "#0F9D58",
   tiktok: "#000000",
   klaviyo: "#FFD79D",
+  woocommerce: "#96588A",
+  bigcommerce: "#121118",
+  magento: "#EE672F",
+  wix: "#0C6EFC",
+  squarespace: "#000000",
+  prestashop: "#DF0067",
+  shopware: "#189EFF",
 } as const;
+
+type LogoProps = { className?: string; size?: number };
 
 // ─── Meta (Simple Icons) ────────────────────────────────────────────────────
 export function MetaLogo({
@@ -139,6 +160,119 @@ export function KlaviyoLogoText({ className = "" }: { className?: string }) {
       aria-hidden
     >
       Klaviyo
+    </span>
+  );
+}
+
+// ─── Commerce platforms (Simple Icons) ───────────────────────────────────────
+
+export function WooCommerceLogo({ className = "", size = defaultSize }: LogoProps) {
+  return (
+    <SiWoocommerce className={className} size={size} color={COLORS.woocommerce} />
+  );
+}
+
+export function BigCommerceLogo({ className = "", size = defaultSize }: LogoProps) {
+  return (
+    <SiBigcommerce className={className} size={size} color={COLORS.bigcommerce} />
+  );
+}
+
+export function MagentoLogo({ className = "", size = defaultSize }: LogoProps) {
+  return <SiMagento className={className} size={size} color={COLORS.magento} />;
+}
+
+export function WixLogo({ className = "", size = defaultSize }: LogoProps) {
+  return <SiWix className={className} size={size} color={COLORS.wix} />;
+}
+
+export function SquarespaceLogo({ className = "", size = defaultSize }: LogoProps) {
+  return (
+    <SiSquarespace className={className} size={size} color={COLORS.squarespace} />
+  );
+}
+
+export function PrestaShopLogo({ className = "", size = defaultSize }: LogoProps) {
+  return (
+    <SiPrestashop className={className} size={size} color={COLORS.prestashop} />
+  );
+}
+
+export function ShopwareLogo({ className = "", size = defaultSize }: LogoProps) {
+  return <SiShopware className={className} size={size} color={COLORS.shopware} />;
+}
+
+export function CommercePlatformLogo({
+  platform,
+  className = "",
+  size = defaultSize,
+}: {
+  platform: CommercePlatformId;
+  className?: string;
+  size?: number;
+}) {
+  switch (platform) {
+    case "shopify":
+      return <ShopifyLogo className={className} size={size} />;
+    case "woocommerce":
+      return <WooCommerceLogo className={className} size={size} />;
+    case "bigcommerce":
+      return <BigCommerceLogo className={className} size={size} />;
+    case "magento":
+      return <MagentoLogo className={className} size={size} />;
+    case "wix":
+      return <WixLogo className={className} size={size} />;
+    case "squarespace":
+      return <SquarespaceLogo className={className} size={size} />;
+    case "prestashop":
+      return <PrestaShopLogo className={className} size={size} />;
+    case "shopware":
+      return <ShopwareLogo className={className} size={size} />;
+    default:
+      return (
+        <span
+          className={`inline-flex items-center justify-center rounded-md bg-white/10 font-bold text-white/70 ${className}`}
+          style={{ width: size, height: size, fontSize: size * 0.45 }}
+          aria-hidden
+        >
+          ?
+        </span>
+      );
+  }
+}
+
+/** Ad / attribution channel logos for preview charts */
+export function ChannelLogo({
+  channel,
+  className = "",
+  size = 18,
+}: {
+  channel: string;
+  className?: string;
+  size?: number;
+}) {
+  const key = channel.toLowerCase();
+  if (key === "meta") return <MetaLogo className={className} size={size} />;
+  if (key === "google") return <GoogleLogo className={className} size={size} />;
+  if (key === "tiktok") return <TikTokLogo className={className} size={size} />;
+  if (key === "email") return <KlaviyoLogo className={className} size={size} />;
+  if (key === "organic")
+    return (
+      <span
+        className={`inline-flex items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 ${className}`}
+        style={{ width: size, height: size, fontSize: size * 0.55 }}
+        aria-hidden
+      >
+        ↗
+      </span>
+    );
+  return (
+    <span
+      className={`inline-flex items-center justify-center rounded-full bg-white/10 text-white/50 ${className}`}
+      style={{ width: size, height: size, fontSize: size * 0.5 }}
+      aria-hidden
+    >
+      •
     </span>
   );
 }

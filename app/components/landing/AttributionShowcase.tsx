@@ -3,7 +3,16 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { GitBranch, Layers, Sparkles } from "lucide-react";
+import { ChannelLogo } from "@/app/components/icons";
 import { COMMERCE_PLATFORMS } from "@/lib/commerce/platforms";
+import { CommercePlatformChip } from "./CommercePlatformChip";
+import { PreviewTabs } from "./PreviewTabs";
+import {
+  previewCard,
+  previewLabel,
+  previewPanel,
+  previewShell,
+} from "./preview-styles";
 
 type ModelTab = {
   id: string;
@@ -37,36 +46,47 @@ const MODEL_TABS: ModelTab[] = [
   },
 ];
 
-const DEMO_CREDITS: Record<string, { channel: string; share: number; color: string }[]> = {
+const DEMO_CREDITS: Record<
+  string,
+  { channel: string; channelId: string; share: number; color: string }[]
+> = {
   markov: [
-    { channel: "Meta", share: 38, color: "bg-[#0668E1]" },
-    { channel: "Google", share: 31, color: "bg-[#4285F4]" },
-    { channel: "TikTok", share: 18, color: "bg-zinc-800" },
-    { channel: "Email", share: 9, color: "bg-[#F26522]" },
-    { channel: "Organic", share: 4, color: "bg-emerald-500" },
+    { channel: "Meta", channelId: "meta", share: 38, color: "bg-[#0668E1]" },
+    { channel: "Google", channelId: "google", share: 31, color: "bg-[#4285F4]" },
+    { channel: "TikTok", channelId: "tiktok", share: 18, color: "bg-zinc-600" },
+    { channel: "Email", channelId: "email", share: 9, color: "bg-[#F26522]" },
+    { channel: "Organic", channelId: "organic", share: 4, color: "bg-emerald-500" },
   ],
   last_click: [
-    { channel: "Meta", share: 52, color: "bg-[#0668E1]" },
-    { channel: "Google", share: 28, color: "bg-[#4285F4]" },
-    { channel: "TikTok", share: 12, color: "bg-zinc-800" },
-    { channel: "Email", share: 5, color: "bg-[#F26522]" },
-    { channel: "Organic", share: 3, color: "bg-emerald-500" },
+    { channel: "Meta", channelId: "meta", share: 52, color: "bg-[#0668E1]" },
+    { channel: "Google", channelId: "google", share: 28, color: "bg-[#4285F4]" },
+    { channel: "TikTok", channelId: "tiktok", share: 12, color: "bg-zinc-600" },
+    { channel: "Email", channelId: "email", share: 5, color: "bg-[#F26522]" },
+    { channel: "Organic", channelId: "organic", share: 3, color: "bg-emerald-500" },
   ],
   first_click: [
-    { channel: "Google", share: 41, color: "bg-[#4285F4]" },
-    { channel: "Meta", share: 29, color: "bg-[#0668E1]" },
-    { channel: "TikTok", share: 16, color: "bg-zinc-800" },
-    { channel: "Email", share: 10, color: "bg-[#F26522]" },
-    { channel: "Organic", share: 4, color: "bg-emerald-500" },
+    { channel: "Google", channelId: "google", share: 41, color: "bg-[#4285F4]" },
+    { channel: "Meta", channelId: "meta", share: 29, color: "bg-[#0668E1]" },
+    { channel: "TikTok", channelId: "tiktok", share: 16, color: "bg-zinc-600" },
+    { channel: "Email", channelId: "email", share: 10, color: "bg-[#F26522]" },
+    { channel: "Organic", channelId: "organic", share: 4, color: "bg-emerald-500" },
   ],
   linear: [
-    { channel: "Meta", share: 34, color: "bg-[#0668E1]" },
-    { channel: "Google", share: 34, color: "bg-[#4285F4]" },
-    { channel: "TikTok", share: 17, color: "bg-zinc-800" },
-    { channel: "Email", share: 9, color: "bg-[#F26522]" },
-    { channel: "Organic", share: 6, color: "bg-emerald-500" },
+    { channel: "Meta", channelId: "meta", share: 34, color: "bg-[#0668E1]" },
+    { channel: "Google", channelId: "google", share: 34, color: "bg-[#4285F4]" },
+    { channel: "TikTok", channelId: "tiktok", share: 17, color: "bg-zinc-600" },
+    { channel: "Email", channelId: "email", share: 9, color: "bg-[#F26522]" },
+    { channel: "Organic", channelId: "organic", share: 6, color: "bg-emerald-500" },
   ],
 };
+
+const JOURNEY_STEPS = [
+  { label: "Google", id: "google" },
+  { label: "Meta", id: "meta" },
+  { label: "Email", id: "email" },
+  { label: "Meta", id: "meta" },
+  { label: "Purchase", id: "purchase" },
+];
 
 export function AttributionShowcase() {
   const [activeModel, setActiveModel] = useState("markov");
@@ -114,60 +134,32 @@ export function AttributionShowcase() {
           viewport={{ once: true }}
         >
           {COMMERCE_PLATFORMS.map((p) => (
-            <span
+            <CommercePlatformChip
               key={p.id}
-              className={`rounded-full border px-3 py-1 text-xs font-medium ${
-                p.status === "available"
-                  ? "border-black/10 bg-white text-black shadow-sm"
-                  : "border-black/5 bg-zinc-50 text-black/40"
-              }`}
-            >
-              {p.label}
-              {p.status === "coming_soon" && (
-                <span className="ml-1.5 text-[10px] uppercase tracking-wide text-black/30">
-                  soon
-                </span>
-              )}
-            </span>
+              id={p.id}
+              label={p.label}
+              status={p.status}
+            />
           ))}
         </motion.div>
 
         <motion.div
-          className="mt-14 overflow-hidden rounded-[32px] border border-black/5 bg-zinc-950 text-white shadow-[0_24px_65px_rgba(0,0,0,0.85)]"
+          className={`relative mt-14 ${previewShell}`}
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.1 }}
         >
-          <motion.div
-            className="flex flex-wrap gap-2 border-b border-white/10 p-4 sm:p-6"
-            role="tablist"
-            aria-label="Attribution models"
-          >
-            {MODEL_TABS.map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                role="tab"
-                aria-selected={activeModel === tab.id}
-                onClick={() => setActiveModel(tab.id)}
-                className={`rounded-full px-4 py-2 text-sm font-medium transition ${
-                  activeModel === tab.id
-                    ? tab.highlight
-                      ? "bg-violet-500 text-white shadow-[0_0_24px_-4px_rgba(139,92,246,0.8)]"
-                      : "bg-white text-black"
-                    : "bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
-                }`}
-              >
-                {tab.label}
-                {tab.highlight && activeModel !== tab.id && (
-                  <span className="ml-1 text-violet-300">★</span>
-                )}
-              </button>
-            ))}
-          </motion.div>
+          <div className="border-b border-white/10 p-4 sm:p-6">
+            <PreviewTabs
+              tabs={MODEL_TABS}
+              activeId={activeModel}
+              onChange={setActiveModel}
+              ariaLabel="Attribution models"
+            />
+          </div>
 
-          <div className="grid gap-8 p-6 sm:p-8 lg:grid-cols-2 lg:gap-12">
+          <div className="grid gap-6 p-6 sm:gap-8 sm:p-8 lg:grid-cols-2 lg:gap-12">
             <motion.div
               key={activeModel}
               initial={{ opacity: 0, x: -12 }}
@@ -178,74 +170,81 @@ export function AttributionShowcase() {
                 <motion.div
                   className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-violet-500/20 ring-1 ring-violet-500/40"
                   animate={
-                    activeModel === "markov"
-                      ? { scale: [1, 1.05, 1] }
-                      : { scale: 1 }
+                    activeModel === "markov" ? { scale: [1, 1.05, 1] } : { scale: 1 }
                   }
-                  transition={{ repeat: activeModel === "markov" ? Infinity : 0, duration: 2.5 }}
+                  transition={{
+                    repeat: activeModel === "markov" ? Infinity : 0,
+                    duration: 2.5,
+                  }}
                 >
                   <GitBranch className="h-5 w-5 text-violet-300" />
                 </motion.div>
-                <motion.div>
-                  <h3 className="text-lg font-semibold">{activeTab.label} model</h3>
+                <div>
+                  <p className={previewLabel}>Attribution model</p>
+                  <h3 className="text-lg font-semibold">{activeTab.label}</h3>
                   <p className="mt-1 text-sm leading-relaxed text-white/60">
                     {activeTab.description}
                   </p>
-                </motion.div>
+                </div>
               </div>
 
               <motion.div className="mt-8 space-y-4">
                 {credits.map((row, i) => (
                   <motion.div
                     key={row.channel}
-                    initial={{ opacity: 0, width: 0 }}
+                    initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: i * 0.06, duration: 0.4 }}
                   >
-                    <motion.div
-                      className="mb-1.5 flex justify-between text-sm"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: i * 0.06 + 0.1 }}
-                    >
-                      <span className="font-medium">{row.channel}</span>
+                    <div className="mb-1.5 flex items-center justify-between gap-2 text-sm">
+                      <span className="flex items-center gap-2 font-medium">
+                        <ChannelLogo channel={row.channelId} size={18} />
+                        {row.channel}
+                      </span>
                       <span className="text-white/50">{row.share}% credited</span>
-                    </motion.div>
-                    <motion.div className="h-2.5 overflow-hidden rounded-full bg-white/10">
+                    </div>
+                    <div className="h-2.5 overflow-hidden rounded-full bg-white/10">
                       <motion.div
                         className={`h-full rounded-full ${row.color}`}
                         initial={{ width: 0 }}
                         animate={{ width: `${row.share}%` }}
-                        transition={{ duration: 0.6, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                        transition={{
+                          duration: 0.6,
+                          delay: i * 0.08,
+                          ease: [0.22, 1, 0.36, 1],
+                        }}
                       />
-                    </motion.div>
+                    </div>
                   </motion.div>
                 ))}
               </motion.div>
             </motion.div>
 
-            <div className="flex flex-col justify-center rounded-2xl border border-white/10 bg-white/5 p-6">
+            <div className={`flex flex-col justify-center p-6 ${previewCard}`}>
               <div className="flex items-center gap-2 text-sm font-medium text-white/80">
-                <Layers className="h-4 w-4" />
+                <Layers className="h-4 w-4 text-violet-300" />
                 Sample journey
               </div>
               <div className="mt-6 flex flex-wrap items-center gap-2 text-xs sm:text-sm">
-                {["Google", "Meta", "Email", "Meta", "Purchase"].map((step, i) => (
+                {JOURNEY_STEPS.map((step, i) => (
                   <motion.span
-                    key={`${step}-${i}`}
-                    className={`rounded-lg px-3 py-2 font-medium ${
-                      step === "Purchase"
+                    key={`${step.id}-${i}`}
+                    className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium ${
+                      step.id === "purchase"
                         ? "bg-emerald-500/20 text-emerald-300 ring-1 ring-emerald-500/40"
-                        : "bg-white/10 text-white/90"
+                        : `${previewPanel} bg-black/20 text-white/90`
                     }`}
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 + i * 0.08 }}
                   >
-                    {step}
-                    {i < 4 && (
-                      <span className="ml-2 hidden text-white/30 sm:inline">→</span>
-                    )}
+                    {step.id !== "purchase" ? (
+                      <ChannelLogo channel={step.id} size={16} />
+                    ) : null}
+                    {step.label}
+                    {i < JOURNEY_STEPS.length - 1 ? (
+                      <span className="ml-1 hidden text-white/30 sm:inline">→</span>
+                    ) : null}
                   </motion.span>
                 ))}
               </div>
@@ -270,6 +269,15 @@ export function AttributionShowcase() {
               </ul>
             </div>
           </div>
+
+          <motion.div
+            className="pointer-events-none absolute inset-0 rounded-[32px]"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(139,92,246,0.08) 0%, transparent 50%)",
+            }}
+            aria-hidden
+          />
         </motion.div>
       </motion.div>
     </section>

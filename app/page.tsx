@@ -17,17 +17,19 @@ import {
 } from "lucide-react";
 import { HeroDashboardPreview } from "./components/landing/HeroDashboardPreview";
 import { AttributionShowcase } from "./components/landing/AttributionShowcase";
-import { COMMERCE_PLATFORMS } from "@/lib/commerce/platforms";
+import { IntegrationLogo } from "./components/landing/IntegrationLogo";
+import { landingDarkCard } from "./components/landing/preview-styles";
 import { Pricing } from "./components/landing/Pricing";
 import { Footer } from "./components/landing/Footer";
 import { Testimonials } from "./components/landing/Testimonials";
 import {
+  BigCommerceLogo,
   GoogleLogo,
   MetaLogo,
   ShopifyLogo,
   KlaviyoLogo,
-  KlaviyoLogoText,
   TikTokLogo,
+  WooCommerceLogo,
 } from "./components/icons";
 
 const sectionFade = {
@@ -177,33 +179,15 @@ export default function Home() {
             </motion.div>
           </motion.div>
         </div>
-        <div className="mx-auto mt-16 max-w-5xl px-4 sm:mt-20 lg:mt-24">
-          <motion.div
-            className="relative overflow-hidden rounded-3xl border border-white/10 bg-zinc-950/80 shadow-2xl shadow-black/50 backdrop-blur-xl"
-            style={{
-              transform: "perspective(1200px) rotateX(4deg) rotateY(-2deg)",
-              boxShadow:
-                "0 0 0 1px rgba(255,255,255,0.05), 0 40px 80px -20px rgba(0,0,0,0.6), 0 0 60px -20px rgba(99,102,241,0.2)",
-            }}
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            whileHover={{
-              boxShadow:
-                "0 0 0 1px rgba(255,255,255,0.08), 0 50px 100px -20px rgba(0,0,0,0.7), 0 0 80px -15px rgba(99,102,241,0.3)",
-            }}
-          >
-            <HeroDashboardPreview />
-            <div
-              className="pointer-events-none absolute inset-0 rounded-3xl"
-              style={{
-                background:
-                  "linear-gradient(135deg, rgba(99,102,241,0.06) 0%, transparent 50%)",
-              }}
-              aria-hidden
-            />
-          </motion.div>
-        </div>
+        <motion.div
+          className="mx-auto mt-16 max-w-5xl px-4 sm:mt-20 lg:mt-24"
+          style={{ transform: "perspective(1200px) rotateX(4deg) rotateY(-2deg)" }}
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <HeroDashboardPreview />
+        </motion.div>
 
         {/* ─── Pricing (2 plans, right under Hero) ───────────────────── */}
         <motion.div
@@ -275,49 +259,14 @@ export default function Home() {
         <p className="mx-auto mb-8 max-w-6xl px-6 text-center text-xs font-medium uppercase tracking-widest sm:text-sm">
           Seamlessly integrated with top platforms
         </p>
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-12 gap-y-6 px-6">
-          <span
-            className="flex items-center gap-2 text-zinc-500 transition [&>svg]:opacity-70 hover:text-[#0668E1] hover:[&>svg]:opacity-100"
-            aria-label="Meta"
-          >
-            <MetaLogo size={28} className="h-7 w-7 sm:h-8 sm:w-8 shrink-0" />
-            <span className="text-sm font-semibold sm:text-base">Meta Ads</span>
-          </span>
-          <span
-            className="flex items-center gap-2 text-zinc-500 transition hover:opacity-100 [&>svg]:opacity-70 hover:[&>svg]:opacity-100"
-            aria-label="Google Ads"
-          >
-            <GoogleLogo size={28} className="h-7 w-7 sm:h-8 sm:w-8 shrink-0" />
-            <span className="text-sm font-semibold sm:text-base">Google Ads</span>
-          </span>
-          <span
-            className="flex items-center gap-2 text-zinc-500 transition [&>svg]:opacity-70 hover:text-[#96BF48] hover:[&>svg]:opacity-100"
-            aria-label="Shopify"
-          >
-            <ShopifyLogo size={28} className="h-7 w-7 sm:h-8 sm:w-8 shrink-0" />
-            <span className="text-sm font-semibold sm:text-base">Shopify</span>
-          </span>
-          {COMMERCE_PLATFORMS.filter((p) => p.id !== "shopify").slice(0, 3).map((p) => (
-            <span
-              key={p.id}
-              className="text-sm font-semibold text-zinc-500 transition hover:text-black sm:text-base"
-            >
-              {p.label}
-            </span>
-          ))}
-          <span
-            className="flex items-center gap-2 text-zinc-500 transition hover:text-[#F26522]"
-            aria-label="Klaviyo"
-          >
-            <KlaviyoLogoText className="text-lg sm:text-xl" />
-          </span>
-          <span
-            className="flex items-center gap-2 text-zinc-500 transition [&>svg]:opacity-80 hover:[&>svg]:opacity-100"
-            aria-label="TikTok"
-          >
-            <TikTokLogo size={28} className="h-7 w-7 sm:h-8 sm:w-8 shrink-0" />
-            <span className="text-sm font-semibold sm:text-base">TikTok Ads</span>
-          </span>
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-10 gap-y-5 px-6">
+          <IntegrationLogo id="meta" label="Meta Ads" />
+          <IntegrationLogo id="google" label="Google Ads" />
+          <IntegrationLogo id="shopify" label="Shopify" />
+          <IntegrationLogo id="woocommerce" label="WooCommerce" />
+          <IntegrationLogo id="bigcommerce" label="BigCommerce" />
+          <IntegrationLogo id="tiktok" label="TikTok Ads" />
+          <IntegrationLogo id="klaviyo" label="Klaviyo" />
         </div>
       </section>
 
@@ -353,7 +302,7 @@ export default function Home() {
             ].map((item, i) => (
               <motion.div
                 key={item.title}
-                className="group rounded-[32px] border border-black/5 bg-zinc-900/95 p-6 text-white shadow-[0_18px_45px_rgba(0,0,0,0.85)] sm:p-8"
+                className={`group p-6 sm:p-8 ${landingDarkCard}`}
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
@@ -441,7 +390,7 @@ export default function Home() {
             ].map((item, i) => (
               <motion.div
                 key={item.name}
-                className="rounded-[32px] border border-zinc-800/80 bg-zinc-950/90 p-6 text-white shadow-xl shadow-black/50 transition hover:border-white/70 hover:shadow-[0_0_60px_-18px_rgba(0,0,0,0.9)] sm:p-8"
+                className={`p-6 transition hover:border-white/20 sm:p-8 ${landingDarkCard}`}
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
@@ -484,13 +433,15 @@ export default function Home() {
             {...sectionFade}
           >
             <div className="relative order-2 lg:order-1">
-              <div className="rounded-[32px] border border-black/5 bg-zinc-950/95 p-8 text-white shadow-[0_24px_65px_rgba(0,0,0,0.95)]">
+              <div className={`p-8 ${landingDarkCard}`}>
                 <div className="flex flex-wrap items-center justify-center gap-5">
                   {[
                     { label: "Meta", Icon: MetaLogo, glow: "shadow-[0_0_20px_-4px_rgba(6,104,225,0.5)]" },
                     { label: "Google", Icon: GoogleLogo, glow: "shadow-[0_0_20px_-4px_rgba(66,133,244,0.4)]" },
                     { label: "TikTok", Icon: TikTokLogo, glow: "shadow-[0_0_20px_-4px_rgba(238,29,82,0.4)]" },
                     { label: "Shopify", Icon: ShopifyLogo, glow: "shadow-[0_0_20px_-4px_rgba(150,191,72,0.5)]" },
+                    { label: "WooCommerce", Icon: WooCommerceLogo, glow: "shadow-[0_0_20px_-4px_rgba(150,88,138,0.5)]" },
+                    { label: "BigCommerce", Icon: BigCommerceLogo, glow: "shadow-[0_0_20px_-4px_rgba(18,17,24,0.5)]" },
                     { label: "Klaviyo", Icon: KlaviyoLogo, glow: "shadow-[0_0_20px_-4px_rgba(242,101,34,0.5)]" },
                   ].map(({ label, Icon, glow }) => (
                     <div
@@ -550,7 +501,7 @@ export default function Home() {
               </p>
             </div>
             <div className="relative">
-              <div className="rounded-[32px] border border-black/5 bg-zinc-950/95 p-6 text-white shadow-[0_24px_65px_rgba(0,0,0,0.95)]">
+              <motion.div className={`p-6 ${landingDarkCard}`}>
                 <div className="flex items-center gap-2">
                   <LayoutDashboard className="h-5 w-5" />
                   <span className="text-sm">Dashboard</span>
@@ -591,7 +542,7 @@ export default function Home() {
                 <p className="mt-4 text-center text-sm leading-relaxed">
                   Hör auf, im Dunkeln zu tappen. Verstehe endlich den wahren ROAS über alle Kanäle hinweg, statt isolierten Plattform-Metriken zu vertrauen.
                 </p>
-              </div>
+              </motion.div>
             </div>
           </motion.div>
 
@@ -601,7 +552,7 @@ export default function Home() {
             {...sectionFade}
           >
             <div className="relative order-2 lg:order-1">
-              <div className="rounded-[32px] border border-black/5 bg-zinc-950/95 p-8 text-white shadow-[0_24px_65px_rgba(0,0,0,0.95)]">
+              <div className={`p-8 ${landingDarkCard}`}>
                 <div className="h-32 w-full">
                   <svg viewBox="0 0 120 64" className="h-full w-full" preserveAspectRatio="none">
                     <defs>
@@ -687,7 +638,7 @@ export default function Home() {
             ].map((item) => (
               <motion.div
                 key={item.title}
-                className="group rounded-[32px] border border-zinc-800/80 bg-zinc-950/90 p-6 text-white shadow-xl shadow-black/50 sm:p-8"
+                className={`group p-6 sm:p-8 ${landingDarkCard}`}
                 initial={false}
                 whileHover={{
                   y: -6,
