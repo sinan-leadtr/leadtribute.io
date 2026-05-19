@@ -156,9 +156,8 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
           >
-            Stop guessing. Start scaling. Unify Meta, Google, TikTok, and your
-            commerce stack — Shopify, WooCommerce, and more — with Markov
-            multi-touch attribution in one dashboard.
+            Stop guessing. Start scaling with Markov attribution and live ROAS
+            in one dashboard.
           </motion.p>
           <motion.div
             className="mt-10 flex flex-wrap items-center justify-center gap-4"
@@ -346,78 +345,9 @@ export default function Home() {
 
       <AttributionShowcase />
 
-      {/* ─── Testimonials (Trusted by growth teams – Lösung nach „Stop flying blind“) ─── */}
       <Testimonials />
 
       {/* ─── Loved by Growth Teams (Social Proof Cases) ───────────────────── */}
-      <section className="relative z-10 px-6 py-24 sm:px-8 sm:py-32">
-        <div className="mx-auto max-w-6xl">
-          <motion.h2
-            className="text-center text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl"
-            {...sectionFade}
-          >
-            Loved by Growth Teams
-          </motion.h2>
-          <p className="mx-auto mt-3 max-w-xl text-center text-black/60">
-            See why marketing leaders trust Leadtribute.
-          </p>
-          <div className="mt-16 grid gap-6 sm:grid-cols-3">
-            {[
-              {
-                name: "Sarah M.",
-                role: "CMO at GlowUp",
-                quote:
-                  "Finally, I can see my real ROAS. We scaled from 10k to 50k spend in one month.",
-                initials: "SM",
-                accent: "bg-violet-500/20 text-violet-400 ring-1 ring-violet-500/40",
-              },
-              {
-                name: "Tom B.",
-                role: "Founder of SneakerDrop",
-                quote:
-                  "The Shopify integration is seamless. No more spreadsheets.",
-                initials: "TB",
-                accent: "bg-emerald-500/20 text-emerald-400 ring-1 ring-emerald-500/40",
-              },
-              {
-                name: "AgencyFlow Team",
-                role: "Performance Agency",
-                quote:
-                  "We use Leadtribute for all our clients. Reporting time cut by 90%.",
-                initials: "AF",
-                accent: "bg-violet-500/20 text-violet-400 ring-1 ring-violet-500/40",
-              },
-            ].map((item, i) => (
-              <motion.div
-                key={item.name}
-                className={`p-6 transition hover:border-white/20 sm:p-8 ${landingDarkCard}`}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.45, delay: i * 0.1 }}
-              >
-                <div className="flex items-center gap-4">
-                  <div
-                    className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-sm font-bold ${item.accent}`}
-                    aria-hidden
-                  >
-                    {item.initials}
-                  </div>
-                  <div>
-                    <p className="font-semibold">{item.name}</p>
-                    <p className="text-xs">{item.role}</p>
-                  </div>
-                </div>
-                <p className="mt-4 text-sm leading-relaxed text-white/70">
-                  &ldquo;{item.quote}&rdquo;
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ─── How it Works (Zig-Zag) ───────────────────────────────────────── */}
       <section className="relative z-10 px-6 py-24 sm:px-8 sm:py-32">
         <div className="mx-auto max-w-6xl">
           <motion.h2
@@ -768,28 +698,6 @@ export default function Home() {
               <span>Start 14-day Free Trial</span>
             </Link>
           </motion.div>
-        </motion.div>
-      </section>
-
-      {/* ─── Social Proof ───────────────────────────────── */}
-      <section className="relative z-10 border-t border-black/5 px-6 py-20 sm:px-8 sm:py-24">
-        <motion.div
-          className="mx-auto max-w-4xl text-center"
-          {...sectionFade}
-        >
-          <p className="text-sm font-medium uppercase tracking-widest text-black/40">
-            Trusted by growth teams at
-          </p>
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-x-12 gap-y-8 sm:gap-x-16">
-            {["Nova", "Flux", "Apex", "Stride", "Venture"].map((name) => (
-              <span
-                key={name}
-                className="text-xl font-semibold text-black/40 transition hover:text-black/70 sm:text-2xl"
-              >
-                {name}
-              </span>
-            ))}
-          </div>
         </motion.div>
       </section>
 
