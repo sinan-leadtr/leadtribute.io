@@ -50,7 +50,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
     const router = useRouter();
     const [channel, setChannel] = useState<ChannelFilter>("all");
     const [aiOpen, setAiOpen] = useState(false);
-    const [aiReply, setAiReply] = useState<"ja" | "nein" | null>(null);
+    const [aiReply, setAiReply] = useState<"yes" | "no" | null>(null);
     const [demoLoading, setDemoLoading] = useState(false);
     const [syncLoading, setSyncLoading] = useState(false);
 
@@ -298,19 +298,19 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                             <p className="text-xs text-slate-600">
                                 {pacingIsOver ? (
                                     <>
-                                        Du bist{" "}
+                                        You are{" "}
                                         <span className="font-semibold text-red-300">
-                                            {pacingDelta.toFixed(1)}% über
+                                            {pacingDelta.toFixed(1)}% above
                                         </span>{" "}
-                                        dem geplanten Budget.
+                                        the planned budget.
                                     </>
                                 ) : (
                                     <>
-                                        Du liegst{" "}
+                                        You are{" "}
                                         <span className="font-semibold text-emerald-600">
-                                            {Math.abs(pacingDelta).toFixed(1)}% unter
+                                            {Math.abs(pacingDelta).toFixed(1)}% below
                                         </span>{" "}
-                                        dem geplanten Budget – stabil.
+                                        the planned budget — on track.
                                     </>
                                 )}
                             </p>
@@ -324,8 +324,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                                         Spend &amp; ROAS – last 30 days
                                     </h2>
                                     <p className="text-xs text-slate-500">
-                                        Kombinierter Überblick: Tages-Spend (Balken) &amp; ROAS
-                                        (Linie).
+                                        Combined view: daily spend (bars) and ROAS (line).
                                     </p>
                                 </div>
                                 <div className="flex flex-wrap items-center gap-2 text-xs">
@@ -608,29 +607,29 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                         <div className="space-y-3 p-4">
                             <div className="rounded-xl border border-white/5 bg-black/50 px-3 py-2.5 text-xs text-white/90">
                                 <p>
-                                    Hi Sinan! Dein ROAS auf TikTok ist heute um 15% gestiegen. 🎉 Soll ich das Budget skalieren?
+                                    Hi! Your TikTok ROAS is up 15% today. 🎉 Want me to scale the budget?
                                 </p>
                             </div>
                             {aiReply === null ? (
                                 <div className="flex flex-wrap gap-2">
                                     <button
-                                        onClick={() => setAiReply("ja")}
+                                        onClick={() => setAiReply("yes")}
                                         className="btn-black px-3 py-1.5 text-xs font-medium"
                                     >
-                                        <span>Ja, mach +20%</span>
+                                        <span>Yes, increase +20%</span>
                                     </button>
                                     <button
-                                        onClick={() => setAiReply("nein")}
+                                        onClick={() => setAiReply("no")}
                                         className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/80 transition hover:bg-white/10"
                                     >
-                                        Nein, ignorieren
+                                        No, ignore
                                     </button>
                                 </div>
                             ) : (
                                 <p className="text-[11px] text-white/50">
-                                    {aiReply === "ja"
-                                        ? "Okay, Budget wird um 20% erhöht. (Mock)"
-                                        : "Alles klar, keine Änderung. (Mock)"}
+                                    {aiReply === "yes"
+                                        ? "OK — budget increased by 20%. (Mock)"
+                                        : "Got it — no changes made. (Mock)"}
                                 </p>
                             )}
                         </div>
@@ -639,7 +638,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                 <button
                     onClick={() => setAiOpen((o) => !o)}
                     className="btn-black flex h-14 w-14 items-center justify-center text-white"
-                    aria-label="AI Copilot öffnen"
+                    aria-label="Open AI Copilot"
                 >
                     <span className="relative flex h-9 w-9 items-center justify-center rounded-full bg-black">
                         <span

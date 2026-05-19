@@ -18,13 +18,13 @@ const tiers = [
     name: "Starter",
     monthly: 0,
     yearly: 0,
-    period: "Free",
-    description: "Für Einsteiger.",
+    period: "mo",
+    description: "Perfect for side projects and testing.",
     features: [
-      "Bis zu 3 verbundene Konten",
-      "Basis ROAS & Spend",
-      "7 Tage Daten-Historie",
-      "E-Mail-Support",
+      "Up to 3 connected accounts",
+      "Basic ROAS & spend",
+      "7-day data history",
+      "Email support",
     ],
     cta: "Get Started",
     href: "/register",
@@ -36,13 +36,13 @@ const tiers = [
     monthly: 49,
     yearly: 39,
     period: "mo",
-    description: "Für wachsende Brands.",
+    description: "For growing brands and teams.",
     features: [
-      "Unbegrenzte Konten",
-      "Echtzeit ROAS & MER",
-      "Voller Verlauf & Export",
-      "Prioritäts-Support",
-      "Shopify & Klaviyo Sync",
+      "Unlimited accounts",
+      "Real-time ROAS & MER",
+      "Full history & export",
+      "Priority support",
+      "Shopify & Klaviyo sync",
     ],
     cta: "Get Started",
     href: "/register",
@@ -55,16 +55,16 @@ const tiers = [
     monthly: 149,
     yearly: 119,
     period: "mo",
-    description: "Für Agenturen & große Teams.",
+    description: "For agencies and larger teams.",
     features: [
-      "Alles aus Pro",
-      "Multi-User & Rollen",
-      "White-Label Reports",
-      "Dedizierter Success Manager",
-      "API-Zugang",
+      "Everything in Pro",
+      "Multi-user & roles",
+      "White-label reports",
+      "Dedicated success manager",
+      "API access",
     ],
-    cta: "Kontakt",
-    href: "#",
+    cta: "Contact sales",
+    href: "mailto:hello@leadtribute.io",
     highlighted: false,
   },
 ];
@@ -74,24 +74,23 @@ export function Pricing() {
 
   return (
     <section className="relative z-10 px-6 py-24 sm:px-8 sm:py-32">
-      <div className="mx-auto max-w-6xl">
+      <motion.div className="mx-auto max-w-6xl">
         <motion.h2
           className="text-center text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl"
           {...sectionFade}
         >
-          Einfaches Pricing
+          Simple pricing
         </motion.h2>
         <p className="mx-auto mt-4 max-w-xl text-center text-black/60">
-          Starte kostenlos. Wechsle jederzeit.
+          Start free. Upgrade when you are ready to scale.
         </p>
 
-        {/* Toggle: Monthly / Yearly */}
         <motion.div
           className="mt-10 flex flex-wrap items-center justify-center gap-4"
           {...sectionFade}
         >
           <span className={`text-sm font-medium ${!yearly ? "text-black" : "text-black/50"}`}>
-            Monatlich
+            Monthly
           </span>
           <button
             type="button"
@@ -104,15 +103,14 @@ export function Pricing() {
               className={`absolute top-1 left-1 h-6 w-6 rounded-full bg-white shadow-lg shadow-black/40 transition-transform ${yearly ? "translate-x-6" : "translate-x-0"}`}
             />
           </button>
-            <span className={`text-sm font-medium ${yearly ? "text-black" : "text-black/50"}`}>
-            Jährlich
+          <span className={`text-sm font-medium ${yearly ? "text-black" : "text-black/50"}`}>
+            Yearly
           </span>
-          <span className="rounded-full bg-emerald-500/20 px-2.5 py-0.5 text-xs font-semibold text-emerald-400 ring-1 ring-emerald-500/40">
+          <span className="rounded-full bg-emerald-500/20 px-2.5 py-0.5 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-500/40">
             Save 20%
           </span>
         </motion.div>
 
-        {/* Cards */}
         <div className="mt-16 grid gap-6 sm:grid-cols-3 sm:gap-8">
           {tiers.map((tier, i) => {
             const price = yearly ? tier.yearly : tier.monthly;
@@ -122,8 +120,8 @@ export function Pricing() {
                 key={tier.id}
                 className={`relative flex flex-col rounded-3xl border p-6 sm:p-8 ${
                   tier.highlighted
-                    ? "border-2 border-black bg-zinc-950/90 shadow-[0_0_60px_-20px_rgba(0,0,0,0.7)] lg:-mt-2 lg:scale-[1.02]"
-                    : "border-zinc-800/80 bg-zinc-900/50"
+                    ? "z-10 border-2 border-black bg-zinc-950 shadow-[0_0_60px_-20px_rgba(0,0,0,0.75)] lg:-mt-2 lg:scale-[1.03]"
+                    : "border-white/20 bg-gradient-to-b from-zinc-900 to-zinc-950 shadow-[0_18px_45px_rgba(0,0,0,0.45)]"
                 }`}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -131,41 +129,41 @@ export function Pricing() {
                 transition={{ duration: 0.45, delay: i * 0.1 }}
               >
                 {tier.badge && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-white px-3 py-1 text-xs font-semibold text-black">
+                  <motion.div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-white px-3 py-1 text-xs font-semibold text-black shadow-md">
                     {tier.badge}
-                  </div>
+                  </motion.div>
                 )}
                 <h3 className="text-lg font-semibold text-white">{tier.name}</h3>
                 <div className="mt-4 flex items-baseline gap-1">
                   <span className="text-3xl font-bold text-white">
-                    {isFree ? "0" : price} €
+                    {isFree ? "€0" : `€${price}`}
                   </span>
                   {!isFree && (
-                    <span className="text-sm text-white/60">
+                    <span className="text-sm text-white/65">
                       /{tier.period}
-                      {yearly && " (jährl.)"}
+                      {yearly && " billed yearly"}
                     </span>
                   )}
                 </div>
                 {isFree && (
-                  <span className="mt-1 text-sm text-white/60">Für immer kostenlos</span>
+                  <span className="mt-1 text-sm text-white/65">Free forever</span>
                 )}
-                <p className="mt-4 text-sm text-white/70">{tier.description}</p>
-                <ul className="mt-6 space-y-3">
+                <p className="mt-4 text-sm text-white/80">{tier.description}</p>
+                <ul className="mt-6 flex-1 space-y-3">
                   {tier.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2 text-sm text-white/80">
+                    <li key={f} className="flex items-start gap-2 text-sm text-white/85">
                       <Check className="h-5 w-5 shrink-0 text-emerald-500" />
                       {f}
                     </li>
                   ))}
                 </ul>
-                <div className="mt-auto pt-8">
+                <div className="mt-8 pt-2">
                   <Link
                     href={tier.href}
-                    className={`inline-flex w-full justify-center rounded-full px-4 py-3 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 focus:ring-offset-black ${
+                    className={`inline-flex w-full justify-center rounded-full px-4 py-3 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-white/40 focus:ring-offset-2 focus:ring-offset-zinc-950 ${
                       tier.highlighted
                         ? "btn-black"
-                        : "border border-white/20 bg-transparent text-white hover:border-white/50 hover:bg-white/10"
+                        : "border border-white/30 bg-white/10 text-white hover:border-white/50 hover:bg-white/15"
                     }`}
                   >
                     {tier.highlighted ? <span>{tier.cta}</span> : tier.cta}
@@ -175,7 +173,7 @@ export function Pricing() {
             );
           })}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

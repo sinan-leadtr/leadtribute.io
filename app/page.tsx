@@ -62,24 +62,24 @@ const heroWord = {
 
 const faqItems = [
   {
-    q: "Do you support TikTok?",
-    a: "Yes. We integrate with TikTok Ads, Meta, Google, Klaviyo, and major commerce stacks — Shopify, WooCommerce, BigCommerce, and more — in one place.",
+    q: "How is Markov attribution different from last-click?",
+    a: "Last-click gives 100% credit to the final ad touch before purchase. Markov models the full journey and splits credit by how often each channel appears on paths that convert—so earlier touches like email or discovery ads get fair share.",
   },
   {
-    q: "Is my data safe?",
-    a: "We use encryption at rest and in transit. Data is stored in the EU and we are GDPR compliant.",
-  },
-  {
-    q: "Can I cancel anytime?",
-    a: "Absolutely. No long-term contract. Cancel from your settings and your data stays exportable for 30 days.",
+    q: "Which platforms can I connect?",
+    a: "Meta, Google, and TikTok Ads, plus Klaviyo for email. For revenue, connect Shopify, WooCommerce, BigCommerce, and more—with additional commerce platforms on the roadmap.",
   },
   {
     q: "How long does setup take?",
-    a: "Most teams are live in under 15 minutes. Connect your ad accounts and commerce store (Shopify, WooCommerce, etc.), and we sync historical data automatically.",
+    a: "Most teams connect ad and commerce accounts in under 15 minutes. We sync historical data automatically so your dashboard fills in without manual CSV exports.",
   },
   {
-    q: "Do you offer a free trial?",
-    a: "Yes. 14 days free, no credit card required. Full access to the Pro plan so you can test with real data.",
+    q: "Is my data secure?",
+    a: "Yes. Data is encrypted in transit and at rest, stored in the EU, and we operate in line with GDPR requirements.",
+  },
+  {
+    q: "Can I cancel or switch plans anytime?",
+    a: "Absolutely. No long-term contract. Upgrade, downgrade, or cancel from settings. After cancellation, you can export your data for 30 days.",
   },
 ];
 
@@ -454,7 +454,7 @@ export default function Home() {
                   ))}
                   <div
                     className="flex h-14 w-14 items-center justify-center rounded-2xl border border-dashed border-black/20 bg-transparent transition hover:border-black/40"
-                    title="Und mehr"
+                    title="And more"
                   >
                     <span className="text-xs font-medium">+ more</span>
                   </div>
@@ -463,8 +463,8 @@ export default function Home() {
                   <Link2 className="h-5 w-5" />
                   <span className="text-sm">Connections</span>
                 </div>
-                <p className="mt-4 text-center text-sm leading-relaxed">
-                  Schluss mit manuellen CSV-Exporten und Datenchaos. Leadtribute zentralisiert deine Datenströme automatisch und fehlerfrei.
+                <p className="mt-4 text-center text-sm leading-relaxed text-white/55">
+                  No more manual CSV exports or scattered spreadsheets. Leadtribute centralizes your ad and commerce data automatically.
                 </p>
               </div>
             </div>
@@ -509,7 +509,7 @@ export default function Home() {
                 <div className="mt-4 overflow-hidden rounded-xl border border-white/5 bg-black/30">
                   <table className="w-full text-left text-sm">
                     <thead>
-                      <tr className="border-b border-black/10 text-[10px] font-medium uppercase tracking-wider">
+                      <tr className="border-b border-white/10 text-[10px] font-medium uppercase tracking-wider text-white/50">
                         <th className="px-3 py-2.5">Campaign</th>
                         <th className="px-3 py-2.5 text-right">Spend</th>
                         <th className="px-3 py-2.5 text-right">ROAS</th>
@@ -539,8 +539,8 @@ export default function Home() {
                     </tbody>
                   </table>
                 </div>
-                <p className="mt-4 text-center text-sm leading-relaxed">
-                  Hör auf, im Dunkeln zu tappen. Verstehe endlich den wahren ROAS über alle Kanäle hinweg, statt isolierten Plattform-Metriken zu vertrauen.
+                <p className="mt-4 text-center text-sm leading-relaxed text-white/55">
+                  Stop guessing from isolated platform metrics. See true ROAS across every channel in one live view.
                 </p>
               </motion.div>
             </div>
@@ -586,7 +586,7 @@ export default function Home() {
                   </span>
                 </div>
                 <p className="mt-4 text-center text-sm leading-relaxed text-white/55">
-                  Skaliere Budgets basierend auf echtem Profit, nicht auf Bauchgefühl. Erkenne die Gewinner-Kampagnen sofort.
+                  Scale budgets from real profit, not gut feel. Spot winning campaigns the moment they emerge.
                 </p>
               </div>
             </div>

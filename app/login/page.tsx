@@ -37,10 +37,10 @@ export default function LoginPage() {
         setIsLoading(false);
         return;
       }
-      toast.success("Eingeloggt. Weiterleitung…");
+      toast.success("Signed in. Redirecting…");
       router.push("/dashboard");
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Etwas ist schiefgelaufen.";
+      const message = err instanceof Error ? err.message : "Something went wrong.";
       setError(message);
       toast.error(message);
       setIsLoading(false);
@@ -74,10 +74,10 @@ export default function LoginPage() {
         setIsLoading(false);
         return;
       }
-      toast.success("Account erstellt! Weiterleitung…");
+      toast.success("Account created! Redirecting…");
       router.push("/dashboard");
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Etwas ist schiefgelaufen.";
+      const message = err instanceof Error ? err.message : "Something went wrong.";
       setError(message);
       toast.error(message);
       setIsLoading(false);
@@ -99,7 +99,7 @@ export default function LoginPage() {
       setIsLoading(false);
       return;
     }
-    toast.info("Weiterleitung zu Google…");
+    toast.info("Redirecting to Google…");
   }
 
   async function handleAppleLogin() {
@@ -117,7 +117,7 @@ export default function LoginPage() {
       setIsLoading(false);
       return;
     }
-    toast.info("Weiterleitung zu Apple…");
+    toast.info("Redirecting to Apple…");
   }
 
   return (
@@ -136,12 +136,12 @@ export default function LoginPage() {
             <span className="text-xl font-semibold">LT</span>
           </div>
           <h1 className="text-xl font-semibold tracking-tight text-black">
-            {tab === "login" ? "Willkommen zurück" : "Account erstellen"}
+            {tab === "login" ? "Welcome back" : "Create your account"}
           </h1>
           <p className="mt-1 text-sm text-black/60">
             {tab === "login"
-              ? "Melde dich an, um deine Performance zu verwalten."
-              : "Starte mit Leadtribute durch."}
+              ? "Sign in to manage your performance marketing."
+              : "Get started with Leadtribute in minutes."}
           </p>
         </div>
 
@@ -156,7 +156,7 @@ export default function LoginPage() {
                   : "text-black/60 hover:text-black hover:bg-black/5"
               }`}
           >
-            Anmelden
+            Sign in
           </button>
           <button
             type="button"
@@ -167,7 +167,7 @@ export default function LoginPage() {
                   : "text-black/60 hover:text-black hover:bg-black/5"
               }`}
           >
-            Registrieren
+            Sign up
           </button>
         </div>
 
@@ -175,24 +175,24 @@ export default function LoginPage() {
         {tab === "login" && (
           <form onSubmit={handleSignIn} className="space-y-4">
             <div>
-              <label htmlFor="email" className="sr-only">E-Mail</label>
+              <label htmlFor="email" className="sr-only">Email</label>
               <input
                 id="email"
                 name="email"
                 type="email"
-                placeholder="E-Mail"
+                placeholder="Email"
                 autoComplete="email"
                 disabled={isLoading}
                 className={inputBase}
               />
             </div>
             <div>
-              <label htmlFor="password" className="sr-only">Passwort</label>
+              <label htmlFor="password" className="sr-only">Password</label>
               <input
                 id="password"
                 name="password"
                 type="password"
-                placeholder="Passwort"
+                placeholder="Password"
                 autoComplete="current-password"
                 disabled={isLoading}
                 className={inputBase}
@@ -211,10 +211,10 @@ export default function LoginPage() {
               {isLoading ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Wird angemeldet…
+                  Signing in…
                 </>
               ) : (
-                "Einloggen"
+                "Sign in"
               )}
             </button>
           </form>
@@ -236,24 +236,24 @@ export default function LoginPage() {
               />
             </div>
             <div>
-              <label htmlFor="signup-email" className="sr-only">E-Mail</label>
+              <label htmlFor="signup-email" className="sr-only">Email</label>
               <input
                 id="signup-email"
                 name="signup-email"
                 type="email"
-                placeholder="E-Mail"
+                placeholder="Email"
                 autoComplete="email"
                 disabled={isLoading}
                 className={inputBase}
               />
             </div>
             <div>
-              <label htmlFor="signup-password" className="sr-only">Passwort</label>
+              <label htmlFor="signup-password" className="sr-only">Password</label>
               <input
                 id="signup-password"
                 name="signup-password"
                 type="password"
-                placeholder="Passwort"
+                placeholder="Password"
                 autoComplete="new-password"
                 disabled={isLoading}
                 className={inputBase}
@@ -272,10 +272,10 @@ export default function LoginPage() {
               {isLoading ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Wird erstellt…
+                  Creating account…
                 </>
               ) : (
-                "Account erstellen"
+                "Create account"
               )}
             </button>
           </form>
@@ -288,7 +288,7 @@ export default function LoginPage() {
               <div className="w-full border-t border-black/10" />
             </div>
             <span className="relative bg-white px-3 text-xs text-black/50">
-              Oder weiter mit
+              Or continue with
             </span>
           </div>
           <div className="mt-4 flex gap-3">
@@ -316,9 +316,9 @@ export default function LoginPage() {
         {/* Footer hint (optional) */}
         <p className="mt-6 text-center text-sm text-black/50">
           {tab === "login" ? (
-            <>Noch kein Konto? Wechsle oben auf <strong className="text-black">Registrieren</strong>.</>
+            <>No account yet? Switch to <strong className="text-black">Sign up</strong> above.</>
           ) : (
-            <>Bereits Konto? Wechsle oben auf <strong className="text-black">Anmelden</strong>.</>
+            <>Already have an account? Switch to <strong className="text-black">Sign in</strong> above.</>
           )}
         </p>
       </div>

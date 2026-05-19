@@ -4,24 +4,21 @@ import { motion } from "framer-motion";
 
 const testimonials = [
   {
-    quote:
-      "Endlich sehe ich, welcher Channel wirklich profitabel ist.",
+    quote: "Finally I can see which channel is actually profitable.",
     name: "Martin S.",
     title: "E-Com Founder",
     initials: "MS",
     accent: "bg-violet-500/20 text-violet-400 ring-1 ring-violet-500/40",
   },
   {
-    quote:
-      "Das Setup hat nur 5 Minuten gedauert. Ein Gamechanger.",
+    quote: "Setup took five minutes. A real game-changer for our team.",
     name: "Lena K.",
     title: "Performance Lead",
     initials: "LK",
     accent: "bg-emerald-500/20 text-emerald-400 ring-1 ring-emerald-500/40",
   },
   {
-    quote:
-      "Keine Excel-Hölle mehr. Leadtribute ist meine Startseite geworden.",
+    quote: "No more spreadsheet hell. Leadtribute is my homepage now.",
     name: "Tim B.",
     title: "Agency Owner",
     initials: "TB",
@@ -39,14 +36,20 @@ const sectionFade = {
 export function Testimonials() {
   return (
     <section className="relative z-10 px-6 py-20 sm:px-8 sm:py-28">
-      <div className="mx-auto max-w-6xl">
+      <motion.div className="mx-auto max-w-6xl">
         <motion.p
           className="text-center text-sm font-medium uppercase tracking-widest text-black/40 sm:text-base"
           {...sectionFade}
         >
           Trusted by growth teams.
         </motion.p>
-        <div className="mt-12 grid gap-6 sm:grid-cols-3 sm:gap-8">
+        <motion.div
+          className="mt-12 grid gap-6 sm:grid-cols-3 sm:gap-8"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.45, delay: 0.05 }}
+        >
           {testimonials.map((item, i) => (
             <motion.div
               key={item.name}
@@ -59,22 +62,22 @@ export function Testimonials() {
               <p className="text-sm leading-relaxed text-white/80 sm:text-base">
                 &ldquo;{item.quote}&rdquo;
               </p>
-              <div className="mt-6 flex items-center gap-4">
+              <motion.div className="mt-6 flex items-center gap-4">
                 <div
                   className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-sm font-bold ${item.accent}`}
                   aria-hidden
                 >
                   {item.initials}
                 </div>
-                <div>
+                <motion.div>
                   <p className="font-semibold text-white">{item.name}</p>
                   <p className="text-xs text-white/50 sm:text-sm">{item.title}</p>
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
             </motion.div>
           ))}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

@@ -14,9 +14,9 @@ const companyLinks = [
 ];
 
 const legalLinks = [
-  { label: "Impressum", href: "/legal/impressum" },
-  { label: "Datenschutz", href: "/legal/datenschutz" },
-  { label: "AGB", href: "/legal/agb" },
+  { label: "Imprint", href: "/legal/impressum" },
+  { label: "Privacy", href: "/legal/datenschutz" },
+  { label: "Terms", href: "/legal/agb" },
 ];
 
 export function Footer() {
