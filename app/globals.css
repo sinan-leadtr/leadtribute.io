@@ -137,6 +137,67 @@
   opacity: 1;
 }
 
+/* White CTA on dark cards — same luminous gradient ring on hover */
+.btn-white-glow {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background-color: #ffffff;
+  color: #000000;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+
+.btn-white-glow::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background-image: linear-gradient(
+    120deg,
+    #a855f7,
+    #7c3aed,
+    #6366f1,
+    #4f46e5,
+    #38bdf8,
+    #22d3ee,
+    #22c55e,
+    #0ea5e9,
+    #6366f1,
+    #a855f7
+  );
+  background-size: 300% 100%;
+  opacity: 0;
+  animation: hero-shimmer 10s linear infinite;
+  transition: opacity 0.4s ease-out;
+}
+
+.btn-white-glow::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: inherit;
+  background-color: #ffffff;
+  z-index: 0;
+}
+
+.btn-white-glow span {
+  position: relative;
+  z-index: 10;
+}
+
+.btn-white-glow:hover {
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+}
+
+.btn-white-glow:hover::before {
+  opacity: 1;
+}
+
 /* Animated gradient ring for small pill controls (e.g. dashboard tabs) */
 @keyframes tab-ring-shimmer {
   0% {
