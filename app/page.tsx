@@ -78,8 +78,12 @@ const faqItems = [
     a: "Yes. Data is encrypted in transit and at rest, stored in the EU, and we operate in line with GDPR requirements.",
   },
   {
+    q: "What happens after the 14-day Pro trial?",
+    a: "You get full Pro features for 14 days with no credit card required. When the trial ends, subscribe to Pro or continue on the free Starter plan with limited accounts and 7-day history.",
+  },
+  {
     q: "Can I cancel or switch plans anytime?",
-    a: "Absolutely. No long-term contract. Upgrade, downgrade, or cancel from settings. After cancellation, you can export your data for 30 days.",
+    a: "Yes. No long-term contract. Upgrade, downgrade to Starter, or cancel from settings. After cancellation, you can export your data for 30 days.",
   },
 ];
 
@@ -173,7 +177,7 @@ export default function Home() {
                 href="/register"
                 className="btn-black px-10 py-4 text-base font-semibold focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 focus:ring-offset-white"
               >
-                <span>Start Free Trial</span>
+                <span>Start 14-day Pro trial</span>
               </Link>
             </motion.div>
           </motion.div>
@@ -204,8 +208,8 @@ export default function Home() {
             <div className="flex flex-col rounded-3xl border border-black/5 bg-white p-6 shadow-xl sm:p-8">
               <h3 className="text-lg font-semibold">Starter</h3>
               <p className="mt-3 text-3xl font-bold">0 €</p>
-              <p className="mt-1 text-sm">Free</p>
-              <p className="mt-4 text-sm">Perfect for side projects.</p>
+              <p className="mt-1 text-sm text-black/60">Free forever · limited features</p>
+              <p className="mt-4 text-sm">Perfect for side projects and testing.</p>
               <ul className="mt-6 space-y-3 text-sm">
                 {["Up to 3 connected accounts", "Basic ROAS & spend", "7-day data history"].map((item) => (
                   <li key={item} className="flex items-center gap-2">
@@ -219,7 +223,7 @@ export default function Home() {
                   href="/register"
                   className="inline-flex w-full justify-center rounded-full border border-black/10 bg-white/60 px-4 py-3 text-sm font-semibold text-black/80 shadow-sm transition hover:bg-white hover:border-black/20"
                 >
-                  Get Started
+                  Start on Starter
                 </Link>
               </div>
             </div>
@@ -230,8 +234,8 @@ export default function Home() {
               </div>
               <h3 className="text-lg font-semibold">Pro</h3>
               <p className="mt-3 text-3xl font-bold">49 €</p>
-              <p className="mt-1 text-sm">per month</p>
-              <p className="mt-4 text-sm">The CMO Suite.</p>
+              <p className="mt-1 text-sm text-black/60">14-day Pro trial · then per month</p>
+              <p className="mt-4 text-sm">The CMO Suite for growing teams.</p>
               <ul className="mt-6 space-y-3 text-sm">
                 {["Unlimited accounts", "Real-time ROAS & MER", "Full history & export", "Priority support"].map((item) => (
                   <li key={item} className="flex items-center gap-2">
@@ -245,7 +249,7 @@ export default function Home() {
                   href="/register"
                   className="btn-black inline-flex w-full justify-center px-4 py-3 text-sm font-semibold"
                 >
-                  <span>Get Started</span>
+                  <span>Start 14-day Pro trial</span>
                 </Link>
               </div>
             </div>
@@ -691,7 +695,7 @@ export default function Home() {
             Ready to optimize?
           </h2>
           <p className="mt-4 text-lg text-black/70">
-            Join growth teams who run on one dashboard.
+            14-day Pro trial, no credit card. Stay on Starter free if you don&apos;t upgrade.
           </p>
           <motion.div
             className="mt-10"
@@ -702,7 +706,7 @@ export default function Home() {
               href="/register"
               className="btn-black px-12 py-5 text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 focus:ring-offset-white"
             >
-              <span>Start 14-day Free Trial</span>
+              <span>Start 14-day Pro trial</span>
             </Link>
           </motion.div>
         </motion.div>

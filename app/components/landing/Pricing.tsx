@@ -19,14 +19,16 @@ const tiers = [
     monthly: 0,
     yearly: 0,
     period: "mo",
-    description: "Perfect for side projects and testing.",
+    description: "Free forever with limits — ideal for side projects.",
+    priceNote: "Free forever",
+    priceSub: "Limited features",
     features: [
       "Up to 3 connected accounts",
       "Basic ROAS & spend",
       "7-day data history",
       "Email support",
     ],
-    cta: "Get Started",
+    cta: "Start on Starter",
     href: "/register",
     highlighted: false,
   },
@@ -36,7 +38,10 @@ const tiers = [
     monthly: 49,
     yearly: 39,
     period: "mo",
-    description: "For growing brands and teams.",
+    description: "Full attribution, history, and exports for growing teams.",
+    priceNote: "14-day Pro trial",
+    priceSub: "No credit card required",
+    afterTrial: true,
     features: [
       "Unlimited accounts",
       "Real-time ROAS & MER",
@@ -44,7 +49,7 @@ const tiers = [
       "Priority support",
       "Shopify & Klaviyo sync",
     ],
-    cta: "Get Started",
+    cta: "Start 14-day Pro trial",
     href: "/register",
     highlighted: true,
     badge: "Most Popular",
@@ -56,6 +61,8 @@ const tiers = [
     yearly: 119,
     period: "mo",
     description: "For agencies and larger teams.",
+    priceNote: null,
+    priceSub: null,
     features: [
       "Everything in Pro",
       "Multi-user & roles",
@@ -82,7 +89,7 @@ export function Pricing() {
           Simple pricing
         </motion.h2>
         <p className="mx-auto mt-4 max-w-xl text-center text-black/60">
-          Start free. Upgrade when you are ready to scale.
+          Try Pro free for 14 days. Keep Starter forever if you don&apos;t upgrade.
         </p>
 
         <motion.div
@@ -129,9 +136,9 @@ export function Pricing() {
                 transition={{ duration: 0.45, delay: i * 0.1 }}
               >
                 {tier.badge && (
-                  <motion.div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-white px-3 py-1 text-xs font-semibold text-black shadow-md">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-white px-3 py-1 text-xs font-semibold text-black shadow-md">
                     {tier.badge}
-                  </motion.div>
+                  </div>
                 )}
                 <h3 className="text-lg font-semibold text-white">{tier.name}</h3>
                 <div className="mt-4 flex items-baseline gap-1">
@@ -142,11 +149,15 @@ export function Pricing() {
                     <span className="text-sm text-white/65">
                       /{tier.period}
                       {yearly && " billed yearly"}
+                      {tier.afterTrial && " after trial"}
                     </span>
                   )}
                 </div>
-                {isFree && (
-                  <span className="mt-1 text-sm text-white/65">Free forever</span>
+                {tier.priceNote && (
+                  <p className="mt-1 text-sm font-medium text-white/90">{tier.priceNote}</p>
+                )}
+                {tier.priceSub && (
+                  <p className="mt-0.5 text-xs text-white/55">{tier.priceSub}</p>
                 )}
                 <p className="mt-4 text-sm text-white/80">{tier.description}</p>
                 <ul className="mt-6 flex-1 space-y-3">
