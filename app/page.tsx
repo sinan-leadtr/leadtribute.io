@@ -19,6 +19,7 @@ import { AttributionShowcase } from "./components/landing/AttributionShowcase";
 import { IntegrationLogo } from "./components/landing/IntegrationLogo";
 import { landingDarkCard } from "./components/landing/preview-styles";
 import { Pricing } from "./components/landing/Pricing";
+import { PricingComparison } from "./components/landing/PricingComparison";
 import { PricingFeatureList } from "./components/landing/PricingFeatureList";
 import { PricingTierBadge } from "./components/landing/PricingTierBadge";
 import { heroPricingTierIds, pricingTiers } from "./components/landing/pricing-features";
@@ -624,6 +625,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <PricingComparison />
 
       {/* ─── Pricing (Monthly / Yearly Toggle, 3 Tiers) ───────────────────── */}
       <section id="pricing" className="relative z-10 scroll-mt-20">
