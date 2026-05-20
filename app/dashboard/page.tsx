@@ -2,7 +2,8 @@ import { createClient } from "@/lib/supabase/server";
 import { DashboardContent } from "../components/dashboard-content";
 import type { Campaign } from "../components/campaign-table";
 import type { Integration } from "./actions";
-import { getForecast } from "./actions";
+import { getAttributionCredits, getForecast } from "./actions";
+import { getUserPlanState, historyStartDateIso } from "@/lib/plans/get-user-plan";
 
 type DbCampaign = {
   id: string;
@@ -69,7 +70,13 @@ function aggregatePlatformSpend(
 
 export default async function DashboardPage() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const planState = user ? await getUserPlanState() : null;
+  const historyDays = planState?.entitlements.historyDays ?? 30;
+  const startDate = historyStartDateIso(historyDays);
 
   let campaigns: Campaign[] = [];
   let integrations: Integration[] = [];
@@ -77,54 +84,58 @@ export default async function DashboardPage() {
   let platformSpend: PlatformSpendPoint[] = [];
   let totals = { totalSpend: 0, totalRevenue: 0, roas: 0 };
   let forecast: ForecastShape = null;
+  let attributionCredits: { channel: string; creditedRevenue: number; creditShare: number }[] =
+    [];
+  let integrationCount = 0;
 
   if (user) {
-    const today = new Date();
-    const start = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() - 29));
-    const startDate = start.toISOString().slice(0, 10);
-
-    const [campaignsRes, integrationsRes, analyticsRes, platformRes, forecastRes] = await Promise.all([
-      supabase
-        .from("campaigns")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("spend", { ascending: false }),
-      supabase
-        .from("integrations")
-        .select("id, platform, status, connected_at")
-        .eq("user_id", user.id),
-      supabase
-        .from("analytics_daily")
-        .select("date, platform, spend, revenue, roas")
-        .eq("user_id", user.id)
-        .eq("platform", "blended")
-        .gte("date", startDate)
-        .order("date", { ascending: true }),
-      supabase
-        .from("analytics_daily")
-        .select("platform, spend")
-        .eq("user_id", user.id)
-        .in("platform", ["meta", "google", "tiktok"])
-        .gte("date", startDate),
-      getForecast(),
-    ]);
+    const [campaignsRes, integrationsRes, analyticsRes, platformRes, forecastRes, attrRes] =
+      await Promise.all([
+        supabase
+          .from("campaigns")
+          .select("*")
+          .eq("user_id", user.id)
+          .order("spend", { ascending: false }),
+        supabase
+          .from("integrations")
+          .select("id, platform, status, connected_at")
+          .eq("user_id", user.id),
+        supabase
+          .from("analytics_daily")
+          .select("date, platform, spend, revenue, roas")
+          .eq("user_id", user.id)
+          .eq("platform", "blended")
+          .gte("date", startDate)
+          .order("date", { ascending: true }),
+        supabase
+          .from("analytics_daily")
+          .select("platform, spend")
+          .eq("user_id", user.id)
+          .in("platform", ["meta", "google", "tiktok"])
+          .gte("date", startDate),
+        planState?.entitlements.forecast ? getForecast() : Promise.resolve(null),
+        planState?.entitlements.markovAttribution
+          ? getAttributionCredits()
+          : Promise.resolve(null),
+      ]);
 
     if (campaignsRes.data && Array.isArray(campaignsRes.data)) {
       campaigns = (campaignsRes.data as DbCampaign[]).map(toCampaign);
     }
     if (integrationsRes.data && Array.isArray(integrationsRes.data)) {
       integrations = integrationsRes.data as Integration[];
+      integrationCount = integrations.length;
     }
 
     if (analyticsRes.data && Array.isArray(analyticsRes.data)) {
-      blended = analyticsRes.data.map((row: any) => ({
+      blended = analyticsRes.data.map((row: { date: string; spend: unknown; revenue: unknown; roas: unknown }) => ({
         date: row.date as string,
         spend: Number(row.spend ?? 0),
         revenue: Number(row.revenue ?? 0),
         roas: Number(row.roas ?? 0),
       }));
-      const totalSpend = blended.reduce((sum, d) => sum += d.spend, 0);
-      const totalRevenue = blended.reduce((sum, d) => sum += d.revenue, 0);
+      const totalSpend = blended.reduce((sum, d) => sum + d.spend, 0);
+      const totalRevenue = blended.reduce((sum, d) => sum + d.revenue, 0);
       const roas = totalSpend > 0 ? totalRevenue / totalSpend : 0;
       totals = {
         totalSpend,
@@ -145,12 +156,23 @@ export default async function DashboardPage() {
         trendPercentage: forecastRes.trendPercentage,
       };
     }
+
+    if (attrRes && attrRes.ok) {
+      attributionCredits = attrRes.credits;
+    }
+  }
+
+  if (!planState) {
+    return null;
   }
 
   return (
     <DashboardContent
+      planState={planState}
       campaigns={campaigns}
       integrations={integrations}
+      integrationCount={integrationCount}
+      attributionCredits={attributionCredits}
       analytics={{ blended, totals, platformSpend }}
       forecast={forecast}
     />

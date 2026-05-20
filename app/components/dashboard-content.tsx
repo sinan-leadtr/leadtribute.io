@@ -8,9 +8,11 @@ import { RevenueChart } from "./dashboard/RevenueChart";
 import { PlatformSpendChart } from "./charts/platform-spend-chart";
 import { Integrations } from "./dashboard/Integrations";
 import { CreativesGrid } from "./creatives-grid";
-import { Sidebar } from "./sidebar";
-import { UserNav } from "./user-nav";
+import { DashboardShell } from "./dashboard/DashboardShell";
+import { StarterDashboard } from "./dashboard/StarterDashboard";
+import { AttributionPanel } from "./dashboard/AttributionPanel";
 import { Bot, Calendar, ShoppingBag, Sparkles } from "lucide-react";
+import type { UserPlanState } from "@/lib/plans/types";
 import { generateDemoData, syncData } from "@/app/dashboard/actions";
 import {
     Bar,
@@ -35,9 +37,18 @@ const pacingIsOver = pacingDelta > 3; // Toleranz
 
 type ChannelFilter = "all" | "meta" | "google" | "tiktok";
 
+type AttributionCredit = {
+    channel: string;
+    creditedRevenue: number;
+    creditShare: number;
+};
+
 interface DashboardContentProps {
+    planState: UserPlanState;
     campaigns: Campaign[];
     integrations: { id: string; platform: string; status: string; connected_at: string }[];
+    integrationCount: number;
+    attributionCredits: AttributionCredit[];
     analytics: {
         blended: { date: string; spend: number; revenue: number; roas: number }[];
         totals: { totalSpend: number; totalRevenue: number; roas: number };
@@ -46,13 +57,41 @@ interface DashboardContentProps {
     forecast: { forecastedRevenue: number; trendPercentage: number } | null;
 }
 
-export function DashboardContent({ campaigns, integrations = [], analytics, forecast }: DashboardContentProps) {
+export function DashboardContent({
+    planState,
+    campaigns,
+    integrations = [],
+    integrationCount,
+    attributionCredits = [],
+    analytics,
+    forecast,
+}: DashboardContentProps) {
     const router = useRouter();
     const [channel, setChannel] = useState<ChannelFilter>("all");
     const [aiOpen, setAiOpen] = useState(false);
     const [aiReply, setAiReply] = useState<"yes" | "no" | null>(null);
     const [demoLoading, setDemoLoading] = useState(false);
     const [syncLoading, setSyncLoading] = useState(false);
+
+    if (planState.effectivePlanId === "starter") {
+        return (
+            <StarterDashboard
+                planState={planState}
+                campaigns={campaigns}
+                integrations={integrations}
+                analytics={{
+                    blended: analytics?.blended ?? [],
+                    totals: analytics?.totals ?? { totalSpend: 0, totalRevenue: 0, roas: 0 },
+                }}
+                integrationCount={integrationCount}
+            />
+        );
+    }
+
+    const historyDays = planState.entitlements.historyDays;
+    const showForecast = planState.entitlements.forecast;
+    const showAi = planState.entitlements.aiCopilot;
+    const showMarkov = planState.entitlements.markovAttribution;
 
     const blended = analytics?.blended ?? [];
     const platformSpend = analytics?.platformSpend ?? [];
@@ -63,7 +102,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
     const totalRevenue = totals.totalRevenue;
     const totalRoas = totals.roas;
 
-    const hasForecast = !!forecast && forecast.forecastedRevenue > 0;
+    const hasForecast = showForecast && !!forecast && forecast.forecastedRevenue > 0;
     const forecastRevenue = hasForecast ? forecast!.forecastedRevenue : 0;
     const forecastTrend = hasForecast ? forecast!.trendPercentage : 0;
     const forecastChip = hasForecast
@@ -104,75 +143,42 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
         const result = await syncData();
         setSyncLoading(false);
         if (result.ok) {
-            toast.success("Analytics synced for the last 30 days.");
+            toast.success(`Analytics synced for the last ${historyDays} days.`);
             router.refresh();
         } else {
             toast.error(result.error);
         }
     }
 
+    const headerActions = (
+        <button
+            type="button"
+            onClick={handleSyncData}
+            disabled={syncLoading}
+            className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-white/15"
+        >
+            {syncLoading ? (
+                <>
+                    <span className="h-3 w-3 animate-spin rounded-full border border-white/20 border-t-white" />
+                    Syncing…
+                </>
+            ) : (
+                <>
+                    <Sparkles className="h-3.5 w-3.5" />
+                    Sync now
+                </>
+            )}
+        </button>
+    );
+
     return (
-        <div className="flex min-h-screen bg-white text-slate-900">
-            <Sidebar />
-
-            {/* Main content */}
-            <main className="flex min-h-screen flex-1 flex-col px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
-                {/* Header */}
-                <header className="mb-4 flex items-center justify-between gap-4">
-                    <div className="space-y-1">
-                        <nav className="flex items-center gap-2 text-xs font-medium text-slate-500">
-                            <span className="cursor-pointer transition hover:text-slate-900">
-                                Home
-                            </span>
-                            <span className="text-slate-400">/</span>
-                            <span className="cursor-pointer transition hover:text-slate-900">
-                                Analytics
-                            </span>
-                            <span className="text-slate-400">/</span>
-                            <span className="text-slate-900">Leadtribute Dashboard</span>
-                        </nav>
-                        <h1 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
-                            Leadtribute Performance Overview
-                        </h1>
-                        <p className="text-xs text-slate-500">
-                            Last 30 days • All channels • UTC
-                        </p>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                        <button
-                            type="button"
-                            onClick={handleSyncData}
-                            className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-black px-3 py-1.5 text-xs font-semibold text-white shadow-sm shadow-black/40 transition hover:bg-black/80"
-                            disabled={syncLoading}
-                        >
-                            {syncLoading ? (
-                                <>
-                                    <span className="h-3 w-3 animate-spin rounded-full border border-black/20 border-t-black" />
-                                    Syncing…
-                                </>
-                            ) : (
-                                <>
-                                    <Sparkles className="h-3.5 w-3.5" />
-                                    Sync Now
-                                </>
-                            )}
-                        </button>
-
-                        {/* Notifications */}
-                        <button
-                            type="button"
-                            onClick={() => toast.info("You have no new notifications.")}
-                            className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-black/10 bg-white/70 text-black/70 shadow-sm shadow-black/10 transition hover:bg-white hover:border-black/20"
-                        >
-                            <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400/80" />
-                            <span className="h-4 w-4 border-b border-white/40" />
-                        </button>
-
-                        <UserNav />
-                    </div>
-                </header>
-
+        <>
+        <DashboardShell
+            planState={planState}
+            title="Performance overview"
+            subtitle={`Last ${historyDays} days · All channels · UTC`}
+            headerActions={headerActions}
+        >
                 {/* Control Bar – Filter & Date */}
                 <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <h2 className="text-sm font-semibold text-slate-900">Performance Overview</h2>
@@ -206,11 +212,11 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                         ))}
                         <button
                             type="button"
-                            onClick={() => toast("Date range: Last 30 Days", { duration: 2000 })}
+                            onClick={() => toast(`Date range: Last ${historyDays} days`, { duration: 2000 })}
                             className="inline-flex items-center gap-1.5 rounded-full border border-slate-300 bg-slate-900 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-black hover:border-black"
                         >
                             <Calendar className="h-3.5 w-3.5" aria-hidden />
-                            <span>Last 30 Days</span>
+                            <span>Last {historyDays} days</span>
                         </button>
                     </div>
                 </div>
@@ -220,19 +226,19 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                     <KpiCard
                         label="Total Spend"
                         value={`€ ${totalSpend.toLocaleString("de-DE")}`}
-                        chip="Last 30 days"
+                        chip={`Last ${historyDays} days`}
                         chipTone="sky"
                     />
                     <KpiCard
                         label="ROAS"
                         value={`${totalRoas.toFixed(2)}x`}
-                        chip="Blended ROAS (30d)"
+                        chip={`Blended ROAS (${historyDays}d)`}
                         chipTone="emerald"
                     />
                     <KpiCard
                         label="Revenue"
                         value={`€ ${totalRevenue.toLocaleString("de-DE")}`}
-                        chip="Last 30 days"
+                        chip={`Last ${historyDays} days`}
                         chipTone="sky"
                     />
                     <KpiCard
@@ -321,7 +327,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                             <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
                                 <div>
                                     <h2 className="text-sm font-semibold text-slate-900">
-                                        Spend &amp; ROAS – last 30 days
+                                        Spend &amp; ROAS – last {historyDays} days
                                     </h2>
                                     <p className="text-xs text-slate-500">
                                         Combined view: daily spend (bars) and ROAS (line).
@@ -329,7 +335,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                                 </div>
                                 <div className="flex flex-wrap items-center gap-2 text-xs">
                                     <button className="rounded-full border border-slate-300 bg-slate-900 px-2.5 py-1 text-[11px] font-medium text-white shadow-sm shadow-black/30 transition hover:bg-black hover:border-black">
-                                        Last 30 days
+                                        Last {historyDays} days
                                     </button>
                                     <button className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-medium text-slate-700 transition hover:bg-slate-100 hover:border-slate-300 hover:text-slate-900">
                                         Compare period
@@ -345,7 +351,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                                         </p>
                                         <p className="max-w-sm text-xs text-slate-500">
                                             Connect Shopify under Data Sources, then click Sync
-                                            Now to load your last 30 days.
+                                            Now to load your last {historyDays} days.
                                         </p>
                                         <button
                                             type="button"
@@ -556,6 +562,12 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                 {/* Integrations – Google Ads & Meta Ads */}
                 <Integrations integrations={integrations} />
 
+                {showMarkov ? (
+                    <section className="mt-6">
+                        <AttributionPanel credits={attributionCredits} />
+                    </section>
+                ) : null}
+
                 {/* Active Campaigns */}
                 <section id="campaigns" className="mt-6 scroll-mt-4">
                     {campaigns.length === 0 ? (
@@ -586,7 +598,7 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                             </button>
                         </div>
                     ) : (
-                        <CampaignTable campaigns={campaigns} />
+                        <CampaignTable campaigns={campaigns} historyLabel={`Last ${historyDays} days`} />
                     )}
                 </section>
 
@@ -594,9 +606,9 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                 <section className="mt-6">
                     <CreativesGrid />
                 </section>
-            </main>
+        </DashboardShell>
 
-            {/* AI Copilot – Floating Action Button + Chat Popover */}
+            {showAi ? (
             <div className="fixed bottom-8 right-8 z-50 flex flex-col items-end gap-3">
                 {aiOpen && (
                     <div className="w-full max-w-sm rounded-3xl border border-zinc-800 bg-zinc-950/95 shadow-2xl shadow-black/80 backdrop-blur-sm sm:max-w-xs">
@@ -651,7 +663,8 @@ export function DashboardContent({ campaigns, integrations = [], analytics, fore
                     </span>
                 </button>
             </div>
-        </div>
+            ) : null}
+        </>
     );
 }
 

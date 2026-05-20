@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { initializeUserProfile } from "@/app/dashboard/plan-actions";
 
 type Tab = "login" | "signup";
 
@@ -74,7 +75,8 @@ export default function LoginPage() {
         setIsLoading(false);
         return;
       }
-      toast.success("Account created! Redirecting…");
+      await initializeUserProfile();
+      toast.success("Account created! Your 14-day Pro trial has started.");
       router.push("/dashboard");
     } catch (err) {
       const message = err instanceof Error ? err.message : "Something went wrong.";

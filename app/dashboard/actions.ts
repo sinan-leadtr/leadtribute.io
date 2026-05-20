@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { getUserPlanState } from "@/lib/plans/get-user-plan";
 import { revalidatePath } from "next/cache";
 import { fetchShopifyOrders, fetchShopifyRevenue } from "@/app/lib/shopify";
 import { touchpointsFromOrderContext } from "@/lib/attribution/utm";
@@ -61,6 +62,21 @@ export async function connectIntegration(platform: "google" | "meta"): Promise<C
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     return { ok: false, error: "Not logged in" };
+  }
+
+  const planState = await getUserPlanState();
+  const maxIntegrations = planState?.entitlements.maxIntegrations ?? 3;
+
+  const { count } = await supabase
+    .from("integrations")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", user.id);
+
+  if ((count ?? 0) >= maxIntegrations) {
+    return {
+      ok: false,
+      error: `Connection limit reached (${maxIntegrations}). Upgrade to Pro for unlimited connections.`,
+    };
   }
 
   // Simulated connection delay (1–2s) so loading spinner is visible
@@ -147,6 +163,23 @@ export async function saveApiKeys(
     return { ok: false, error: "Not logged in" };
   }
 
+  const planState = await getUserPlanState();
+  const maxIntegrations = planState?.entitlements.maxIntegrations ?? 3;
+
+  const { data: existingKeys } = await supabase
+    .from("api_keys")
+    .select("service")
+    .eq("user_id", user.id);
+
+  const services = (existingKeys ?? []).map((r) => r.service as string);
+  const isNew = !services.includes(service);
+  if (isNew && services.length >= maxIntegrations) {
+    return {
+      ok: false,
+      error: `Starter plan allows up to ${maxIntegrations} connections. Upgrade to Pro for more.`,
+    };
+  }
+
   const row = {
     user_id: user.id,
     service,
@@ -206,6 +239,10 @@ export async function syncData(): Promise<SyncDataResult> {
     return { ok: false, error: "Not logged in" };
   }
 
+  const planState = await getUserPlanState();
+  const historyDays = planState?.entitlements.historyDays ?? 30;
+  const canRunMarkov = planState?.entitlements.markovAttribution ?? false;
+
   const { data: apiKeys, error: apiError } = await supabase
     .from("api_keys")
     .select("service, api_key, account_id, shop_url")
@@ -227,7 +264,7 @@ export async function syncData(): Promise<SyncDataResult> {
     return { ok: false, error: "No connected integrations found. Connect Meta, Google or Shopify first." };
   }
 
-  const dates = lastNDatesUTC(30);
+  const dates = lastNDatesUTC(historyDays);
   const rows: Omit<AnalyticsDailyRow, "id" | "created_at">[] = [];
 
   // Shopify: real revenue per day via Admin API
@@ -355,7 +392,7 @@ export async function syncData(): Promise<SyncDataResult> {
     }
   }
 
-  if (hasShopify && shopifyKey) {
+  if (hasShopify && shopifyKey && canRunMarkov) {
     const attrResult = await syncShopifyConversionsAndAttribution(
       supabase,
       user.id,
@@ -516,6 +553,14 @@ export async function getAttributionCredits(
   } = await supabase.auth.getUser();
   if (!user) return { ok: false, error: "Not logged in" };
 
+  const planState = await getUserPlanState();
+  if (!planState?.entitlements.markovAttribution) {
+    return {
+      ok: false,
+      error: "Markov attribution is available on Pro and Scale. Upgrade to unlock.",
+    };
+  }
+
   const { data: run } = await supabase
     .from("attribution_runs")
     .select("id")
@@ -561,8 +606,16 @@ export async function getForecast(): Promise<ForecastResult> {
     return { ok: false, error: "Not logged in" };
   }
 
+  const planState = await getUserPlanState();
+  if (!planState?.entitlements.forecast) {
+    return { ok: true, forecastedRevenue: 0, trendPercentage: 0 };
+  }
+
+  const historyDays = planState.entitlements.historyDays;
   const today = new Date();
-  const start = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() - 29));
+  const start = new Date(
+    Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() - (historyDays - 1)),
+  );
   const startDate = start.toISOString().slice(0, 10);
 
   const { data, error } = await supabase

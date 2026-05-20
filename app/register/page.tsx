@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { initializeUserProfile } from "@/app/dashboard/plan-actions";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -41,7 +42,8 @@ export default function RegisterPage() {
       }
 
       console.log("[Register] signUp success:", data.user?.id);
-      toast.success("Account created! Redirecting…");
+      await initializeUserProfile();
+      toast.success("Account created! Your 14-day Pro trial has started.");
       router.push("/dashboard");
       return;
     } catch (err) {

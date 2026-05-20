@@ -19,6 +19,7 @@ export interface Campaign {
 
 interface CampaignTableProps {
   campaigns: Campaign[];
+  historyLabel?: string;
 }
 
 function PlatformIcon({ platform }: { platform: Platform }) {
@@ -64,14 +65,14 @@ function RoasCell({ roas }: { roas: number }) {
   return <span className={`font-medium tabular-nums ${className}`}>{roas.toFixed(1)}x</span>;
 }
 
-export function CampaignTable({ campaigns = [] }: CampaignTableProps) {
+export function CampaignTable({ campaigns = [], historyLabel = "Last 7 days" }: CampaignTableProps) {
   const router = useRouter();
 
   return (
     <section className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.2)]">
       <div className="mb-4 flex items-center justify-between gap-2">
         <h2 className="text-sm font-semibold text-white">Active Campaigns</h2>
-        <span className="text-[10px] text-white/50">Last 7 days</span>
+        <span className="text-[10px] text-white/50">{historyLabel}</span>
       </div>
       <div className="overflow-x-auto -mx-1">
         <table className="w-full min-w-[600px] border-collapse text-left text-sm">

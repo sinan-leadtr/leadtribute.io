@@ -17,14 +17,20 @@ export type RevenueChartPoint = {
   revenue: number;
 };
 
-export function RevenueChart({ data }: { data: RevenueChartPoint[] }) {
+export function RevenueChart({
+  data,
+  title = "Revenue (last 14 days)",
+}: {
+  data: RevenueChartPoint[];
+  title?: string;
+}) {
   const hasData = data.some((d) => d.revenue > 0);
 
   if (!hasData) {
     return (
       <div className="flex h-[280px] w-full flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-700 bg-zinc-950/50 p-6 text-center">
         <p className="text-xs font-semibold uppercase tracking-wider text-white/60">
-          Revenue (last 30 days)
+          {title}
         </p>
         <p className="mt-3 text-sm text-white/50">
           Run Sync Now after connecting Shopify to load revenue.
@@ -38,7 +44,7 @@ export function RevenueChart({ data }: { data: RevenueChartPoint[] }) {
   return (
     <div className="h-[280px] w-full">
       <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-white/60">
-        Revenue (last 14 days)
+        {title}
       </p>
       <ResponsiveContainer width="100%" height="100%" minHeight={200}>
         <AreaChart

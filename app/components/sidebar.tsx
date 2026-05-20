@@ -23,13 +23,13 @@ const navItems = [
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
-export function Sidebar() {
+export function Sidebar({ planLabel }: { planLabel?: string } = {}) {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
     <aside
-      className={`hidden h-screen shrink-0 flex-col border-r border-black/5 bg-white transition-all duration-300 ease-in-out sm:flex ${
+      className={`hidden h-screen shrink-0 flex-col border-r border-white/10 bg-zinc-950 transition-all duration-300 ease-in-out sm:flex ${
         isCollapsed ? "w-20 px-3" : "w-64 px-4"
       }`}
     >
@@ -42,10 +42,12 @@ export function Sidebar() {
           </div>
           {!isCollapsed && (
             <div className="min-w-0 flex-1">
-              <span className="block truncate text-sm font-semibold tracking-wide text-black">
+              <span className="block truncate text-sm font-semibold tracking-wide text-white">
                 Leadtribute
               </span>
-              <span className="block truncate text-xs text-black/60">Performance Suite</span>
+              <span className="block truncate text-xs text-white/50">
+                {planLabel ?? "Performance Suite"}
+              </span>
             </div>
           )}
         </Link>
@@ -62,10 +64,10 @@ export function Sidebar() {
               "group flex w-full items-center gap-3 rounded-full px-3.5 py-2.5 transition";
 
             const activeClasses =
-              "bg-black text-white border border-black shadow-[0_10px_30px_-18px_rgba(0,0,0,0.9)]";
+              "bg-white text-black border border-white/20 shadow-[0_10px_30px_-18px_rgba(0,0,0,0.5)]";
 
             const idleClasses =
-              "border border-black/10 bg-white text-black/70 hover:bg-black/5 hover:text-black hover:border-black/20";
+              "border border-white/10 bg-transparent text-white/60 hover:bg-white/5 hover:text-white hover:border-white/20";
 
             const Icon = item.icon;
 
