@@ -625,52 +625,59 @@ export default function Home() {
           >
             Frequently asked
           </motion.h2>
-          <div className="mt-12 space-y-2">
-            {faqItems.map((item, i) => (
-              <motion.div
-                key={i}
-                className="rounded-[999px] border border-black/5 bg-zinc-900/95 text-white shadow-[0_18px_45px_rgba(0,0,0,0.85)] overflow-hidden"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.05 }}
-                whileHover={{
-                  y: -4,
-                  boxShadow:
-                    "0 20px 55px rgba(0,0,0,0.9), 0 0 60px -18px rgba(148,163,184,0.6)",
-                }}
-              >
-                <button
-                  type="button"
-                  onClick={() => setFaqOpen(faqOpen === i ? null : i)}
-                  className="flex w-full items-center justify-between gap-4 px-6 py-4 text-left text-white/90 transition hover:bg-white/5"
+          <p className="mx-auto mt-4 max-w-xl text-center text-black/60">
+            Quick answers about attribution, integrations, and plans.
+          </p>
+          <motion.div className="mt-12 space-y-3">
+            {faqItems.map((item, i) => {
+              const isOpen = faqOpen === i;
+              return (
+                <motion.div
+                  key={i}
+                  className={`overflow-hidden transition-colors ${landingDarkCard} ${
+                    isOpen
+                      ? "border-violet-500/35 ring-1 ring-violet-500/25"
+                      : "hover:border-white/25"
+                  }`}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: i * 0.05 }}
                 >
-                  <span className="font-medium">{item.q}</span>
-                  <motion.span
-                    animate={{ rotate: faqOpen === i ? 180 : 0 }}
-                    transition={{ duration: 0.2 }}
+                  <button
+                    type="button"
+                    onClick={() => setFaqOpen(isOpen ? null : i)}
+                    className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition hover:bg-white/[0.04]"
+                    aria-expanded={isOpen}
                   >
-                    <ChevronDown className="h-5 w-5 shrink-0 text-white/50" />
-                  </motion.span>
-                </button>
-                <AnimatePresence initial={false}>
-                  {faqOpen === i && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.25 }}
-                      className="overflow-hidden"
+                    <span className="font-medium text-white">{item.q}</span>
+                    <motion.span
+                      animate={{ rotate: isOpen ? 180 : 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5"
                     >
-                      <p className="border-t border-white/5 px-6 py-4 text-sm text-white/70">
-                        {item.a}
-                      </p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            ))}
-          </div>
+                      <ChevronDown className="h-4 w-4 text-white/70" />
+                    </motion.span>
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25 }}
+                        className="overflow-hidden"
+                      >
+                        <p className="border-t border-white/10 px-6 py-4 text-sm leading-relaxed text-white/65">
+                          {item.a}
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              );
+            })}
+          </motion.div>
         </div>
       </section>
 

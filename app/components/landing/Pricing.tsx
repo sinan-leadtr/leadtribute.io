@@ -160,13 +160,13 @@ export function Pricing() {
                 <div className="mt-8 pt-2">
                   <Link
                     href={tier.href}
-                    className={`inline-flex w-full justify-center rounded-full px-4 py-3 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-white/40 focus:ring-offset-2 focus:ring-offset-zinc-950 ${
+                    className={`inline-flex w-full justify-center rounded-full px-4 py-3 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                       tier.highlighted
-                        ? "btn-black"
-                        : "border border-white/30 bg-white/10 text-white hover:border-white/50 hover:bg-white/15"
+                        ? "bg-white text-black shadow-lg shadow-black/30 hover:bg-white/95 hover:shadow-xl focus:ring-white/50 focus:ring-offset-zinc-950"
+                        : "border border-white/30 bg-white/10 text-white hover:border-white/50 hover:bg-white/15 focus:ring-white/40 focus:ring-offset-zinc-950"
                     }`}
                   >
-                    {tier.highlighted ? <span>{tier.cta}</span> : tier.cta}
+                    {tier.cta}
                   </Link>
                 </div>
               </motion.div>
