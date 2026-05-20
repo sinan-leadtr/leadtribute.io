@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { DashboardContent } from "../components/dashboard-content";
 import type { Campaign } from "../components/campaign-table";
@@ -74,8 +75,16 @@ export default async function DashboardPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const planState = user ? await getUserPlanState() : null;
-  const historyDays = planState?.entitlements.historyDays ?? 30;
+  if (!user) {
+    redirect("/login?next=/dashboard");
+  }
+
+  const planState = await getUserPlanState();
+  if (!planState) {
+    redirect("/login?next=/dashboard");
+  }
+
+  const historyDays = planState.entitlements.historyDays;
   const startDate = historyStartDateIso(historyDays);
 
   let campaigns: Campaign[] = [];
@@ -88,82 +97,76 @@ export default async function DashboardPage() {
     [];
   let integrationCount = 0;
 
-  if (user) {
-    const [campaignsRes, integrationsRes, analyticsRes, platformRes, forecastRes, attrRes] =
-      await Promise.all([
-        supabase
-          .from("campaigns")
-          .select("*")
-          .eq("user_id", user.id)
-          .order("spend", { ascending: false }),
-        supabase
-          .from("integrations")
-          .select("id, platform, status, connected_at")
-          .eq("user_id", user.id),
-        supabase
-          .from("analytics_daily")
-          .select("date, platform, spend, revenue, roas")
-          .eq("user_id", user.id)
-          .eq("platform", "blended")
-          .gte("date", startDate)
-          .order("date", { ascending: true }),
-        supabase
-          .from("analytics_daily")
-          .select("platform, spend")
-          .eq("user_id", user.id)
-          .in("platform", ["meta", "google", "tiktok"])
-          .gte("date", startDate),
-        planState?.entitlements.forecast ? getForecast() : Promise.resolve(null),
-        planState?.entitlements.markovAttribution
-          ? getAttributionCredits()
-          : Promise.resolve(null),
-      ]);
+  const [campaignsRes, integrationsRes, analyticsRes, platformRes, forecastRes, attrRes] =
+    await Promise.all([
+      supabase
+        .from("campaigns")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("spend", { ascending: false }),
+      supabase
+        .from("integrations")
+        .select("id, platform, status, connected_at")
+        .eq("user_id", user.id),
+      supabase
+        .from("analytics_daily")
+        .select("date, platform, spend, revenue, roas")
+        .eq("user_id", user.id)
+        .eq("platform", "blended")
+        .gte("date", startDate)
+        .order("date", { ascending: true }),
+      supabase
+        .from("analytics_daily")
+        .select("platform, spend")
+        .eq("user_id", user.id)
+        .in("platform", ["meta", "google", "tiktok"])
+        .gte("date", startDate),
+      planState.entitlements.forecast ? getForecast() : Promise.resolve(null),
+      planState.entitlements.markovAttribution
+        ? getAttributionCredits()
+        : Promise.resolve(null),
+    ]);
 
-    if (campaignsRes.data && Array.isArray(campaignsRes.data)) {
-      campaigns = (campaignsRes.data as DbCampaign[]).map(toCampaign);
-    }
-    if (integrationsRes.data && Array.isArray(integrationsRes.data)) {
-      integrations = integrationsRes.data as Integration[];
-      integrationCount = integrations.length;
-    }
-
-    if (analyticsRes.data && Array.isArray(analyticsRes.data)) {
-      blended = analyticsRes.data.map((row: { date: string; spend: unknown; revenue: unknown; roas: unknown }) => ({
-        date: row.date as string,
-        spend: Number(row.spend ?? 0),
-        revenue: Number(row.revenue ?? 0),
-        roas: Number(row.roas ?? 0),
-      }));
-      const totalSpend = blended.reduce((sum, d) => sum + d.spend, 0);
-      const totalRevenue = blended.reduce((sum, d) => sum + d.revenue, 0);
-      const roas = totalSpend > 0 ? totalRevenue / totalSpend : 0;
-      totals = {
-        totalSpend,
-        totalRevenue,
-        roas,
-      };
-    }
-
-    if (platformRes.data && Array.isArray(platformRes.data)) {
-      platformSpend = aggregatePlatformSpend(
-        platformRes.data as { platform: string; spend: number }[],
-      );
-    }
-
-    if (forecastRes && forecastRes.ok) {
-      forecast = {
-        forecastedRevenue: forecastRes.forecastedRevenue,
-        trendPercentage: forecastRes.trendPercentage,
-      };
-    }
-
-    if (attrRes && attrRes.ok) {
-      attributionCredits = attrRes.credits;
-    }
+  if (campaignsRes.data && Array.isArray(campaignsRes.data)) {
+    campaigns = (campaignsRes.data as DbCampaign[]).map(toCampaign);
+  }
+  if (integrationsRes.data && Array.isArray(integrationsRes.data)) {
+    integrations = integrationsRes.data as Integration[];
+    integrationCount = integrations.length;
   }
 
-  if (!planState) {
-    return null;
+  if (analyticsRes.data && Array.isArray(analyticsRes.data)) {
+    blended = analyticsRes.data.map((row: { date: string; spend: unknown; revenue: unknown; roas: unknown }) => ({
+      date: row.date as string,
+      spend: Number(row.spend ?? 0),
+      revenue: Number(row.revenue ?? 0),
+      roas: Number(row.roas ?? 0),
+    }));
+    const totalSpend = blended.reduce((sum, d) => sum + d.spend, 0);
+    const totalRevenue = blended.reduce((sum, d) => sum + d.revenue, 0);
+    const roas = totalSpend > 0 ? totalRevenue / totalSpend : 0;
+    totals = {
+      totalSpend,
+      totalRevenue,
+      roas,
+    };
+  }
+
+  if (platformRes.data && Array.isArray(platformRes.data)) {
+    platformSpend = aggregatePlatformSpend(
+      platformRes.data as { platform: string; spend: number }[],
+    );
+  }
+
+  if (forecastRes && forecastRes.ok) {
+    forecast = {
+      forecastedRevenue: forecastRes.forecastedRevenue,
+      trendPercentage: forecastRes.trendPercentage,
+    };
+  }
+
+  if (attrRes && attrRes.ok) {
+    attributionCredits = attrRes.credits;
   }
 
   return (

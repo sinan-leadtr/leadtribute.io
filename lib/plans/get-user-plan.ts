@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { getEntitlementsForPlan, PRO_TRIAL_DAYS } from "./entitlements";
 import type { PlanId, UserPlanState } from "./types";
 
@@ -32,9 +33,12 @@ function shouldDowngradeToStarter(profile: ProfileRow): boolean {
   return new Date(profile.trial_ends_at).getTime() < Date.now();
 }
 
-export async function ensureUserProfile(userId: string): Promise<void> {
-  const supabase = await createClient();
-  const { data: existing } = await supabase
+export async function ensureUserProfile(
+  userId: string,
+  supabase?: SupabaseClient,
+): Promise<void> {
+  const client = supabase ?? (await createClient());
+  const { data: existing } = await client
     .from("user_profiles")
     .select("user_id")
     .eq("user_id", userId)
@@ -42,7 +46,7 @@ export async function ensureUserProfile(userId: string): Promise<void> {
 
   if (existing) return;
 
-  await supabase.from("user_profiles").insert({
+  await client.from("user_profiles").insert({
     user_id: userId,
     plan: "pro",
     trial_ends_at: addDaysIso(PRO_TRIAL_DAYS),

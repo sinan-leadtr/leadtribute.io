@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart3,
@@ -34,6 +35,7 @@ import {
   TikTokLogo,
   WooCommerceLogo,
 } from "./components/icons";
+import { createClient } from "@/lib/supabase/client";
 
 const sectionFade = {
   initial: { opacity: 0, y: 40 },
@@ -91,7 +93,21 @@ const faqItems = [
 ];
 
 export default function Home() {
+  const router = useRouter();
   const [faqOpen, setFaqOpen] = useState<number | null>(0);
+
+  useEffect(() => {
+    let cancelled = false;
+    const supabase = createClient();
+    void supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!cancelled && user) {
+        router.replace("/dashboard");
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [router]);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-white text-black">

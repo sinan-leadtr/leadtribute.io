@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { oauthCallbackUrl } from "@/lib/auth/oauth-callback-url";
 import { initializeUserProfile } from "@/app/dashboard/plan-actions";
 
 export default function RegisterPage() {
@@ -59,10 +60,10 @@ export default function RegisterPage() {
     if (isLoading) return;
     setIsLoading(true);
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithOAuth({
+    const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${typeof window !== "undefined" ? window.location.origin : ""}/auth/callback`,
+        redirectTo: oauthCallbackUrl(),
       },
     });
     if (error) {
@@ -70,17 +71,22 @@ export default function RegisterPage() {
       setIsLoading(false);
       return;
     }
-    toast.info("Redirecting to Google…");
+    if (data?.url) {
+      window.location.assign(data.url);
+      return;
+    }
+    toast.error("Could not start Google sign-in.");
+    setIsLoading(false);
   }
 
   async function handleAppleSignUp() {
     if (isLoading) return;
     setIsLoading(true);
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithOAuth({
+    const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "apple",
       options: {
-        redirectTo: `${typeof window !== "undefined" ? window.location.origin : ""}/auth/callback`,
+        redirectTo: oauthCallbackUrl(),
       },
     });
     if (error) {
@@ -88,7 +94,12 @@ export default function RegisterPage() {
       setIsLoading(false);
       return;
     }
-    toast.info("Redirecting to Apple…");
+    if (data?.url) {
+      window.location.assign(data.url);
+      return;
+    }
+    toast.error("Could not start Apple sign-in.");
+    setIsLoading(false);
   }
 
   return (

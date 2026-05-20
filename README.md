@@ -77,5 +77,14 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 In **Supabase** → Authentication → URL Configuration, add:
 
-- **Site URL:** `https://your-project-name.vercel.app`
-- **Redirect URLs:** `https://your-project-name.vercel.app/auth/callback`
+- **Site URL:** `https://your-project-name.vercel.app` (your real production origin)
+- **Redirect URLs:** must include **exactly** the callback you use in the browser, e.g.  
+  `https://your-project-name.vercel.app/auth/callback`  
+  and for local dev: `http://127.0.0.1:3000/auth/callback`  
+  (If the callback URL is not allowed, Supabase may fall back to **Site URL** and you end up on `/` without a session.)
+
+Enable **Google** under Authentication → Providers and add your Google OAuth client ID/secret.
+
+**Production vs local:** OAuth fixes in this repo only apply on **Vercel after you push** (or on your machine when `npm run dev` is running the latest code). Testing an old deployment will not show new behaviour.
+
+After a successful OAuth exchange, this app **always** redirects to `/dashboard` (not the `next` query param). If you still land on `/` with a session, the homepage sends you to `/dashboard` automatically.
