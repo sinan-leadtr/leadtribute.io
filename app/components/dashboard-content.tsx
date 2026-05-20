@@ -181,7 +181,7 @@ export function DashboardContent({
         >
                 {/* Control Bar – Filter & Date */}
                 <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <h2 className="text-sm font-semibold text-slate-900">Performance Overview</h2>
+                    <h2 className="text-sm font-semibold text-white">Performance overview</h2>
                     <div className="flex flex-wrap items-center gap-2">
                         {(
                             [
@@ -203,8 +203,8 @@ export function DashboardContent({
                                 }}
                                 className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
                                     channel === id
-                                        ? "bg-white text-black shadow-lg shadow-black/20"
-                                        : "border border-white/10 bg-black/80 text-white/70 hover:border-white/20 hover:bg-white/5 hover:text-white"
+                                        ? "bg-white text-zinc-950 shadow-lg shadow-black/30"
+                                        : "border border-white/15 bg-white/[0.06] text-white/85 hover:border-white/25 hover:bg-white/[0.1] hover:text-white"
                                 }`}
                             >
                                 {label}
@@ -266,8 +266,8 @@ export function DashboardContent({
                                 </div>
                                 <span
                                     className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold ${pacingIsOver
-                                        ? "bg-red-500/10 text-red-300 ring-1 ring-red-500/40"
-                                        : "bg-emerald-500/10 text-emerald-300 ring-1 ring-emerald-500/40"
+                                        ? "bg-red-100 text-red-800 ring-1 ring-red-300/80"
+                                        : "bg-emerald-100 text-emerald-900 ring-1 ring-emerald-300/80"
                                         }`}
                                 >
                                     {pacingIsOver ? "Over" : "On track"}
@@ -305,7 +305,7 @@ export function DashboardContent({
                                 {pacingIsOver ? (
                                     <>
                                         You are{" "}
-                                        <span className="font-semibold text-red-300">
+                                        <span className="font-semibold text-red-700">
                                             {pacingDelta.toFixed(1)}% above
                                         </span>{" "}
                                         the planned budget.
@@ -313,7 +313,7 @@ export function DashboardContent({
                                 ) : (
                                     <>
                                         You are{" "}
-                                        <span className="font-semibold text-emerald-600">
+                                        <span className="font-semibold text-emerald-800">
                                             {Math.abs(pacingDelta).toFixed(1)}% below
                                         </span>{" "}
                                         the planned budget — on track.
@@ -421,7 +421,7 @@ export function DashboardContent({
 
                 {/* Profitability & Unit Economics */}
                 <section className="mt-6">
-                    <h2 className="mb-4 text-sm font-semibold text-slate-900">Profitability & Unit Economics</h2>
+                    <h2 className="mb-4 text-sm font-semibold text-white">Profitability &amp; unit economics</h2>
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                         {/* Shopify Revenue */}
                         <div className="flex flex-col gap-2 rounded-2xl border border-zinc-800 bg-zinc-950/80 p-4 transition hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)]">

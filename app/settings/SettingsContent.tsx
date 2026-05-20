@@ -5,6 +5,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { Sidebar } from "../components/sidebar";
 import type { UserPlanState } from "@/lib/plans/types";
+import { appPageBg } from "@/lib/ui/app-surfaces";
 
 function Switch({
   checked,
@@ -106,10 +107,7 @@ export function SettingsContent({ planState }: Props) {
   };
 
   return (
-    <div
-      className="flex min-h-screen bg-black text-white"
-      style={{ backgroundColor: "#000000" }}
-    >
+    <div className={`flex ${appPageBg}`}>
       <Sidebar planLabel={planState.entitlements.displayName} />
 
       <main className="flex min-h-screen flex-1 flex-col px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
@@ -225,7 +223,7 @@ export function SettingsContent({ planState }: Props) {
                     onClick={() =>
                       toast.info("Redirecting to Stripe Customer Portal...")
                     }
-                    className="mt-4 rounded-full border border-zinc-700 bg-transparent px-5 py-2.5 text-sm font-medium text-white/90 transition hover:border-white/60 hover:bg-white/5"
+                    className="mt-4 w-full rounded-full border border-white/20 bg-white/10 px-5 py-2.5 text-sm font-medium text-white transition hover:border-white/40 hover:bg-white/[0.14]"
                   >
                     Manage Subscription
                   </button>

@@ -13,6 +13,11 @@ import {
   type ApiKeyService,
 } from "@/app/dashboard/actions";
 import { useRouter } from "next/navigation";
+import { appPageBg } from "@/lib/ui/app-surfaces";
+
+const fieldLabel = "mb-1.5 block text-xs font-medium text-white/70";
+const inputDark =
+  "w-full rounded-xl border border-white/12 bg-zinc-950 px-4 py-2.5 text-sm text-white placeholder:text-white/35 shadow-inner shadow-black/40 focus:border-violet-400/50 focus:outline-none focus:ring-1 focus:ring-violet-500/35";
 
 // Lightweight UI primitives to mirror Card / Input / Button semantics
 type BasicProps = { className?: string; children: React.ReactNode };
@@ -20,7 +25,7 @@ type BasicProps = { className?: string; children: React.ReactNode };
 function Card({ className = "", children }: BasicProps) {
   return (
     <div
-      className={`rounded-2xl border border-black/5 bg-white p-6 shadow-[0_10px_40px_-24px_rgba(15,23,42,0.3)] ${className}`}
+      className={`rounded-2xl border border-white/10 bg-gradient-to-b from-zinc-900/95 to-zinc-950 p-6 shadow-[0_18px_45px_rgba(0,0,0,0.8)] ${className}`}
     >
       {children}
     </div>
@@ -35,13 +40,13 @@ function CardHeader({ className = "", children }: BasicProps) {
 
 function CardTitle({ className = "", children }: BasicProps) {
   return (
-    <h2 className={`text-base font-medium text-slate-900 ${className}`}>{children}</h2>
+    <h2 className={`text-base font-medium text-white ${className}`}>{children}</h2>
   );
 }
 
 function CardDescription({ className = "", children }: BasicProps) {
   return (
-    <p className={`text-xs text-slate-500 ${className}`}>{children}</p>
+    <p className={`text-xs text-white/55 ${className}`}>{children}</p>
   );
 }
 
@@ -56,7 +61,7 @@ function Label({
 }: any) {
   return (
     <label
-      className={`text-xs font-medium text-slate-600 ${className}`}
+      className={`text-xs font-medium text-white/70 ${className}`}
       {...props}
     >
       {children}
@@ -67,7 +72,7 @@ function Label({
 function Input({ className = "", ...props }: any) {
   return (
     <input
-      className={`w-full rounded-xl border border-black/10 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-black focus:outline-none focus:ring-1 focus:ring-black ${className}`}
+      className={`${inputDark} ${className}`}
       {...props}
     />
   );
@@ -108,7 +113,7 @@ function keyMap(rows: ApiKeyRow[]): Partial<Record<ApiKeyService, ApiKeyRow | nu
 
 function ConnectedBadge() {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/20 px-2.5 py-1 text-xs font-medium text-emerald-400 ring-1 ring-emerald-500/40">
+    <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-2.5 py-1 text-xs font-medium text-emerald-300 ring-1 ring-emerald-500/45">
       <Check className="h-3.5 w-3.5" />
       Connected
     </span>
@@ -126,13 +131,13 @@ type CardProps = {
 
 function ProviderCard({ title, icon, connected, saving, onSave, children }: CardProps) {
   return (
-    <div className="rounded-2xl border border-black/5 bg-white p-6 shadow-[0_10px_40px_-24px_rgba(15,23,42,0.3)]">
+    <div className="rounded-2xl border border-white/10 bg-gradient-to-b from-zinc-900/95 to-zinc-950 p-6 shadow-[0_18px_45px_rgba(0,0,0,0.8)]">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="flex h-12 min-w-12 items-center justify-center rounded-xl border border-black/10 bg-black/90 px-3 text-2xl text-white">
+          <div className="flex h-12 min-w-12 items-center justify-center rounded-xl border border-white/15 bg-black/50 px-3 text-2xl text-white">
             {icon}
           </div>
-          {title ? <h2 className="text-lg font-semibold text-slate-900">{title}</h2> : null}
+          {title ? <h2 className="text-lg font-semibold text-white">{title}</h2> : null}
         </div>
         {connected && <ConnectedBadge />}
       </div>
@@ -144,7 +149,10 @@ function ProviderCard({ title, icon, connected, saving, onSave, children }: Card
           disabled={saving}
           className="btn-black inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold disabled:opacity-60"
         >
-          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <span>Save Connection</span>}
+          <span className="inline-flex items-center gap-2">
+            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+            Save Connection
+          </span>
         </button>
       </div>
     </div>
@@ -200,23 +208,20 @@ export function IntegrationsForm({ initialKeys }: Props) {
     }
   };
 
-  const inputClass =
-    "w-full rounded-xl border border-black/10 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-black focus:outline-none focus:ring-1 focus:ring-black";
-
   return (
-    <div className="flex min-h-screen bg-white text-black">
+    <div className={`flex ${appPageBg}`}>
       <Sidebar />
       <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
         <header className="mb-8">
-          <nav className="flex items-center gap-2 text-xs font-medium text-slate-500">
-            <Link href="/dashboard" className="transition hover:text-slate-900">Home</Link>
-            <span className="text-slate-400">/</span>
-            <span className="text-slate-900">Integrations</span>
+          <nav className="flex items-center gap-2 text-xs font-medium text-white/50">
+            <Link href="/dashboard" className="transition hover:text-white">Home</Link>
+            <span className="text-white/30">/</span>
+            <span className="text-white/90">Integrations</span>
           </nav>
-          <h1 className="mt-1 text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
+          <h1 className="mt-1 text-xl font-semibold tracking-tight text-white sm:text-2xl">
             Integrations
           </h1>
-          <p className="mt-1 text-sm text-slate-600">
+          <p className="mt-1 text-sm text-white/55">
             Connect ad platforms and commerce stores (Shopify, WooCommerce, and more).
             Keys are stored securely per account.
           </p>
@@ -277,23 +282,23 @@ export function IntegrationsForm({ initialKeys }: Props) {
             onSave={() => handleSave("meta", { api_key: metaToken, account_id: metaAccountId })}
           >
             <div>
-              <label className="mb-1.5 block text-xs font-medium text-slate-600">Access Token</label>
+              <label className={fieldLabel}>Access Token</label>
               <input
                 type="password"
                 placeholder="EAAxxxx…"
                 value={metaToken}
                 onChange={(e) => setMetaToken(e.target.value)}
-                className={inputClass}
+                className={inputDark}
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-medium text-slate-600">Ad Account ID</label>
+              <label className={fieldLabel}>Ad Account ID</label>
               <input
                 type="text"
                 placeholder="act_123456789"
                 value={metaAccountId}
                 onChange={(e) => setMetaAccountId(e.target.value)}
-                className={inputClass}
+                className={inputDark}
               />
             </div>
           </ProviderCard>
@@ -307,23 +312,23 @@ export function IntegrationsForm({ initialKeys }: Props) {
             onSave={() => handleSave("google", { api_key: googleToken, account_id: googleCustomerId })}
           >
             <div>
-              <label className="mb-1.5 block text-xs font-medium text-slate-600">Developer Token</label>
+              <label className={fieldLabel}>Developer Token</label>
               <input
                 type="password"
                 placeholder="xxxx…"
                 value={googleToken}
                 onChange={(e) => setGoogleToken(e.target.value)}
-                className={inputClass}
+                className={inputDark}
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-medium text-slate-600">Customer ID</label>
+              <label className={fieldLabel}>Customer ID</label>
               <input
                 type="text"
                 placeholder="123-456-7890"
                 value={googleCustomerId}
                 onChange={(e) => setGoogleCustomerId(e.target.value)}
-                className={inputClass}
+                className={inputDark}
               />
             </div>
           </ProviderCard>
@@ -336,13 +341,13 @@ export function IntegrationsForm({ initialKeys }: Props) {
             onSave={() => handleSave("tiktok", { api_key: tiktokToken })}
           >
             <div>
-              <label className="mb-1.5 block text-xs font-medium text-slate-600">Access Token</label>
+              <label className={fieldLabel}>Access Token</label>
               <input
                 type="password"
                 placeholder="Placeholder – coming soon"
                 value={tiktokToken}
                 onChange={(e) => setTiktokToken(e.target.value)}
-                className={inputClass}
+                className={inputDark}
               />
             </div>
           </ProviderCard>
@@ -355,13 +360,13 @@ export function IntegrationsForm({ initialKeys }: Props) {
             onSave={() => handleSave("klaviyo", { api_key: klaviyoToken })}
           >
             <div>
-              <label className="mb-1.5 block text-xs font-medium text-slate-600">Private API Key</label>
+              <label className={fieldLabel}>Private API Key</label>
               <input
                 type="password"
                 placeholder="Placeholder – coming soon"
                 value={klaviyoToken}
                 onChange={(e) => setKlaviyoToken(e.target.value)}
-                className={inputClass}
+                className={inputDark}
               />
             </div>
           </ProviderCard>

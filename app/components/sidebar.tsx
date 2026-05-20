@@ -64,10 +64,10 @@ export function Sidebar({ planLabel }: { planLabel?: string } = {}) {
               "group flex w-full items-center gap-3 rounded-full px-3.5 py-2.5 transition";
 
             const activeClasses =
-              "bg-white text-black border border-white/20 shadow-[0_10px_30px_-18px_rgba(0,0,0,0.5)]";
+              "border border-white/25 bg-white text-zinc-950 shadow-[0_10px_30px_-18px_rgba(0,0,0,0.5)]";
 
             const idleClasses =
-              "border border-white/10 bg-transparent text-white/60 hover:bg-white/5 hover:text-white hover:border-white/20";
+              "border border-white/10 bg-white/[0.04] text-white/80 hover:bg-white/[0.08] hover:text-white hover:border-white/20";
 
             const Icon = item.icon;
 
@@ -83,8 +83,8 @@ export function Sidebar({ planLabel }: { planLabel?: string } = {}) {
                 <span
                   className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl text-sm font-medium transition ${
                     isActive
-                      ? "bg-white/10 text-white"
-                      : "bg-black/5 text-black/60 group-hover:bg-black/10 group-hover:text-black"
+                      ? "bg-zinc-950/10 text-zinc-950"
+                      : "bg-white/10 text-white/90 group-hover:bg-white/15 group-hover:text-white"
                   }`}
                 >
                   <Icon className="h-4 w-4" />
@@ -97,9 +97,9 @@ export function Sidebar({ planLabel }: { planLabel?: string } = {}) {
 
         {/* Today's Pulse (when open) – gehört zum scrollbaren Bereich */}
         {!isCollapsed && (
-          <div className="mt-4 rounded-2xl border border-black/5 bg-white px-3 py-3 text-xs text-black/70 shadow-sm">
-            <p className="font-medium text-black">Today&apos;s Pulse</p>
-            <p className="mt-1 text-black/70">
+          <div className="mt-4 rounded-2xl border border-white/10 bg-zinc-900/90 px-3 py-3 text-xs text-white/70 shadow-inner shadow-black/40">
+            <p className="font-medium text-white">Today&apos;s Pulse</p>
+            <p className="mt-1 text-white/60">
               +18.3% ROAS vs. last 7 days. Keep scaling your top ad sets.
             </p>
           </div>
@@ -107,12 +107,12 @@ export function Sidebar({ planLabel }: { planLabel?: string } = {}) {
       </div>
 
       {/* Toggle immer sichtbar am unteren Rand der Sidebar (nicht mit-scrollend) */}
-      <div className="shrink-0 border-t border-black/5 px-2 py-3">
+      <div className="shrink-0 border-t border-white/10 px-2 py-3">
         <div className="flex justify-end">
           <button
             type="button"
             onClick={() => setIsCollapsed((c) => !c)}
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-black/10 text-black/70 transition hover:border-black/40 hover:bg-black/5"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/15 text-white/80 transition hover:border-white/30 hover:bg-white/10 hover:text-white"
             aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             {isCollapsed ? (

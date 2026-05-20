@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowLeft, Image, Video } from "lucide-react";
 import { Sidebar } from "../../components/sidebar";
+import { appPageBg } from "@/lib/ui/app-surfaces";
 import {
   Bar,
   CartesianGrid,
@@ -97,7 +98,7 @@ export default function CampaignDetailPage() {
   const statusLabel = { active: "Active", paused: "Paused", learning: "Learning Phase" };
 
   return (
-    <div className="flex min-h-screen bg-black text-white" style={{ backgroundColor: "#000000" }}>
+    <div className={`flex ${appPageBg}`}>
       <Sidebar />
 
       <main className="flex min-h-screen flex-1 flex-col px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
