@@ -25,5 +25,4 @@ export const previewTabActiveMarkov =
 
 export const previewBarAccent = "bg-sky-400/50";
 
-export const landingDarkCard =
-  "rounded-[32px] border border-white/10 bg-gradient-to-b from-zinc-900/95 to-zinc-950 text-white shadow-[0_18px_45px_rgba(0,0,0,0.85)]";
+export { appDarkCard as landingDarkCard } from "@/lib/ui/app-surfaces";

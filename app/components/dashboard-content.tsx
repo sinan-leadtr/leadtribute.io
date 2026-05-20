@@ -15,10 +15,16 @@ import { Bot, Calendar, ShoppingBag, Sparkles } from "lucide-react";
 import type { UserPlanState } from "@/lib/plans/types";
 import {
     appBtnPrimary,
+    appChartWell,
     appChipActive,
     appChipIdle,
+    appChipOnDarkActive,
+    appChipOnDarkIdle,
+    appDarkCard,
+    appDarkCardSm,
     appHeading,
     appSection,
+    appSectionTitle,
 } from "@/lib/ui/app-surfaces";
 import { generateDemoData, syncData } from "@/app/dashboard/actions";
 import {
@@ -259,20 +265,20 @@ export function DashboardContent({
                 <section className={`flex flex-1 flex-col gap-4 ${appSection}`}>
                     <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
                         {/* Monthly pacing card */}
-                        <div className="w-full rounded-3xl border border-slate-200 bg-white p-4 text-sm text-slate-900 shadow-lg shadow-black/5 lg:w-72">
+                        <div className={`w-full p-4 text-sm lg:w-72 ${appDarkCardSm}`}>
                             <div className="mb-3 flex items-center justify-between gap-2">
                                 <div>
-                                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                                    <p className={appSectionTitle}>
                                         Monthly Pacing
                                     </p>
-                                    <p className="mt-1 text-sm font-semibold text-slate-900">
+                                    <p className="mt-1 text-sm font-semibold text-white">
                                         Budget alignment
                                     </p>
                                 </div>
                                 <span
                                     className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold ${pacingIsOver
-                                        ? "bg-red-100 text-red-800 ring-1 ring-red-300/80"
-                                        : "bg-emerald-100 text-emerald-900 ring-1 ring-emerald-300/80"
+                                        ? "bg-red-500/20 text-red-300 ring-1 ring-red-500/40"
+                                        : "bg-emerald-500/20 text-emerald-300 ring-1 ring-emerald-500/40"
                                         }`}
                                 >
                                     {pacingIsOver ? "Over" : "On track"}
@@ -280,19 +286,19 @@ export function DashboardContent({
                             </div>
 
                             <div className="mb-3 flex items-baseline justify-between text-xs">
-                                <span className="text-slate-600">
+                                <span className="text-white/60">
                                     Spent:{" "}
-                                    <span className="font-semibold text-slate-900">
+                                    <span className="font-semibold text-white">
                                         € {pacingSpent.toLocaleString("de-DE")}
                                     </span>{" "}
                                     / € {pacingTarget.toLocaleString("de-DE")}
                                 </span>
-                                <span className="font-medium text-slate-700">
+                                <span className="font-medium text-white/80">
                                     {pacingPct.toFixed(0)}%
                                 </span>
                             </div>
 
-                            <div className="relative mb-2 h-2 w-full overflow-hidden rounded-full bg-slate-100">
+                            <div className="relative mb-2 h-2 w-full overflow-hidden rounded-full bg-white/10">
                                 {/* Planned line */}
                                 <div
                                     className="pointer-events-none absolute inset-y-0 w-[2px] bg-white/20"
@@ -306,11 +312,11 @@ export function DashboardContent({
                                 />
                             </div>
 
-                            <p className="text-xs text-slate-600">
+                            <p className="text-xs text-white/60">
                                 {pacingIsOver ? (
                                     <>
                                         You are{" "}
-                                        <span className="font-semibold text-red-700">
+                                        <span className="font-semibold text-red-300">
                                             {pacingDelta.toFixed(1)}% above
                                         </span>{" "}
                                         the planned budget.
@@ -318,7 +324,7 @@ export function DashboardContent({
                                 ) : (
                                     <>
                                         You are{" "}
-                                        <span className="font-semibold text-emerald-800">
+                                        <span className="font-semibold text-emerald-300">
                                             {Math.abs(pacingDelta).toFixed(1)}% below
                                         </span>{" "}
                                         the planned budget — on track.
@@ -331,30 +337,30 @@ export function DashboardContent({
                         <div className="flex-1">
                             <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
                                 <div>
-                                    <h2 className="text-sm font-semibold text-slate-900">
+                                    <h2 className="text-sm font-semibold text-white">
                                         Spend &amp; ROAS – last {historyDays} days
                                     </h2>
-                                    <p className="text-xs text-slate-500">
+                                    <p className="text-xs text-white/50">
                                         Combined view: daily spend (bars) and ROAS (line).
                                     </p>
                                 </div>
                                 <div className="flex flex-wrap items-center gap-2 text-xs">
-                                    <button className="rounded-full border border-slate-300 bg-slate-900 px-2.5 py-1 text-[11px] font-medium text-white shadow-sm shadow-black/30 transition hover:bg-black hover:border-black">
+                                    <button type="button" className={appChipOnDarkActive}>
                                         Last {historyDays} days
                                     </button>
-                                    <button className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-medium text-slate-700 transition hover:bg-slate-100 hover:border-slate-300 hover:text-slate-900">
+                                    <button type="button" className={appChipOnDarkIdle}>
                                         Compare period
                                     </button>
                                 </div>
                             </div>
 
-                            <div className="h-[320px] w-full rounded-2xl border border-slate-200 bg-white p-2 sm:h-[360px] lg:h-[400px]">
+                            <div className={`h-[320px] w-full sm:h-[360px] lg:h-[400px] ${appChartWell}`}>
                                 {!hasAnalytics ? (
                                     <div className="flex h-full flex-col items-center justify-center gap-3 px-4 text-center">
-                                        <p className="text-sm font-medium text-slate-900">
+                                        <p className="text-sm font-medium text-white">
                                             No analytics yet
                                         </p>
-                                        <p className="max-w-sm text-xs text-slate-500">
+                                        <p className="max-w-sm text-xs text-white/50">
                                             Connect Shopify under Data Sources, then click Sync
                                             Now to load your last {historyDays} days.
                                         </p>
@@ -374,7 +380,7 @@ export function DashboardContent({
                                         margin={{ top: 12, right: 16, left: 0, bottom: 8 }}
                                     >
                                         <CartesianGrid
-                                            stroke="#1e293b"
+                                            stroke="rgba(255,255,255,0.08)"
                                             strokeDasharray="3 3"
                                             vertical={false}
                                         />
@@ -382,14 +388,14 @@ export function DashboardContent({
                                             dataKey="day"
                                             tickLine={false}
                                             axisLine={false}
-                                            tick={{ fill: "#94a3b8", fontSize: 10 }}
+                                            tick={{ fill: "rgba(255,255,255,0.45)", fontSize: 10 }}
                                             interval={4}
                                         />
                                         <YAxis
                                             yAxisId="left"
                                             tickLine={false}
                                             axisLine={false}
-                                            tick={{ fill: "#64748b", fontSize: 10 }}
+                                            tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 10 }}
                                             tickFormatter={(v) => `€${v}`}
                                         />
                                         <Tooltip
@@ -429,7 +435,7 @@ export function DashboardContent({
                     <h2 className={`mb-4 ${appHeading}`}>Profitability &amp; unit economics</h2>
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                         {/* Shopify Revenue */}
-                        <div className="flex flex-col gap-2 rounded-2xl border border-zinc-800 bg-zinc-950/80 p-4 transition hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)]">
+                        <div className={`flex flex-col gap-2 p-4 ${appDarkCardSm}`}>
                             <div className="flex items-center gap-2">
                                 <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400">
                                     <ShoppingBag className="h-4 w-4" />
@@ -445,7 +451,7 @@ export function DashboardContent({
                         </div>
 
                         {/* MER */}
-                        <div className="flex flex-col gap-2 rounded-2xl border border-zinc-800 bg-zinc-950/80 p-4 transition hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)]">
+                        <div className={`flex flex-col gap-2 p-4 ${appDarkCardSm}`}>
                             <span className="text-xs font-medium uppercase tracking-wider text-white/50">
                                 MER (Marketing Efficiency Ratio)
                             </span>
@@ -461,7 +467,7 @@ export function DashboardContent({
 
                         {/* Net Profit (Est.) */}
                         <div
-                            className="group relative flex flex-col gap-2 rounded-2xl border border-zinc-800 bg-zinc-950/80 p-4 transition hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)]"
+                            className={`group relative flex flex-col gap-2 p-4 ${appDarkCardSm}`}
                             title="Based on estimated 30% COGS"
                         >
                             <span className="text-xs font-medium uppercase tracking-wider text-white/50">
@@ -475,7 +481,7 @@ export function DashboardContent({
                         </div>
 
                         {/* New Customer Rate */}
-                        <div className="flex flex-col gap-2 rounded-2xl border border-zinc-800 bg-zinc-950/80 p-4 transition hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)]">
+                        <div className={`flex flex-col gap-2 p-4 ${appDarkCardSm}`}>
                             <span className="text-xs font-medium uppercase tracking-wider text-white/50">
                                 New Customer Rate
                             </span>
@@ -488,7 +494,7 @@ export function DashboardContent({
                 {/* Email & Retention Performance (Klaviyo Mock) */}
                 <section className="mt-6">
                     <h2 className={`mb-4 ${appHeading}`}>Email &amp; retention performance</h2>
-                    <div className="rounded-3xl border border-zinc-800 border-l-4 border-l-[#25D366] bg-zinc-950/80 p-4 transition hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)] lg:p-5">
+                    <div className={`border-l-4 border-l-[#25D366] p-4 lg:p-5 ${appDarkCard}`}>
                         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                             {/* Left: Email Revenue + List Growth */}
                             <div className="space-y-4">
@@ -580,10 +586,10 @@ export function DashboardContent({
                             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-500/10 ring-1 ring-violet-500/40">
                                 <Sparkles className="h-7 w-7 text-violet-300" />
                             </div>
-                            <h2 className="mt-5 text-xl font-semibold text-zinc-900">
+                            <h2 className="mt-5 text-xl font-semibold text-white">
                                 No campaigns yet
                             </h2>
-                            <p className="mt-2 max-w-sm mx-auto text-sm text-zinc-500">
+                            <p className="mt-2 max-w-sm mx-auto text-sm text-white/50">
                                 Connect your ad accounts or generate demo data to see your performance table here.
                             </p>
                             <button
@@ -616,7 +622,7 @@ export function DashboardContent({
             {showAi ? (
             <div className="fixed bottom-8 right-8 z-50 flex flex-col items-end gap-3">
                 {aiOpen && (
-                    <div className="w-full max-w-sm rounded-3xl border border-zinc-800 bg-zinc-950/95 shadow-2xl shadow-black/80 backdrop-blur-sm sm:max-w-xs">
+                    <div className={`w-full max-w-sm sm:max-w-xs ${appDarkCard}`}>
                         <div className="border-b border-white/10 px-4 py-3">
                             <p className="text-xs font-semibold text-sky-400">AI Copilot</p>
                             <p className="text-[10px] text-white/50">Leadtribute Assistant</p>
@@ -705,7 +711,7 @@ function KpiCard({
                 : "bg-emerald-400 shadow-emerald-400/70";
 
     return (
-        <article className="group relative overflow-hidden rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-white/60 hover:bg-zinc-900 hover:shadow-[0_0_50px_-16px_rgba(0,0,0,0.9)]">
+        <article className={`group relative overflow-hidden p-4 transition-all duration-300 ease-out hover:-translate-y-1 ${appDarkCardSm}`}>
             <div className="relative flex flex-col gap-3">
                 <div className="flex items-center justify-between gap-2">
                     <p className="inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-[0.16em] text-white/60">
@@ -754,7 +760,7 @@ function CustomDualAxisTooltip({ active, payload, label }: TooltipProps) {
 
 
     return (
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/95 px-3 py-2 text-xs text-white shadow-2xl shadow-black/70">
+        <div className={`px-3 py-2 text-xs text-white ${appDarkCardSm}`}>
             <p className="mb-1 text-[11px] font-medium text-white">{label}</p>
             <div className="space-y-1">
                 <div className="flex items-center justify-between gap-4">

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowLeft, Image, Video } from "lucide-react";
 import { Sidebar } from "../../components/sidebar";
-import { appCard, appCardTitle, appPageBg, appTextMuted } from "@/lib/ui/app-surfaces";
+import { appCard, appCardTitle, appChartWell, appPageBg, appTextMuted } from "@/lib/ui/app-surfaces";
 import {
   Bar,
   CartesianGrid,
@@ -149,7 +149,7 @@ export default function CampaignDetailPage() {
         {/* Chart */}
         <section className={`mb-6 ${appCard} p-4`}>
           <h2 className={`mb-3 ${appCardTitle}`}>Spend &amp; ROAS – this campaign</h2>
-          <div className="h-[360px] w-full rounded-2xl border border-zinc-800 bg-zinc-950/80 p-2 sm:h-[400px]">
+          <div className={`h-[360px] w-full sm:h-[400px] ${appChartWell}`}>
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={chartData} margin={{ top: 12, right: 32, left: 0, bottom: 8 }}>
                 <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" vertical={false} />

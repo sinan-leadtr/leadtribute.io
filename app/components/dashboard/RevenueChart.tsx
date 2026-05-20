@@ -28,11 +28,11 @@ export function RevenueChart({
 
   if (!hasData) {
     return (
-      <div className="flex h-[280px] w-full flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-200 bg-zinc-50 p-6 text-center">
-        <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
+      <div className="flex h-[280px] w-full flex-col items-center justify-center rounded-2xl border border-dashed border-white/15 bg-black/40 p-6 text-center">
+        <p className="text-xs font-semibold uppercase tracking-wider text-white/50">
           {title}
         </p>
-        <p className="mt-3 text-sm text-zinc-500">
+        <p className="mt-3 text-sm text-white/45">
           Run Sync Now after connecting Shopify to load revenue.
         </p>
       </div>
@@ -43,7 +43,7 @@ export function RevenueChart({
 
   return (
     <div className="h-[280px] w-full">
-      <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+      <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-white/50">
         {title}
       </p>
       <ResponsiveContainer width="100%" height="100%" minHeight={200}>
@@ -59,12 +59,12 @@ export function RevenueChart({
           </defs>
           <CartesianGrid
             strokeDasharray="3 3"
-            stroke="rgba(0,0,0,0.06)"
+            stroke="rgba(255,255,255,0.08)"
             vertical={false}
           />
           <XAxis
             dataKey="day"
-            tick={{ fill: "#71717a", fontSize: 11 }}
+            tick={{ fill: "rgba(255,255,255,0.45)", fontSize: 11 }}
             axisLine={false}
             tickLine={false}
           />
@@ -72,15 +72,15 @@ export function RevenueChart({
             tickFormatter={(v) =>
               v >= 1000 ? `€ ${(v / 1000).toFixed(1)}k` : `€ ${v}`
             }
-            tick={{ fill: "#71717a", fontSize: 11 }}
+            tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }}
             axisLine={false}
             tickLine={false}
             width={48}
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: "#18181b",
-              border: "1px solid rgba(0,0,0,0.1)",
+              backgroundColor: "#000000",
+              border: "1px solid rgba(255,255,255,0.12)",
               borderRadius: "12px",
               fontSize: "12px",
               color: "#fafafa",

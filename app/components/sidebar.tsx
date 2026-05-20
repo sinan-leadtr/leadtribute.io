@@ -94,7 +94,7 @@ export function Sidebar({ planLabel }: { planLabel?: string } = {}) {
         </nav>
 
         {!isCollapsed && (
-          <div className="mt-4 rounded-2xl border border-zinc-200 bg-zinc-950 px-3 py-3 text-xs text-white/80 shadow-sm">
+          <div className="mt-4 rounded-2xl border border-white/10 bg-gradient-to-b from-zinc-900/95 to-black px-3 py-3 text-xs text-white/80 shadow-[0_12px_32px_rgba(0,0,0,0.75)]">
             <p className="font-medium text-white">Today&apos;s Pulse</p>
             <p className="mt-1 text-white/60">
               +18.3% ROAS vs. last 7 days. Keep scaling your top ad sets.
