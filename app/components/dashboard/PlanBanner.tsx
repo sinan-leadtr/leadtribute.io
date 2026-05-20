@@ -12,18 +12,18 @@ export function PlanBanner({ planState }: Props) {
 
   if (entitlements.planId === "scale") {
     return (
-      <div className="mb-6 rounded-2xl border border-sky-500/30 bg-sky-500/10 px-4 py-3 text-sm text-sky-200">
+      <div className="mb-6 rounded-2xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-900">
         <span className="font-semibold">Scale plan</span>
-        <span className="text-sky-200/70"> — agency features enabled.</span>
+        <span className="text-sky-800/80"> — agency features enabled.</span>
       </div>
     );
   }
 
   if (isOnProTrial && daysLeftOnTrial != null) {
     return (
-      <div className="mb-6 rounded-2xl border border-violet-500/30 bg-violet-500/10 px-4 py-3 text-sm text-violet-100">
+      <div className="mb-6 rounded-2xl border border-violet-200 bg-violet-50 px-4 py-3 text-sm text-violet-900">
         <span className="font-semibold">Pro trial</span>
-        <span className="text-violet-200/80">
+        <span className="text-violet-800/90">
           {" "}
           — {daysLeftOnTrial} day{daysLeftOnTrial === 1 ? "" : "s"} left. Then you&apos;ll
           move to Starter (free) unless you subscribe.
@@ -34,10 +34,10 @@ export function PlanBanner({ planState }: Props) {
 
   if (entitlements.planId === "starter") {
     return (
-      <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-amber-100">
+      <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-amber-950">
           <span className="font-semibold">Starter plan</span>
-          <span className="text-amber-200/80">
+          <span className="text-amber-900/80">
             {" "}
             — {entitlements.historyDays}-day history, up to {entitlements.maxIntegrations}{" "}
             connections.
@@ -46,7 +46,7 @@ export function PlanBanner({ planState }: Props) {
         </p>
         <Link
           href="/settings"
-          className="shrink-0 rounded-full border border-emerald-500/40 bg-emerald-500/15 px-4 py-2 text-xs font-semibold text-emerald-300 transition hover:bg-emerald-500/25"
+          className="shrink-0 rounded-full border border-emerald-300 bg-emerald-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-emerald-700"
         >
           Upgrade to Pro
         </Link>

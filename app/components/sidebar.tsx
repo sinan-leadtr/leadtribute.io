@@ -29,23 +29,21 @@ export function Sidebar({ planLabel }: { planLabel?: string } = {}) {
 
   return (
     <aside
-      className={`hidden h-screen shrink-0 flex-col border-r border-white/10 bg-zinc-950 transition-all duration-300 ease-in-out sm:flex ${
+      className={`hidden h-screen shrink-0 flex-col border-r border-zinc-200 bg-white transition-all duration-300 ease-in-out sm:flex ${
         isCollapsed ? "w-20 px-3" : "w-64 px-4"
       }`}
     >
-      {/* Scrollbarer Bereich: Logo, Nav, Today's Pulse */}
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto py-6">
-        {/* Logo / Home → Dashboard */}
         <Link href="/dashboard" className="mb-8 flex items-center gap-2 px-2">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-black text-white">
             <span className="text-lg font-semibold">LT</span>
           </div>
           {!isCollapsed && (
             <div className="min-w-0 flex-1">
-              <span className="block truncate text-sm font-semibold tracking-wide text-white">
+              <span className="block truncate text-sm font-semibold tracking-wide text-zinc-900">
                 Leadtribute
               </span>
-              <span className="block truncate text-xs text-white/50">
+              <span className="block truncate text-xs text-zinc-500">
                 {planLabel ?? "Performance Suite"}
               </span>
             </div>
@@ -64,10 +62,10 @@ export function Sidebar({ planLabel }: { planLabel?: string } = {}) {
               "group flex w-full items-center gap-3 rounded-full px-3.5 py-2.5 transition";
 
             const activeClasses =
-              "border border-white/25 bg-white text-zinc-950 shadow-[0_10px_30px_-18px_rgba(0,0,0,0.5)]";
+              "border border-zinc-900 bg-black text-white shadow-sm";
 
             const idleClasses =
-              "border border-white/10 bg-white/[0.04] text-white/80 hover:bg-white/[0.08] hover:text-white hover:border-white/20";
+              "border border-transparent text-zinc-600 hover:border-zinc-200 hover:bg-zinc-50 hover:text-zinc-900";
 
             const Icon = item.icon;
 
@@ -81,10 +79,10 @@ export function Sidebar({ planLabel }: { planLabel?: string } = {}) {
                 title={isCollapsed ? item.label : undefined}
               >
                 <span
-                  className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl text-sm font-medium transition ${
+                  className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl transition ${
                     isActive
-                      ? "bg-zinc-950/10 text-zinc-950"
-                      : "bg-white/10 text-white/90 group-hover:bg-white/15 group-hover:text-white"
+                      ? "bg-white/15 text-white"
+                      : "bg-zinc-100 text-zinc-700 group-hover:bg-zinc-200 group-hover:text-zinc-900"
                   }`}
                 >
                   <Icon className="h-4 w-4" />
@@ -95,9 +93,8 @@ export function Sidebar({ planLabel }: { planLabel?: string } = {}) {
           })}
         </nav>
 
-        {/* Today's Pulse (when open) – gehört zum scrollbaren Bereich */}
         {!isCollapsed && (
-          <div className="mt-4 rounded-2xl border border-white/10 bg-zinc-900/90 px-3 py-3 text-xs text-white/70 shadow-inner shadow-black/40">
+          <div className="mt-4 rounded-2xl border border-zinc-200 bg-zinc-950 px-3 py-3 text-xs text-white/80 shadow-sm">
             <p className="font-medium text-white">Today&apos;s Pulse</p>
             <p className="mt-1 text-white/60">
               +18.3% ROAS vs. last 7 days. Keep scaling your top ad sets.
@@ -106,13 +103,12 @@ export function Sidebar({ planLabel }: { planLabel?: string } = {}) {
         )}
       </div>
 
-      {/* Toggle immer sichtbar am unteren Rand der Sidebar (nicht mit-scrollend) */}
-      <div className="shrink-0 border-t border-white/10 px-2 py-3">
+      <div className="shrink-0 border-t border-zinc-200 px-2 py-3">
         <div className="flex justify-end">
           <button
             type="button"
             onClick={() => setIsCollapsed((c) => !c)}
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/15 text-white/80 transition hover:border-white/30 hover:bg-white/10 hover:text-white"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-zinc-200 text-zinc-600 transition hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-900"
             aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             {isCollapsed ? (

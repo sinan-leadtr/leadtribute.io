@@ -13,20 +13,18 @@ import {
   type ApiKeyService,
 } from "@/app/dashboard/actions";
 import { useRouter } from "next/navigation";
-import { appPageBg } from "@/lib/ui/app-surfaces";
+import { appBreadcrumb, appCard, appPageBg, appTextMuted } from "@/lib/ui/app-surfaces";
 
 const fieldLabel = "mb-1.5 block text-xs font-medium text-white/70";
 const inputDark =
-  "w-full rounded-xl border border-white/12 bg-zinc-950 px-4 py-2.5 text-sm text-white placeholder:text-white/35 shadow-inner shadow-black/40 focus:border-violet-400/50 focus:outline-none focus:ring-1 focus:ring-violet-500/35";
+  "w-full rounded-xl border border-white/15 bg-black/40 px-4 py-2.5 text-sm text-white placeholder:text-white/40 focus:border-violet-400/50 focus:outline-none focus:ring-1 focus:ring-violet-500/35";
 
 // Lightweight UI primitives to mirror Card / Input / Button semantics
 type BasicProps = { className?: string; children: React.ReactNode };
 
 function Card({ className = "", children }: BasicProps) {
   return (
-    <div
-      className={`rounded-2xl border border-white/10 bg-gradient-to-b from-zinc-900/95 to-zinc-950 p-6 shadow-[0_18px_45px_rgba(0,0,0,0.8)] ${className}`}
-    >
+    <div className={`${appCard} p-6 ${className}`}>
       {children}
     </div>
   );
@@ -131,7 +129,7 @@ type CardProps = {
 
 function ProviderCard({ title, icon, connected, saving, onSave, children }: CardProps) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-gradient-to-b from-zinc-900/95 to-zinc-950 p-6 shadow-[0_18px_45px_rgba(0,0,0,0.8)]">
+    <div className={`${appCard} p-6`}>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="flex h-12 min-w-12 items-center justify-center rounded-xl border border-white/15 bg-black/50 px-3 text-2xl text-white">
@@ -213,15 +211,15 @@ export function IntegrationsForm({ initialKeys }: Props) {
       <Sidebar />
       <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
         <header className="mb-8">
-          <nav className="flex items-center gap-2 text-xs font-medium text-white/50">
-            <Link href="/dashboard" className="transition hover:text-white">Home</Link>
-            <span className="text-white/30">/</span>
-            <span className="text-white/90">Integrations</span>
+          <nav className={`flex items-center gap-2 ${appBreadcrumb}`}>
+            <Link href="/dashboard" className="transition hover:text-zinc-900">Home</Link>
+            <span className="text-zinc-300">/</span>
+            <span className="text-zinc-700">Integrations</span>
           </nav>
-          <h1 className="mt-1 text-xl font-semibold tracking-tight text-white sm:text-2xl">
+          <h1 className="mt-1 text-xl font-semibold tracking-tight text-zinc-900 sm:text-2xl">
             Integrations
           </h1>
-          <p className="mt-1 text-sm text-white/55">
+          <p className={`mt-1 text-sm ${appTextMuted}`}>
             Connect ad platforms and commerce stores (Shopify, WooCommerce, and more).
             Keys are stored securely per account.
           </p>

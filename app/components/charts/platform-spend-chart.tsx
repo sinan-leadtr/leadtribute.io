@@ -35,11 +35,11 @@ export function PlatformSpendChart({
 
   if (!hasData) {
     return (
-      <div className="flex h-[280px] w-full flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-700 bg-zinc-950/50 p-6 text-center">
-        <p className="text-xs font-semibold uppercase tracking-wider text-white/60">
+      <div className="flex h-[280px] w-full flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-200 bg-zinc-50 p-6 text-center">
+        <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
           Ad Spend by platform
         </p>
-        <p className="mt-3 text-sm text-white/50">
+        <p className="mt-3 text-sm text-zinc-500">
           Connect integrations and run Sync Now to see platform spend.
         </p>
       </div>
@@ -48,7 +48,7 @@ export function PlatformSpendChart({
 
   return (
     <div className="h-[280px] w-full">
-      <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-white/60">
+      <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-zinc-500">
         Ad Spend by platform
       </p>
       <ResponsiveContainer width="100%" height="100%" minHeight={200}>
@@ -59,39 +59,35 @@ export function PlatformSpendChart({
         >
           <CartesianGrid
             strokeDasharray="3 3"
-            stroke="rgba(255,255,255,0.06)"
+            stroke="rgba(0,0,0,0.06)"
             vertical={false}
           />
           <XAxis
             dataKey="platform"
-            stroke="rgba(255,255,255,0.4)"
-            tick={{ fill: "rgba(255,255,255,0.6)", fontSize: 12 }}
+            tick={{ fill: "#71717a", fontSize: 12 }}
             axisLine={false}
             tickLine={false}
           />
           <YAxis
             tickFormatter={(v) => `€ ${(v / 1000).toFixed(0)}k`}
-            stroke="rgba(255,255,255,0.4)"
-            tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 11 }}
+            tick={{ fill: "#71717a", fontSize: 11 }}
             axisLine={false}
             tickLine={false}
             width={44}
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: "rgb(24,24,27)",
-              border: "1px solid rgba(255,255,255,0.1)",
+              backgroundColor: "#18181b",
+              border: "1px solid rgba(0,0,0,0.1)",
               borderRadius: "12px",
               fontSize: "12px",
-              color: "#e5e7eb",
+              color: "#fafafa",
             }}
-            labelStyle={{ color: "#e5e7eb" }}
-            itemStyle={{ color: "#e5e7eb" }}
             formatter={(value) => [
               `€ ${Number(value ?? 0).toLocaleString("de-DE")}`,
               "Spend",
             ]}
-            cursor={{ fill: "rgba(255,255,255,0.04)" }}
+            cursor={{ fill: "rgba(0,0,0,0.04)" }}
           />
           <Bar dataKey="spend" radius={[6, 6, 0, 0]} isAnimationActive={false} />
         </BarChart>

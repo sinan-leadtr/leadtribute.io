@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowLeft, Image, Video } from "lucide-react";
 import { Sidebar } from "../../components/sidebar";
-import { appPageBg } from "@/lib/ui/app-surfaces";
+import { appCard, appCardTitle, appPageBg, appTextMuted } from "@/lib/ui/app-surfaces";
 import {
   Bar,
   CartesianGrid,
@@ -106,13 +106,13 @@ export default function CampaignDetailPage() {
         <div className="mb-6">
           <Link
             href="/dashboard"
-            className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-transparent px-3 py-2 text-sm font-medium text-white/80 transition hover:border-white/60 hover:bg-white/5"
+            className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm font-medium text-zinc-700 shadow-sm transition hover:border-zinc-300 hover:bg-zinc-50"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Dashboard
           </Link>
           <div className="mt-4 flex flex-wrap items-center gap-3">
-            <h1 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+            <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">
               Campaign Analysis: {campaign.name}
             </h1>
             <span
@@ -121,24 +121,24 @@ export default function CampaignDetailPage() {
               {statusLabel[campaign.status]}
             </span>
           </div>
-          <p className="mt-1 text-xs text-white/60">Drill-down • Last 14 days • This campaign only</p>
+          <p className={`mt-1 text-xs ${appTextMuted}`}>Drill-down · Last 14 days · This campaign only</p>
         </div>
 
         {/* KPI cards */}
         <section className="mb-6 grid gap-4 sm:grid-cols-3">
-          <article className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:-translate-y-0.5 hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)]">
+          <article className={`${appCard} p-4 transition hover:-translate-y-0.5`}>
             <p className="text-xs font-medium uppercase tracking-[0.16em] text-white/60">Spend</p>
             <p className="mt-1 text-xl font-bold tabular-nums text-white sm:text-2xl">
               € {campaign.spend.toLocaleString("de-DE")}
             </p>
           </article>
-          <article className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:-translate-y-0.5 hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)]">
+          <article className={`${appCard} p-4 transition hover:-translate-y-0.5`}>
             <p className="text-xs font-medium uppercase tracking-[0.16em] text-white/60">ROAS</p>
             <p className="mt-1 text-xl font-bold tabular-nums text-sky-400 sm:text-2xl">
               {campaign.roas > 0 ? `${campaign.roas.toFixed(1)}x` : "—"}
             </p>
           </article>
-          <article className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:-translate-y-0.5 hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)]">
+          <article className={`${appCard} p-4 transition hover:-translate-y-0.5`}>
             <p className="text-xs font-medium uppercase tracking-[0.16em] text-white/60">Revenue</p>
             <p className="mt-1 text-xl font-bold tabular-nums text-white sm:text-2xl">
               € {campaign.revenue.toLocaleString("de-DE")}
@@ -147,8 +147,8 @@ export default function CampaignDetailPage() {
         </section>
 
         {/* Chart */}
-        <section className="mb-6 rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.2)]">
-          <h2 className="mb-3 text-sm font-semibold text-white">Spend & ROAS – this campaign</h2>
+        <section className={`mb-6 ${appCard} p-4`}>
+          <h2 className={`mb-3 ${appCardTitle}`}>Spend &amp; ROAS – this campaign</h2>
           <div className="h-[360px] w-full rounded-2xl border border-zinc-800 bg-zinc-950/80 p-2 sm:h-[400px]">
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={chartData} margin={{ top: 12, right: 32, left: 0, bottom: 8 }}>
@@ -201,9 +201,9 @@ export default function CampaignDetailPage() {
         </section>
 
         {/* Ad Sets & Creatives */}
-        <section className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.2)]">
+        <section className={`${appCard} p-4`}>
           <div className="mb-4 flex items-center justify-between gap-2">
-            <h2 className="text-sm font-semibold text-white">Ad Sets & Creatives</h2>
+            <h2 className={appCardTitle}>Ad Sets &amp; Creatives</h2>
             <span className="text-[10px] text-white/50">Images & videos • Performance</span>
           </div>
           <div className="overflow-x-auto -mx-1">

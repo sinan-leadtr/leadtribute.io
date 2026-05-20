@@ -13,6 +13,13 @@ import { StarterDashboard } from "./dashboard/StarterDashboard";
 import { AttributionPanel } from "./dashboard/AttributionPanel";
 import { Bot, Calendar, ShoppingBag, Sparkles } from "lucide-react";
 import type { UserPlanState } from "@/lib/plans/types";
+import {
+    appBtnPrimary,
+    appChipActive,
+    appChipIdle,
+    appHeading,
+    appSection,
+} from "@/lib/ui/app-surfaces";
 import { generateDemoData, syncData } from "@/app/dashboard/actions";
 import {
     Bar,
@@ -155,7 +162,7 @@ export function DashboardContent({
             type="button"
             onClick={handleSyncData}
             disabled={syncLoading}
-            className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-white/15"
+            className={appBtnPrimary}
         >
             {syncLoading ? (
                 <>
@@ -181,7 +188,7 @@ export function DashboardContent({
         >
                 {/* Control Bar – Filter & Date */}
                 <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <h2 className="text-sm font-semibold text-white">Performance overview</h2>
+                    <h2 className={appHeading}>Performance overview</h2>
                     <div className="flex flex-wrap items-center gap-2">
                         {(
                             [
@@ -201,10 +208,8 @@ export function DashboardContent({
                                             : `Filtering for ${label} Ads...`;
                                     toast(msg, { duration: 2000 });
                                 }}
-                                className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
-                                    channel === id
-                                        ? "bg-white text-zinc-950 shadow-lg shadow-black/30"
-                                        : "border border-white/15 bg-white/[0.06] text-white/85 hover:border-white/25 hover:bg-white/[0.1] hover:text-white"
+                                className={`px-3 py-1.5 text-xs font-medium transition ${
+                                    channel === id ? appChipActive : appChipIdle
                                 }`}
                             >
                                 {label}
@@ -213,7 +218,7 @@ export function DashboardContent({
                         <button
                             type="button"
                             onClick={() => toast(`Date range: Last ${historyDays} days`, { duration: 2000 })}
-                            className="inline-flex items-center gap-1.5 rounded-full border border-slate-300 bg-slate-900 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-black hover:border-black"
+                            className={`inline-flex items-center gap-1.5 ${appChipIdle}`}
                         >
                             <Calendar className="h-3.5 w-3.5" aria-hidden />
                             <span>Last {historyDays} days</span>
@@ -251,7 +256,7 @@ export function DashboardContent({
                 </section>
 
                 {/* Chart + Monthly pacing */}
-                <section className="flex flex-1 flex-col gap-4 rounded-3xl border border-slate-200 bg-white p-4 shadow-xl shadow-black/5">
+                <section className={`flex flex-1 flex-col gap-4 ${appSection}`}>
                     <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
                         {/* Monthly pacing card */}
                         <div className="w-full rounded-3xl border border-slate-200 bg-white p-4 text-sm text-slate-900 shadow-lg shadow-black/5 lg:w-72">
@@ -421,7 +426,7 @@ export function DashboardContent({
 
                 {/* Profitability & Unit Economics */}
                 <section className="mt-6">
-                    <h2 className="mb-4 text-sm font-semibold text-white">Profitability &amp; unit economics</h2>
+                    <h2 className={`mb-4 ${appHeading}`}>Profitability &amp; unit economics</h2>
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                         {/* Shopify Revenue */}
                         <div className="flex flex-col gap-2 rounded-2xl border border-zinc-800 bg-zinc-950/80 p-4 transition hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)]">
@@ -482,7 +487,7 @@ export function DashboardContent({
 
                 {/* Email & Retention Performance (Klaviyo Mock) */}
                 <section className="mt-6">
-                    <h2 className="mb-4 text-sm font-semibold text-white">Email & Retention Performance</h2>
+                    <h2 className={`mb-4 ${appHeading}`}>Email &amp; retention performance</h2>
                     <div className="rounded-3xl border border-zinc-800 border-l-4 border-l-[#25D366] bg-zinc-950/80 p-4 transition hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)] lg:p-5">
                         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                             {/* Left: Email Revenue + List Growth */}
@@ -551,10 +556,10 @@ export function DashboardContent({
 
                 {/* Analytics Charts – Cards über der Tabelle */}
                 <section className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <div className="rounded-2xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)]">
+                    <div className={`${appSection} p-4`}>
                         <RevenueChart data={revenueChartData} />
                     </div>
-                    <div className="rounded-2xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:border-white/60 hover:shadow-[0_0_40px_-16px_rgba(0,0,0,0.9)]">
+                    <div className={`${appSection} p-4`}>
                         <PlatformSpendChart platformSpend={platformSpend} />
                     </div>
                 </section>
@@ -571,14 +576,14 @@ export function DashboardContent({
                 {/* Active Campaigns */}
                 <section id="campaigns" className="mt-6 scroll-mt-4">
                     {campaigns.length === 0 ? (
-                        <div className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-10 text-center shadow-xl shadow-black/50 sm:p-14">
+                        <div className={`${appSection} p-10 text-center sm:p-14`}>
                             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-500/10 ring-1 ring-violet-500/40">
                                 <Sparkles className="h-7 w-7 text-violet-300" />
                             </div>
-                            <h2 className="mt-5 text-xl font-semibold text-white">
+                            <h2 className="mt-5 text-xl font-semibold text-zinc-900">
                                 No campaigns yet
                             </h2>
-                            <p className="mt-2 max-w-sm mx-auto text-sm text-white/60">
+                            <p className="mt-2 max-w-sm mx-auto text-sm text-zinc-500">
                                 Connect your ad accounts or generate demo data to see your performance table here.
                             </p>
                             <button

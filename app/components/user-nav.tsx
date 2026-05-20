@@ -56,7 +56,7 @@ export function UserNav() {
       <DropdownMenuTrigger asChild>
         <button
           type="button"
-          className="flex items-center gap-2 rounded-full border border-white/10 bg-black/80 px-2 py-1.5 text-left text-xs shadow-sm shadow-black/30 transition hover:border-white/60 hover:bg-white/5"
+          className="flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-2 py-1.5 text-left text-xs shadow-sm transition hover:border-zinc-300 hover:bg-zinc-50"
           aria-label="Open user menu"
         >
           {avatarUrl ? (
@@ -73,10 +73,10 @@ export function UserNav() {
             </div>
           )}
           <div className="hidden flex-col leading-tight sm:flex">
-            <span className="text-[11px] font-medium text-white truncate max-w-[120px]">
+            <span className="text-[11px] font-medium text-zinc-900 truncate max-w-[120px]">
               {displayName}
             </span>
-            <span className="text-[10px] text-white/60 truncate max-w-[120px]">
+            <span className="text-[10px] text-zinc-500 truncate max-w-[120px]">
               {email || "Leadtribute"}
             </span>
           </div>

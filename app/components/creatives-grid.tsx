@@ -37,10 +37,10 @@ export function CreativesGrid() {
   const maxRoas = Math.max(...mockCreatives.map((c) => c.roas));
 
   return (
-    <section className="mt-6 rounded-2xl border border-white/10 bg-zinc-950/50 p-4 shadow-xl shadow-black/50">
+    <section className="mt-6">
       <div className="mb-4 flex items-center justify-between gap-2">
-        <h2 className="text-sm font-semibold text-white">Top Performing Creatives</h2>
-        <span className="text-[10px] text-white/50">Last 30 days</span>
+        <h2 className="text-sm font-semibold text-zinc-900">Top Performing Creatives</h2>
+        <span className="text-[10px] text-zinc-500">Last 30 days</span>
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {mockCreatives.map((creative) => {

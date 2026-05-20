@@ -11,7 +11,7 @@ import { DashboardShell } from "./DashboardShell";
 import { UpgradeGate } from "./UpgradeGate";
 import { syncData } from "@/app/dashboard/actions";
 import type { UserPlanState } from "@/lib/plans/types";
-import { appCard } from "@/lib/ui/app-surfaces";
+import { appBtnPrimary, appCard } from "@/lib/ui/app-surfaces";
 import { useState } from "react";
 
 type Props = {
@@ -65,7 +65,7 @@ export function StarterDashboard({
       type="button"
       onClick={handleSync}
       disabled={syncLoading}
-      className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-white/15"
+      className={appBtnPrimary}
     >
       {syncLoading ? "Syncing…" : "Sync now"}
     </button>

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { Sidebar } from "../components/sidebar";
 import type { UserPlanState } from "@/lib/plans/types";
-import { appPageBg } from "@/lib/ui/app-surfaces";
+import { appBreadcrumb, appCard, appPageBg, appSection, appTextMuted } from "@/lib/ui/app-surfaces";
 
 function Switch({
   checked,
@@ -18,16 +18,16 @@ function Switch({
 }) {
   return (
     <div className="flex items-center justify-between gap-4 py-3">
-      <span className="text-sm font-medium text-white/90">{label}</span>
+      <span className="text-sm font-medium text-zinc-800">{label}</span>
       <button
         type="button"
         role="switch"
         aria-checked={checked}
         onClick={() => onCheckedChange(!checked)}
-        className={`relative h-6 w-11 shrink-0 rounded-full border transition focus:outline-none focus:ring-2 focus:ring-white/70 focus:ring-offset-2 focus:ring-offset-zinc-950 ${
+        className={`relative h-6 w-11 shrink-0 rounded-full border transition focus:outline-none focus:ring-2 focus:ring-zinc-900/20 focus:ring-offset-2 focus:ring-offset-white ${
           checked
-            ? "border-white/70 bg-white/20"
-            : "border-zinc-700 bg-zinc-900"
+            ? "border-zinc-900 bg-zinc-900"
+            : "border-zinc-300 bg-zinc-100"
         }`}
       >
         <span
@@ -112,42 +112,42 @@ export function SettingsContent({ planState }: Props) {
 
       <main className="flex min-h-screen flex-1 flex-col px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
         <header className="mb-6">
-          <nav className="flex items-center gap-2 text-xs font-medium text-white/60">
-            <Link href="/dashboard" className="cursor-pointer transition hover:text-white/90">
+          <nav className={`flex items-center gap-2 ${appBreadcrumb}`}>
+            <Link href="/dashboard" className="cursor-pointer transition hover:text-zinc-900">
               Home
             </Link>
-            <span className="text-white/40">/</span>
-            <span className="text-white/90">Settings</span>
+            <span className="text-zinc-300">/</span>
+            <span className="text-zinc-700">Settings</span>
           </nav>
-          <h1 className="mt-1 text-xl font-semibold tracking-tight text-white sm:text-2xl">
+          <h1 className="mt-1 text-xl font-semibold tracking-tight text-zinc-900 sm:text-2xl">
             Settings
           </h1>
-          <p className="text-xs text-white/60">
+          <p className={`text-xs ${appTextMuted}`}>
             Manage your profile, notifications and billing.
           </p>
         </header>
 
         <div className="space-y-8">
-          <section className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-6 shadow-xl shadow-black/50 transition hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.2)]">
-            <h2 className="mb-6 text-sm font-semibold uppercase tracking-wider text-white/80">
+          <section className={`${appSection} p-6`}>
+            <h2 className="mb-6 text-sm font-semibold uppercase tracking-wider text-zinc-800">
               Profile &amp; Account
             </h2>
             <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
               <div className="flex flex-col items-center gap-3 sm:shrink-0">
-                <div className="flex h-24 w-24 items-center justify-center rounded-full border-2 border-zinc-700 bg-zinc-900">
-                  <span className="text-2xl font-semibold text-white">S</span>
+                <div className="flex h-24 w-24 items-center justify-center rounded-full border-2 border-zinc-200 bg-zinc-100">
+                  <span className="text-2xl font-semibold text-zinc-900">S</span>
                 </div>
                 <button
                   type="button"
                   onClick={() => toast.info("Photo upload is coming soon.")}
-                  className="rounded-full border border-zinc-700 bg-zinc-900 px-4 py-2 text-xs font-medium text-white/80 transition hover:border-white/60 hover:bg-white/5"
+                  className="rounded-full border border-zinc-200 bg-white px-4 py-2 text-xs font-medium text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50"
                 >
                   Change Photo
                 </button>
               </div>
               <div className="min-w-0 flex-1 space-y-4">
                 <div>
-                  <label htmlFor="fullName" className="mb-1 block text-xs font-medium text-white/60">
+                  <label htmlFor="fullName" className="mb-1 block text-xs font-medium text-zinc-500">
                     Full Name
                   </label>
                   <input
@@ -155,11 +155,11 @@ export function SettingsContent({ planState }: Props) {
                     type="text"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="w-full rounded-2xl border border-zinc-800 bg-zinc-900 px-4 py-2.5 text-sm text-white placeholder:text-zinc-500 focus:border-white focus:outline-none focus:ring-2 focus:ring-white/60"
+                    className="w-full rounded-2xl border border-zinc-200 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/15"
                   />
                 </div>
                 <div>
-                  <label htmlFor="email" className="mb-1 block text-xs font-medium text-white/60">
+                  <label htmlFor="email" className="mb-1 block text-xs font-medium text-zinc-500">
                     Email Address
                   </label>
                   <input
@@ -167,7 +167,7 @@ export function SettingsContent({ planState }: Props) {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full rounded-2xl border border-zinc-800 bg-zinc-900 px-4 py-2.5 text-sm text-white placeholder:text-zinc-500 focus:border-white focus:outline-none focus:ring-2 focus:ring-white/60"
+                    className="w-full rounded-2xl border border-zinc-200 bg-white px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/15"
                   />
                 </div>
                 <button
@@ -181,11 +181,11 @@ export function SettingsContent({ planState }: Props) {
             </div>
           </section>
 
-          <section className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-6 shadow-xl shadow-black/50 transition hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.2)]">
-            <h2 className="mb-6 text-sm font-semibold uppercase tracking-wider text-white/80">
+          <section className={`${appSection} p-6`}>
+            <h2 className="mb-6 text-sm font-semibold uppercase tracking-wider text-zinc-800">
               Notifications
             </h2>
-            <div className="divide-y divide-zinc-800">
+            <div className="divide-y divide-zinc-200">
               <Switch
                 label="Daily Performance Digest"
                 checked={digest}
@@ -204,12 +204,12 @@ export function SettingsContent({ planState }: Props) {
             </div>
           </section>
 
-          <section className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-6 shadow-xl shadow-black/50 transition hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.2)]">
-            <h2 className="mb-6 text-sm font-semibold uppercase tracking-wider text-white/80">
+          <section className={`${appSection} p-6`}>
+            <h2 className="mb-6 text-sm font-semibold uppercase tracking-wider text-zinc-800">
               Billing &amp; Plan
             </h2>
             <div className="space-y-6">
-              <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4">
+              <div className={`rounded-2xl p-4 ${appCard}`}>
                 <div className="flex flex-wrap items-center justify-between gap-4">
                   <div>
                     <p className="text-sm font-semibold text-white">{billing.name} plan</p>
@@ -223,7 +223,7 @@ export function SettingsContent({ planState }: Props) {
                     onClick={() =>
                       toast.info("Redirecting to Stripe Customer Portal...")
                     }
-                    className="mt-4 w-full rounded-full border border-white/20 bg-white/10 px-5 py-2.5 text-sm font-medium text-white transition hover:border-white/40 hover:bg-white/[0.14]"
+                    className="mt-4 w-full rounded-full border border-white/25 bg-white/10 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-white/15"
                   >
                     Manage Subscription
                   </button>
@@ -238,23 +238,23 @@ export function SettingsContent({ planState }: Props) {
               </div>
               {billing.showManage ? (
                 <div>
-                  <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-white/60">
+                  <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-zinc-500">
                     Recent Invoices
                   </h3>
-                  <div className="overflow-x-auto rounded-2xl border border-zinc-800">
+                  <div className="overflow-x-auto rounded-2xl border border-zinc-200">
                     <table className="w-full min-w-[280px] border-collapse text-left text-sm">
                       <thead>
-                        <tr className="border-b border-zinc-800 bg-zinc-900/50 text-[11px] font-medium uppercase tracking-wider text-white/50">
+                        <tr className="border-b border-zinc-200 bg-zinc-50 text-[11px] font-medium uppercase tracking-wider text-zinc-500">
                           <th className="px-4 py-3">Date</th>
                           <th className="px-4 py-3 text-right">Amount</th>
                           <th className="px-4 py-3 text-right">Status</th>
                         </tr>
                       </thead>
-                      <tbody className="text-white/90">
+                      <tbody className="text-zinc-800">
                         {mockInvoices.map((row, i) => (
                           <tr
                             key={i}
-                            className="border-b border-zinc-800/80 last:border-0"
+                            className="border-b border-zinc-100 last:border-0"
                           >
                             <td className="px-4 py-3">{row.date}</td>
                             <td className="px-4 py-3 text-right tabular-nums">

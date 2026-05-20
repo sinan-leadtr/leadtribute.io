@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { GoogleLogo, MetaLogo, TikTokLogo } from "./icons";
+import { appCard, appCardTitle } from "@/lib/ui/app-surfaces";
 
 export type Platform = "meta" | "google" | "tiktok";
 export type Status = "active" | "paused" | "learning";
@@ -69,9 +70,9 @@ export function CampaignTable({ campaigns = [], historyLabel = "Last 7 days" }: 
   const router = useRouter();
 
   return (
-    <section className="rounded-3xl border border-zinc-800/80 bg-zinc-950/90 p-4 shadow-xl shadow-black/50 transition hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.2)]">
+    <section className={`${appCard} p-4`}>
       <div className="mb-4 flex items-center justify-between gap-2">
-        <h2 className="text-sm font-semibold text-white">Active Campaigns</h2>
+        <h2 className={appCardTitle}>Active Campaigns</h2>
         <span className="text-[10px] text-white/50">{historyLabel}</span>
       </div>
       <div className="overflow-x-auto -mx-1">

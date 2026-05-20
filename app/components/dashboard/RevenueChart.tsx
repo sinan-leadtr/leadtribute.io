@@ -28,11 +28,11 @@ export function RevenueChart({
 
   if (!hasData) {
     return (
-      <div className="flex h-[280px] w-full flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-700 bg-zinc-950/50 p-6 text-center">
-        <p className="text-xs font-semibold uppercase tracking-wider text-white/60">
+      <div className="flex h-[280px] w-full flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-200 bg-zinc-50 p-6 text-center">
+        <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
           {title}
         </p>
-        <p className="mt-3 text-sm text-white/50">
+        <p className="mt-3 text-sm text-zinc-500">
           Run Sync Now after connecting Shopify to load revenue.
         </p>
       </div>
@@ -43,7 +43,7 @@ export function RevenueChart({
 
   return (
     <div className="h-[280px] w-full">
-      <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-white/60">
+      <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-zinc-500">
         {title}
       </p>
       <ResponsiveContainer width="100%" height="100%" minHeight={200}>
@@ -53,19 +53,18 @@ export function RevenueChart({
         >
           <defs>
             <linearGradient id="revenueAccentGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={LEADTRIBUTE_ACCENT} stopOpacity={0.4} />
+              <stop offset="0%" stopColor={LEADTRIBUTE_ACCENT} stopOpacity={0.35} />
               <stop offset="100%" stopColor={LEADTRIBUTE_ACCENT} stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid
             strokeDasharray="3 3"
-            stroke="rgba(255,255,255,0.06)"
+            stroke="rgba(0,0,0,0.06)"
             vertical={false}
           />
           <XAxis
             dataKey="day"
-            stroke="rgba(255,255,255,0.4)"
-            tick={{ fill: "rgba(255,255,255,0.6)", fontSize: 11 }}
+            tick={{ fill: "#71717a", fontSize: 11 }}
             axisLine={false}
             tickLine={false}
           />
@@ -73,22 +72,19 @@ export function RevenueChart({
             tickFormatter={(v) =>
               v >= 1000 ? `€ ${(v / 1000).toFixed(1)}k` : `€ ${v}`
             }
-            stroke="rgba(255,255,255,0.4)"
-            tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 11 }}
+            tick={{ fill: "#71717a", fontSize: 11 }}
             axisLine={false}
             tickLine={false}
             width={48}
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: "rgb(24,24,27)",
-              border: "1px solid rgba(255,255,255,0.1)",
+              backgroundColor: "#18181b",
+              border: "1px solid rgba(0,0,0,0.1)",
               borderRadius: "12px",
               fontSize: "12px",
-              color: "#e5e7eb",
+              color: "#fafafa",
             }}
-            labelStyle={{ color: "#e5e7eb" }}
-            itemStyle={{ color: "#e5e7eb" }}
             formatter={(value) => [
               `€ ${Number(value ?? 0).toLocaleString("de-DE")}`,
               "Revenue",
