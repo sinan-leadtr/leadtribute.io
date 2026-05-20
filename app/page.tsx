@@ -13,13 +13,15 @@ import {
   ChevronDown,
   Link2,
   LayoutDashboard,
-  Check,
 } from "lucide-react";
 import { HeroDashboardPreview } from "./components/landing/HeroDashboardPreview";
 import { AttributionShowcase } from "./components/landing/AttributionShowcase";
 import { IntegrationLogo } from "./components/landing/IntegrationLogo";
 import { landingDarkCard } from "./components/landing/preview-styles";
 import { Pricing } from "./components/landing/Pricing";
+import { PricingFeatureList } from "./components/landing/PricingFeatureList";
+import { PricingTierBadge } from "./components/landing/PricingTierBadge";
+import { heroPricingTierIds, pricingTiers } from "./components/landing/pricing-features";
 import { Footer } from "./components/landing/Footer";
 import { Testimonials } from "./components/landing/Testimonials";
 import {
@@ -204,55 +206,63 @@ export default function Home() {
             Simple pricing
           </p>
           <div className="mt-8 grid gap-6 sm:grid-cols-2 sm:gap-8">
-            {/* Starter */}
-            <div className="flex flex-col rounded-3xl border border-black/5 bg-white p-6 shadow-xl sm:p-8">
-              <h3 className="text-lg font-semibold">Starter</h3>
-              <p className="mt-3 text-3xl font-bold">0 €</p>
-              <p className="mt-1 text-sm text-black/60">Free forever · limited features</p>
-              <p className="mt-4 text-sm">Perfect for side projects and testing.</p>
-              <ul className="mt-6 space-y-3 text-sm">
-                {["Up to 3 connected accounts", "Basic ROAS & spend", "7-day data history"].map((item) => (
-                  <li key={item} className="flex items-center gap-2">
-                    <Check className="h-5 w-5 shrink-0 text-emerald-500" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-auto pt-8">
-                <Link
-                  href="/register"
-                  className="inline-flex w-full justify-center rounded-full border border-black/10 bg-white/60 px-4 py-3 text-sm font-semibold text-black/80 shadow-sm transition hover:bg-white hover:border-black/20"
-                >
-                  Start on Starter
-                </Link>
-              </div>
-            </div>
-            {/* Pro – Most Popular */}
-            <div className="relative flex flex-col rounded-3xl border-2 border-black p-6 shadow-[0_0_60px_-20px_rgba(0,0,0,0.65)] sm:-mt-1 sm:p-8 sm:scale-[1.02]">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-black px-3 py-1 text-xs font-semibold text-white">
-                Most Popular
-              </div>
-              <h3 className="text-lg font-semibold">Pro</h3>
-              <p className="mt-3 text-3xl font-bold">49 €</p>
-              <p className="mt-1 text-sm text-black/60">14-day Pro trial · then per month</p>
-              <p className="mt-4 text-sm">The CMO Suite for growing teams.</p>
-              <ul className="mt-6 space-y-3 text-sm">
-                {["Unlimited accounts", "Real-time ROAS & MER", "Full history & export", "Priority support"].map((item) => (
-                  <li key={item} className="flex items-center gap-2">
-                    <Check className="h-5 w-5 shrink-0" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-auto pt-8">
-                <Link
-                  href="/register"
-                  className="btn-black inline-flex w-full justify-center px-4 py-3 text-sm font-semibold"
-                >
-                  <span>Start 14-day Pro trial</span>
-                </Link>
-              </div>
-            </div>
+            {pricingTiers
+              .filter((t) => (heroPricingTierIds as readonly string[]).includes(t.id))
+              .map((tier) => {
+                const price = tier.monthly;
+                const isFree = price === 0;
+                return (
+                  <div
+                    key={tier.id}
+                    className={`relative flex flex-col rounded-3xl border p-6 sm:p-8 ${
+                      tier.highlighted
+                        ? "border-2 border-emerald-600/40 shadow-[0_0_50px_-16px_rgba(16,185,129,0.35)] sm:-mt-1 sm:scale-[1.02]"
+                        : "border-black/5 bg-white shadow-xl"
+                    }`}
+                  >
+                    {tier.cornerBadge && (
+                      <div className="absolute right-4 top-4">
+                        <PricingTierBadge
+                          label={tier.cornerBadge.label}
+                          variant={tier.cornerBadge.variant}
+                          theme="light"
+                        />
+                      </div>
+                    )}
+                    <h3 className="pr-24 text-lg font-semibold">{tier.name}</h3>
+                    <p className="mt-3 text-3xl font-bold">
+                      {isFree ? "€0" : `€${price}`}
+                    </p>
+                    {tier.priceNote && (
+                      <p className="mt-1 text-sm text-black/60">{tier.priceNote}</p>
+                    )}
+                    {tier.priceSub && (
+                      <p className="mt-0.5 text-xs text-black/45">{tier.priceSub}</p>
+                    )}
+                    <p className="mt-4 text-sm text-black/70">{tier.description}</p>
+                    <PricingFeatureList
+                      features={tier.features.slice(0, tier.highlighted ? 5 : 4)}
+                      theme="light"
+                    />
+                    <div className="mt-auto pt-8">
+                      <Link
+                        href={tier.href}
+                        className={
+                          tier.highlighted
+                            ? "btn-black inline-flex w-full justify-center px-4 py-3 text-sm font-semibold"
+                            : "inline-flex w-full justify-center rounded-full border border-black/10 bg-white/60 px-4 py-3 text-sm font-semibold text-black/80 shadow-sm transition hover:bg-white hover:border-black/20"
+                        }
+                      >
+                        {tier.highlighted ? (
+                          <span>{tier.cta}</span>
+                        ) : (
+                          tier.cta
+                        )}
+                      </Link>
+                    </div>
+                  </div>
+                );
+              })}
           </div>
         </motion.div>
       </section>

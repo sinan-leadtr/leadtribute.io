@@ -3,7 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Check } from "lucide-react";
+import { PricingFeatureList } from "./PricingFeatureList";
+import { PricingTierBadge } from "./PricingTierBadge";
+import { pricingTiers } from "./pricing-features";
 
 const sectionFade = {
   initial: { opacity: 0, y: 40 },
@@ -11,70 +13,6 @@ const sectionFade = {
   viewport: { once: true, margin: "-60px" },
   transition: { duration: 0.5, ease: "easeOut" as const },
 };
-
-const tiers = [
-  {
-    id: "starter",
-    name: "Starter",
-    monthly: 0,
-    yearly: 0,
-    period: "mo",
-    description: "Free forever with limits — ideal for side projects.",
-    priceNote: "Free forever",
-    priceSub: "Limited features",
-    features: [
-      "Up to 3 connected accounts",
-      "Basic ROAS & spend",
-      "7-day data history",
-      "Email support",
-    ],
-    cta: "Start on Starter",
-    href: "/register",
-    highlighted: false,
-  },
-  {
-    id: "pro",
-    name: "Pro",
-    monthly: 49,
-    yearly: 39,
-    period: "mo",
-    description: "Full attribution, history, and exports for growing teams.",
-    priceNote: "14-day Pro trial",
-    priceSub: "No credit card required",
-    afterTrial: true,
-    features: [
-      "Unlimited accounts",
-      "Real-time ROAS & MER",
-      "Full history & export",
-      "Priority support",
-      "Shopify & Klaviyo sync",
-    ],
-    cta: "Start 14-day Pro trial",
-    href: "/register",
-    highlighted: true,
-    badge: "Most Popular",
-  },
-  {
-    id: "scale",
-    name: "Scale",
-    monthly: 149,
-    yearly: 119,
-    period: "mo",
-    description: "For agencies and larger teams.",
-    priceNote: null,
-    priceSub: null,
-    features: [
-      "Everything in Pro",
-      "Multi-user & roles",
-      "White-label reports",
-      "Dedicated success manager",
-      "API access",
-    ],
-    cta: "Contact sales",
-    href: "mailto:hello@leadtribute.io",
-    highlighted: false,
-  },
-];
 
 export function Pricing() {
   const [yearly, setYearly] = useState(false);
@@ -93,7 +31,25 @@ export function Pricing() {
         </p>
 
         <motion.div
-          className="mt-10 flex flex-wrap items-center justify-center gap-4"
+          className="mt-6 flex flex-wrap items-center justify-center gap-4 text-xs text-black/50"
+          {...sectionFade}
+        >
+          <span className="inline-flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-emerald-500" aria-hidden />
+            Included
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-amber-500" aria-hidden />
+            Limited
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-red-500" aria-hidden />
+            Not included
+          </span>
+        </motion.div>
+
+        <motion.div
+          className="mt-8 flex flex-wrap items-center justify-center gap-4"
           {...sectionFade}
         >
           <span className={`text-sm font-medium ${!yearly ? "text-black" : "text-black/50"}`}>
@@ -119,7 +75,7 @@ export function Pricing() {
         </motion.div>
 
         <div className="mt-16 grid gap-6 sm:grid-cols-3 sm:gap-8">
-          {tiers.map((tier, i) => {
+          {pricingTiers.map((tier, i) => {
             const price = yearly ? tier.yearly : tier.monthly;
             const isFree = price === 0;
             return (
@@ -127,7 +83,7 @@ export function Pricing() {
                 key={tier.id}
                 className={`relative flex flex-col rounded-3xl border p-6 sm:p-8 ${
                   tier.highlighted
-                    ? "z-10 border-2 border-black bg-zinc-950 shadow-[0_0_60px_-20px_rgba(0,0,0,0.75)] lg:-mt-2 lg:scale-[1.03]"
+                    ? "z-10 border-2 border-emerald-500/50 bg-zinc-950 shadow-[0_0_70px_-18px_rgba(16,185,129,0.45)] ring-1 ring-emerald-500/25 lg:-mt-2 lg:scale-[1.03]"
                     : "border-white/20 bg-gradient-to-b from-zinc-900 to-zinc-950 shadow-[0_18px_45px_rgba(0,0,0,0.45)]"
                 }`}
                 initial={{ opacity: 0, y: 30 }}
@@ -135,12 +91,15 @@ export function Pricing() {
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.45, delay: i * 0.1 }}
               >
-                {tier.badge && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-white px-3 py-1 text-xs font-semibold text-black shadow-md">
-                    {tier.badge}
+                {tier.cornerBadge && (
+                  <div className="absolute right-4 top-4 sm:right-5 sm:top-5">
+                    <PricingTierBadge
+                      label={tier.cornerBadge.label}
+                      variant={tier.cornerBadge.variant}
+                    />
                   </div>
                 )}
-                <h3 className="text-lg font-semibold text-white">{tier.name}</h3>
+                <h3 className="pr-24 text-lg font-semibold text-white">{tier.name}</h3>
                 <div className="mt-4 flex items-baseline gap-1">
                   <span className="text-3xl font-bold text-white">
                     {isFree ? "€0" : `€${price}`}
@@ -160,20 +119,16 @@ export function Pricing() {
                   <p className="mt-0.5 text-xs text-white/55">{tier.priceSub}</p>
                 )}
                 <p className="mt-4 text-sm text-white/80">{tier.description}</p>
-                <ul className="mt-6 flex-1 space-y-3">
-                  {tier.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2 text-sm text-white/85">
-                      <Check className="h-5 w-5 shrink-0 text-emerald-500" />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
+                <PricingFeatureList
+                  features={tier.features}
+                  emphasized={tier.highlighted}
+                />
                 <div className="mt-8 pt-2">
                   <Link
                     href={tier.href}
                     className={`inline-flex w-full justify-center px-4 py-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                       tier.highlighted
-                        ? "btn-white-glow focus:ring-violet-500/40 focus:ring-offset-zinc-950"
+                        ? "btn-white-glow focus:ring-emerald-500/40 focus:ring-offset-zinc-950"
                         : "rounded-full border border-white/30 bg-white/10 text-white transition hover:border-white/50 hover:bg-white/15 focus:ring-white/40 focus:ring-offset-zinc-950"
                     }`}
                   >
