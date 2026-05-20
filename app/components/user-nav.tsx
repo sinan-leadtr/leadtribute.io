@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
 import { CreditCard, LogOut, Settings, User } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 function getInitials(user: SupabaseUser | null): string {
@@ -34,6 +34,7 @@ export function UserNav() {
   const [user, setUser] = useState<SupabaseUser | null>(null);
 
   useEffect(() => {
+    if (!isSupabaseConfigured()) return;
     const supabase = createClient();
     const getInitialUser = async () => {
       const { data: { user: u } } = await supabase.auth.getUser();

@@ -35,7 +35,7 @@ import {
   TikTokLogo,
   WooCommerceLogo,
 } from "./components/icons";
-import { createClient } from "@/lib/supabase/client";
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 
 const sectionFade = {
   initial: { opacity: 0, y: 40 },
@@ -97,6 +97,7 @@ export default function Home() {
   const [faqOpen, setFaqOpen] = useState<number | null>(0);
 
   useEffect(() => {
+    if (!isSupabaseConfigured()) return;
     let cancelled = false;
     const supabase = createClient();
     void supabase.auth.getUser().then(({ data: { user } }) => {
