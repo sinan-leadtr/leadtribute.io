@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { connectIntegration, disconnectIntegration, type Integration } from "@/app/dashboard/actions";
+import { disconnectIntegration, type Integration } from "@/app/dashboard/actions";
 import { appCard, appHeading } from "@/lib/ui/app-surfaces";
 
 const PLATFORMS = [
@@ -22,20 +23,7 @@ function isConnected(integrations: Integration[], platform: string): boolean {
 
 export function Integrations({ integrations }: IntegrationsProps) {
   const router = useRouter();
-  const [connecting, setConnecting] = useState<"google" | "meta" | null>(null);
   const [disconnecting, setDisconnecting] = useState<"google" | "meta" | null>(null);
-
-  async function handleConnect(platform: "google" | "meta") {
-    setConnecting(platform);
-    const result = await connectIntegration(platform);
-    setConnecting(null);
-    if (result.ok) {
-      toast.success(`${PLATFORMS.find((p) => p.id === platform)?.label} connected.`);
-      router.refresh();
-    } else {
-      toast.error(result.error);
-    }
-  }
 
   async function handleDisconnect(platform: "google" | "meta") {
     setDisconnecting(platform);
@@ -55,7 +43,7 @@ export function Integrations({ integrations }: IntegrationsProps) {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {PLATFORMS.map(({ id, label }) => {
           const connected = isConnected(integrations, id);
-          const loading = connecting === id || disconnecting === id;
+          const loading = disconnecting === id;
           return (
             <div
               key={id}
@@ -85,19 +73,12 @@ export function Integrations({ integrations }: IntegrationsProps) {
                     </span>
                   </button>
                 ) : (
-                  <button
-                    type="button"
-                    onClick={() => handleConnect(id)}
-                    disabled={loading}
-                    className="btn-black inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-semibold disabled:opacity-70"
+                  <Link
+                    href="/dashboard/integrations"
+                    className="btn-black inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-semibold"
                   >
-                    <span className="inline-flex items-center gap-2">
-                      {loading ? (
-                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                      ) : null}
-                      <span>Connect</span>
-                    </span>
-                  </button>
+                    Connect
+                  </Link>
                 )}
               </div>
             </div>

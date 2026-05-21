@@ -10,6 +10,12 @@ import {
   type AttributionModelId,
   type Journey,
 } from "@/lib/attribution/models";
+import {
+  adsErrorMessage,
+  fetchGoogleDailyInsights,
+  fetchMetaDailyInsights,
+  metricsByDate,
+} from "@/lib/ads";
 
 const DEMO_CAMPAIGNS = [
   { name: "Q1 Brand Awareness", platform: "meta" as const, status: "active" as const, spend: 4250, revenue: 17850 },
@@ -58,39 +64,10 @@ export type ConnectIntegrationResult = { ok: true } | { ok: false; error: string
 export type DisconnectIntegrationResult = { ok: true } | { ok: false; error: string };
 
 export async function connectIntegration(platform: "google" | "meta"): Promise<ConnectIntegrationResult> {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
-    return { ok: false, error: "Not logged in" };
-  }
-
-  const planState = await getUserPlanState();
-  const maxIntegrations = planState?.entitlements.maxIntegrations ?? 3;
-
-  const { count } = await supabase
-    .from("integrations")
-    .select("id", { count: "exact", head: true })
-    .eq("user_id", user.id);
-
-  if ((count ?? 0) >= maxIntegrations) {
-    return {
-      ok: false,
-      error: `Connection limit reached (${maxIntegrations}). Upgrade to Pro for unlimited connections.`,
-    };
-  }
-
-  // Simulated connection delay (1–2s) so loading spinner is visible
-  await new Promise((r) => setTimeout(r, 1500));
-
-  const { error } = await supabase.from("integrations").upsert(
-    { user_id: user.id, platform, status: "active", connected_at: new Date().toISOString() },
-    { onConflict: "user_id,platform" }
-  );
-  if (error) {
-    return { ok: false, error: error.message };
-  }
-  revalidatePath("/dashboard");
-  return { ok: true };
+  return {
+    ok: false,
+    error: `Connect ${platform === "meta" ? "Meta" : "Google"} Ads under Data Sources → Integrations (access token + account ID).`,
+  };
 }
 
 export async function disconnectIntegration(platform: "google" | "meta"): Promise<DisconnectIntegrationResult> {
@@ -100,16 +77,43 @@ export async function disconnectIntegration(platform: "google" | "meta"): Promis
     return { ok: false, error: "Not logged in" };
   }
 
-  const { error } = await supabase
+  const { error: integrationError } = await supabase
     .from("integrations")
     .delete()
     .eq("user_id", user.id)
     .eq("platform", platform);
-  if (error) {
-    return { ok: false, error: error.message };
+
+  const { error: keyError } = await supabase
+    .from("api_keys")
+    .delete()
+    .eq("user_id", user.id)
+    .eq("service", platform);
+
+  if (integrationError) {
+    return { ok: false, error: integrationError.message };
+  }
+  if (keyError) {
+    return { ok: false, error: keyError.message };
   }
   revalidatePath("/dashboard");
+  revalidatePath("/dashboard/integrations");
   return { ok: true };
+}
+
+async function upsertAdIntegrationRecord(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  userId: string,
+  platform: "google" | "meta",
+) {
+  await supabase.from("integrations").upsert(
+    {
+      user_id: userId,
+      platform,
+      status: "active",
+      connected_at: new Date().toISOString(),
+    },
+    { onConflict: "user_id,platform" },
+  );
 }
 
 // --- API Keys (Integrations credentials) ---
@@ -180,12 +184,47 @@ export async function saveApiKeys(
     };
   }
 
+  let apiKey = payload.api_key?.trim() || null;
+  const accountId = payload.account_id?.trim() || null;
+  const shopUrl = payload.shop_url?.trim() || null;
+
+  if ((service === "meta" || service === "google") && !apiKey) {
+    const { data: existing } = await supabase
+      .from("api_keys")
+      .select("api_key")
+      .eq("user_id", user.id)
+      .eq("service", service)
+      .maybeSingle();
+    apiKey = existing?.api_key ?? null;
+  }
+
+  if (service === "meta") {
+    if (!apiKey || !accountId) {
+      return { ok: false, error: "Meta requires an access token and ad account ID." };
+    }
+  }
+
+  if (service === "google") {
+    if (!apiKey || !accountId) {
+      return {
+        ok: false,
+        error: "Google Ads requires an OAuth refresh token and customer ID.",
+      };
+    }
+    if (!process.env.GOOGLE_ADS_DEVELOPER_TOKEN?.trim()) {
+      return {
+        ok: false,
+        error: "Server missing GOOGLE_ADS_DEVELOPER_TOKEN. Add it in Vercel environment variables.",
+      };
+    }
+  }
+
   const row = {
     user_id: user.id,
     service,
-    api_key: payload.api_key?.trim() || null,
-    account_id: payload.account_id?.trim() || null,
-    shop_url: payload.shop_url?.trim() || null,
+    api_key: apiKey,
+    account_id: accountId,
+    shop_url: shopUrl,
   };
 
   const { error } = await supabase.from("api_keys").upsert(row, {
@@ -194,6 +233,11 @@ export async function saveApiKeys(
   if (error) {
     return { ok: false, error: error.message };
   }
+
+  if (service === "meta" || service === "google") {
+    await upsertAdIntegrationRecord(supabase, user.id, service);
+  }
+
   revalidatePath("/dashboard/integrations");
   revalidatePath("/dashboard");
   return { ok: true };
@@ -215,10 +259,6 @@ export type AnalyticsDailyRow = {
 };
 
 export type SyncDataResult = { ok: true } | { ok: false; error: string };
-
-function randomInRange(min: number, max: number): number {
-  return min + Math.random() * (max - min);
-}
 
 function lastNDatesUTC(n: number): string[] {
   const dates: string[] = [];
@@ -253,34 +293,45 @@ export async function syncData(): Promise<SyncDataResult> {
   }
 
   const keys = apiKeys ?? [];
-  const hasMeta = keys.some((k) => k.service === "meta");
-  const hasGoogle = keys.some((k) => k.service === "google");
+  const metaKey = keys.find(
+    (k) => k.service === "meta" && k.api_key && k.account_id,
+  );
+  const googleKey = keys.find(
+    (k) => k.service === "google" && k.api_key && k.account_id,
+  );
   const shopifyKey = keys.find(
     (k) => k.service === "shopify" && k.shop_url && k.api_key,
   );
+  const hasMeta = !!metaKey;
+  const hasGoogle = !!googleKey;
   const hasShopify = !!shopifyKey;
 
   if (!hasMeta && !hasGoogle && !hasShopify) {
-    return { ok: false, error: "No connected integrations found. Connect Meta, Google or Shopify first." };
+    return {
+      ok: false,
+      error:
+        "No connected integrations found. Add credentials under Dashboard → Data Sources → Integrations.",
+    };
   }
 
   const dates = lastNDatesUTC(historyDays);
+  const startDate = dates[0];
+  const endDate = dates[dates.length - 1];
   const rows: Omit<AnalyticsDailyRow, "id" | "created_at">[] = [];
 
-  // Shopify: real revenue per day via Admin API
   let shopifyByDate: Record<string, number> = {};
   if (hasShopify && shopifyKey) {
     try {
       const data = await fetchShopifyRevenue(
         shopifyKey.shop_url as string,
         shopifyKey.api_key as string,
-        30,
+        historyDays,
       );
       shopifyByDate = data.reduce<Record<string, number>>((acc, row) => {
         acc[row.date] = (acc[row.date] ?? 0) + row.revenue;
         return acc;
       }, {});
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to sync Shopify revenue", error);
       return {
         ok: false,
@@ -289,7 +340,45 @@ export async function syncData(): Promise<SyncDataResult> {
     }
   }
 
-  dates.forEach((date) => {
+  let metaByDate: Record<string, { spend: number; impressions: number; clicks: number }> = {};
+  if (hasMeta && metaKey) {
+    try {
+      const metaRows = await fetchMetaDailyInsights(
+        {
+          accessToken: metaKey.api_key as string,
+          adAccountId: metaKey.account_id as string,
+        },
+        startDate,
+        endDate,
+      );
+      metaByDate = metricsByDate(metaRows);
+      await upsertAdIntegrationRecord(supabase, user.id, "meta");
+    } catch (error: unknown) {
+      console.error("Failed to sync Meta Ads", error);
+      return { ok: false, error: adsErrorMessage(error, "meta") };
+    }
+  }
+
+  let googleByDate: Record<string, { spend: number; impressions: number; clicks: number }> = {};
+  if (hasGoogle && googleKey) {
+    try {
+      const googleRows = await fetchGoogleDailyInsights(
+        {
+          refreshOrAccessToken: googleKey.api_key as string,
+          customerId: googleKey.account_id as string,
+        },
+        startDate,
+        endDate,
+      );
+      googleByDate = metricsByDate(googleRows);
+      await upsertAdIntegrationRecord(supabase, user.id, "google");
+    } catch (error: unknown) {
+      console.error("Failed to sync Google Ads", error);
+      return { ok: false, error: adsErrorMessage(error, "google") };
+    }
+  }
+
+  for (const date of dates) {
     let totalSpend = 0;
     let totalRevenue = 0;
 
@@ -309,19 +398,11 @@ export async function syncData(): Promise<SyncDataResult> {
       totalRevenue += shopifyRevenue;
     }
 
-    // Ad spend ≈ 20–30% of daily revenue (Shopify); fallback baseline if ads-only
-    const revenueBase =
-      shopifyRevenue > 0 ? shopifyRevenue : hasMeta || hasGoogle ? 900 : 0;
-    const totalAdSpendPct = randomInRange(0.2, 0.3);
-    const totalAdSpend =
-      revenueBase > 0 ? Math.round(revenueBase * totalAdSpendPct) : 0;
-
-    if (hasMeta && totalAdSpend > 0) {
-      const metaShare = hasGoogle ? 0.6 : 1;
-      const spend = Math.max(1, Math.round(totalAdSpend * metaShare));
-      const impressions = Math.round(spend * randomInRange(80, 140));
-      const clicks = Math.round(impressions * randomInRange(0.01, 0.03));
-
+    if (hasMeta) {
+      const metric = metaByDate[date];
+      const spend = metric?.spend ?? 0;
+      const impressions = metric?.impressions ?? 0;
+      const clicks = metric?.clicks ?? 0;
       rows.push({
         user_id: user.id,
         date,
@@ -335,12 +416,11 @@ export async function syncData(): Promise<SyncDataResult> {
       totalSpend += spend;
     }
 
-    if (hasGoogle && totalAdSpend > 0) {
-      const googleShare = hasMeta ? 0.4 : 1;
-      const spend = Math.max(1, Math.round(totalAdSpend * googleShare));
-      const impressions = Math.round(spend * randomInRange(90, 160));
-      const clicks = Math.round(impressions * randomInRange(0.015, 0.035));
-
+    if (hasGoogle) {
+      const metric = googleByDate[date];
+      const spend = metric?.spend ?? 0;
+      const impressions = metric?.impressions ?? 0;
+      const clicks = metric?.clicks ?? 0;
       rows.push({
         user_id: user.id,
         date,
@@ -366,10 +446,7 @@ export async function syncData(): Promise<SyncDataResult> {
         clicks: null,
       });
     }
-  });
-
-  const startDate = dates[0];
-  const endDate = dates[dates.length - 1];
+  }
 
   // Clean out previous data for this user & date range to avoid duplicates
   const { error: deleteError } = await supabase

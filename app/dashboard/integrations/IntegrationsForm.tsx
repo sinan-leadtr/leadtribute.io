@@ -279,6 +279,10 @@ export function IntegrationsForm({ initialKeys }: Props) {
             saving={saving === "meta"}
             onSave={() => handleSave("meta", { api_key: metaToken, account_id: metaAccountId })}
           >
+            <p className="text-xs text-white/50">
+              Long-lived user token with <code className="rounded bg-white/10 px-1 py-0.5">ads_read</code>.
+              Sync pulls daily spend from the Marketing API.
+            </p>
             <div>
               <label className={fieldLabel}>Access Token</label>
               <input
@@ -301,7 +305,7 @@ export function IntegrationsForm({ initialKeys }: Props) {
             </div>
           </ProviderCard>
 
-          {/* 3. GOOGLE ADS – Search & YouTube performance */}
+          {/* 3. GOOGLE ADS – real spend via Google Ads API */}
           <ProviderCard
             title="Google Ads"
             icon={<GoogleLogo size={28} />}
@@ -309,11 +313,16 @@ export function IntegrationsForm({ initialKeys }: Props) {
             saving={saving === "google"}
             onSave={() => handleSave("google", { api_key: googleToken, account_id: googleCustomerId })}
           >
+            <p className="text-xs text-white/50">
+              Requires server env{" "}
+              <code className="rounded bg-white/10 px-1 py-0.5">GOOGLE_ADS_DEVELOPER_TOKEN</code> plus
+              OAuth client credentials. Paste a refresh token from Google OAuth Playground.
+            </p>
             <div>
-              <label className={fieldLabel}>Developer Token</label>
+              <label className={fieldLabel}>OAuth refresh token</label>
               <input
                 type="password"
-                placeholder="xxxx…"
+                placeholder="1//0gxxxx…"
                 value={googleToken}
                 onChange={(e) => setGoogleToken(e.target.value)}
                 className={inputDark}
@@ -323,7 +332,7 @@ export function IntegrationsForm({ initialKeys }: Props) {
               <label className={fieldLabel}>Customer ID</label>
               <input
                 type="text"
-                placeholder="123-456-7890"
+                placeholder="1234567890"
                 value={googleCustomerId}
                 onChange={(e) => setGoogleCustomerId(e.target.value)}
                 className={inputDark}

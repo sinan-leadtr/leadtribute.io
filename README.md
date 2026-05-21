@@ -88,3 +88,20 @@ Enable **Google** under Authentication → Providers and add your Google OAuth c
 **Production vs local:** OAuth fixes in this repo only apply on **Vercel after you push** (or on your machine when `npm run dev` is running the latest code). Testing an old deployment will not show new behaviour.
 
 After a successful OAuth exchange, this app **always** redirects to `/dashboard` (not the `next` query param). If you still land on `/` with a session, the homepage sends you to `/dashboard` automatically.
+
+## Ad integrations (Meta + Google) — Phase 1
+
+Connect credentials at **Dashboard → Data Sources → Integrations** (`/dashboard/integrations`), then click **Sync now** on the dashboard.
+
+| Platform | User enters (per account) | Server env (Vercel) |
+|----------|---------------------------|---------------------|
+| **Meta Ads** | Long-lived access token + Ad account ID (`act_…`) | — |
+| **Google Ads** | OAuth refresh token + Customer ID (10 digits) | `GOOGLE_ADS_DEVELOPER_TOKEN`, `GOOGLE_ADS_CLIENT_ID`, `GOOGLE_ADS_CLIENT_SECRET` |
+
+Optional: `GOOGLE_ADS_LOGIN_CUSTOMER_ID` if you query client accounts through an MCC.
+
+**Meta:** [Marketing API](https://developers.facebook.com/docs/marketing-api/) — app with `ads_read`, generate a user access token, use your ad account ID.
+
+**Google:** [Google Ads API](https://developers.google.com/google-ads/api/docs/start) — apply for a developer token, create an OAuth client, obtain a refresh token (e.g. [OAuth Playground](https://developers.google.com/oauthplayground/) with scope `https://www.googleapis.com/auth/adwords`).
+
+Copy `.env.example` to `.env.local` for local development. Never commit real tokens.
