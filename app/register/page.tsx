@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { oauthCallbackUrl } from "@/lib/auth/oauth-callback-url";
+import { startOAuthSignIn } from "@/lib/auth/start-oauth";
 import { initializeUserProfile } from "@/app/dashboard/plan-actions";
 
 export default function RegisterPage() {
@@ -59,47 +59,15 @@ export default function RegisterPage() {
   async function handleGoogleSignUp() {
     if (isLoading) return;
     setIsLoading(true);
-    const supabase = createClient();
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: oauthCallbackUrl(),
-      },
-    });
-    if (error) {
-      toast.error(error.message);
-      setIsLoading(false);
-      return;
-    }
-    if (data?.url) {
-      window.location.assign(data.url);
-      return;
-    }
-    toast.error("Could not start Google sign-in.");
-    setIsLoading(false);
+    const started = await startOAuthSignIn("google");
+    if (!started) setIsLoading(false);
   }
 
   async function handleAppleSignUp() {
     if (isLoading) return;
     setIsLoading(true);
-    const supabase = createClient();
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "apple",
-      options: {
-        redirectTo: oauthCallbackUrl(),
-      },
-    });
-    if (error) {
-      toast.error(error.message);
-      setIsLoading(false);
-      return;
-    }
-    if (data?.url) {
-      window.location.assign(data.url);
-      return;
-    }
-    toast.error("Could not start Apple sign-in.");
-    setIsLoading(false);
+    const started = await startOAuthSignIn("apple");
+    if (!started) setIsLoading(false);
   }
 
   return (
@@ -196,10 +164,10 @@ export default function RegisterPage() {
             {isLoading ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Creating account...
+                <span>Creating account...</span>
               </>
             ) : (
-              "Sign Up"
+              <span>Sign Up</span>
             )}
           </button>
         </form>

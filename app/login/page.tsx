@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { initializeUserProfile } from "@/app/dashboard/plan-actions";
-import { oauthCallbackUrl } from "@/lib/auth/oauth-callback-url";
+import { startOAuthSignIn } from "@/lib/auth/start-oauth";
 
 type Tab = "login" | "signup";
 
@@ -90,47 +90,15 @@ export default function LoginPage() {
   async function handleGoogleLogin() {
     if (isLoading) return;
     setIsLoading(true);
-    const supabase = createClient();
-    const { data, error: err } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: oauthCallbackUrl(),
-      },
-    });
-    if (err) {
-      toast.error(err.message);
-      setIsLoading(false);
-      return;
-    }
-    if (data?.url) {
-      window.location.assign(data.url);
-      return;
-    }
-    toast.error("Could not start Google sign-in.");
-    setIsLoading(false);
+    const started = await startOAuthSignIn("google");
+    if (!started) setIsLoading(false);
   }
 
   async function handleAppleLogin() {
     if (isLoading) return;
     setIsLoading(true);
-    const supabase = createClient();
-    const { data, error: err } = await supabase.auth.signInWithOAuth({
-      provider: "apple",
-      options: {
-        redirectTo: oauthCallbackUrl(),
-      },
-    });
-    if (err) {
-      toast.error(err.message);
-      setIsLoading(false);
-      return;
-    }
-    if (data?.url) {
-      window.location.assign(data.url);
-      return;
-    }
-    toast.error("Could not start Apple sign-in.");
-    setIsLoading(false);
+    const started = await startOAuthSignIn("apple");
+    if (!started) setIsLoading(false);
   }
 
   return (
@@ -224,10 +192,10 @@ export default function LoginPage() {
               {isLoading ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Signing in…
+                  <span>Signing in…</span>
                 </>
               ) : (
-                "Sign in"
+                <span>Sign in</span>
               )}
             </button>
           </form>
@@ -285,10 +253,10 @@ export default function LoginPage() {
               {isLoading ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Creating account…
+                  <span>Creating account…</span>
                 </>
               ) : (
-                "Create account"
+                <span>Create account</span>
               )}
             </button>
           </form>
