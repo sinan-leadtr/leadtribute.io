@@ -223,7 +223,13 @@ export function DashboardContent({
                         ))}
                         <button
                             type="button"
-                            onClick={() => toast(`Date range: Last ${historyDays} days`, { duration: 2000 })}
+                            title={`Synced for your plan: last ${historyDays} days (UTC). Custom ranges coming soon.`}
+                            onClick={() =>
+                                toast.info(
+                                    `Charts use the last ${historyDays} days from your plan. Click Sync now after connecting ads.`,
+                                    { duration: 4000 },
+                                )
+                            }
                             className={`inline-flex items-center gap-1.5 ${appChipIdle}`}
                         >
                             <Calendar className="h-3.5 w-3.5" aria-hidden />
@@ -345,10 +351,19 @@ export function DashboardContent({
                                     </p>
                                 </div>
                                 <div className="flex flex-wrap items-center gap-2 text-xs">
-                                    <button type="button" className={appChipOnDarkActive}>
+                                    <button
+                                        type="button"
+                                        title={`Active range: last ${historyDays} days`}
+                                        className={appChipOnDarkActive}
+                                    >
                                         Last {historyDays} days
                                     </button>
-                                    <button type="button" className={appChipOnDarkIdle}>
+                                    <button
+                                        type="button"
+                                        disabled
+                                        title="Compare period — coming soon"
+                                        className={`${appChipOnDarkIdle} cursor-not-allowed opacity-50`}
+                                    >
                                         Compare period
                                     </button>
                                 </div>

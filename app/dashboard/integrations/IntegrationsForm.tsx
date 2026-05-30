@@ -186,7 +186,12 @@ export function IntegrationsForm({ initialKeys }: Props) {
           toast.success("Dashboard analytics updated.");
           router.refresh();
         } else {
-          toast.error(syncResult.error);
+          const msg = syncResult.error;
+          const short =
+            msg.length > 220 || msg.includes("<!DOCTYPE")
+              ? "Sync failed. Check Google/Meta credentials, API access, and Vercel env vars."
+              : msg;
+          toast.error(short);
         }
       }
       setKeys((prev) => ({
@@ -332,12 +337,21 @@ export function IntegrationsForm({ initialKeys }: Props) {
               <label className={fieldLabel}>Customer ID</label>
               <input
                 type="text"
-                placeholder="1234567890"
+                placeholder="4663691956"
                 value={googleCustomerId}
                 onChange={(e) => setGoogleCustomerId(e.target.value)}
                 className={inputDark}
               />
+              <p className="mt-1.5 text-[11px] text-white/45">
+                Digits only (no dashes). From Google Ads top-right, e.g. 466-369-1956 →{" "}
+                <code className="text-white/60">4663691956</code>.
+              </p>
             </div>
+            <p className="text-[11px] text-white/45">
+              Manager account (MCC)? Set{" "}
+              <code className="rounded bg-white/10 px-1">GOOGLE_ADS_LOGIN_CUSTOMER_ID</code> in
+              Vercel to your MCC ID.
+            </p>
           </ProviderCard>
 
           <ProviderCard
